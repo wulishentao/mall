@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.print.DocFlavor;
@@ -39,22 +40,13 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         ApiResult<Object> res = new ApiResult<>();
         String requestURI = request.getRequestURI();
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) {
+        String userToken = CookieUtil.getCookieValue(request, "user_token");
+        String adminToken = CookieUtil.getCookieValue(request, "admin_token");
+        if (StringUtils.isEmpty(userToken) && StringUtils.isEmpty(adminToken)) {
             res.setCode(ResultCode.LOGIN_REQUIRED.getCode());
             res.setMsg("您还未登录,请登录");
-            write(request,response,JSON.toJSONString(res));
+            write(request, response, JSON.toJSONString(res));
             return false;
-        }
-        String userToken = null;
-        String adminToken = null;
-        for (Cookie cookie : cookies) {
-            if ("user_token".equals(cookie.getName())) {
-                userToken = cookie.getValue();
-            }
-            if ("admin_token".equals(cookie.getName())) {
-                adminToken = cookie.getValue();
-            }
         }
         try {
             PartnerInfo pi;

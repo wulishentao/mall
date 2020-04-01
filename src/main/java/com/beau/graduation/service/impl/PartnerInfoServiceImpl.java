@@ -137,10 +137,10 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 		loginUtil.setUser(uuToken, resDto, storeTime, TimeUnit.DAYS);
 		// 将token存入cookie中
 		if (LoginTypeEnum.ADMIN.getCode().equals(resDto.getAccountType())) {
-			CookieUtil.addCookie(response, "admin_token", uuToken, null, 0);
+			CookieUtil.addCookie(response, "admin_token", uuToken, null, 3600 * 24 * 15);
 		} else {
 			storageWithId(request, partnerInfo.getId());
-			CookieUtil.addCookie(response, "user_token", uuToken, null, 0);
+			CookieUtil.addCookie(response, "user_token", uuToken, null, 3600 * 24 * 15);
 		}
 
 		resDto.setCode(ResultCode.SUCCESS.getCode());
@@ -176,7 +176,7 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 				cartList.addAll(bookDtoList);
 				cart.setBookDtoList(cartList);
 			}
-			// 将cart_uuid所存储的购物车信息从缓存中删除
+			// 将cart_uuid所存储的购物车信息清空
 			redisUtil.delete(cart_uuid);
 		}
 		// 将合并过的购物车信息重新存入redis中

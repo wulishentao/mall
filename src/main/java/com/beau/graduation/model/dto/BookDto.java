@@ -19,14 +19,14 @@ public class BookDto extends Book implements Serializable {
 
     private String imgUrl;
 
-    private String isExist;
+    private Boolean exist;
 
-    public String getIsExist() {
-        return isExist;
+    public Boolean getExist() {
+        return exist;
     }
 
-    public void setIsExist(String isExist) {
-        this.isExist = isExist;
+    public void setExist(Boolean exist) {
+        this.exist = exist;
     }
 
     public String getImgUrl() {

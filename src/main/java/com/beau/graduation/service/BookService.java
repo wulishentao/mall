@@ -1,12 +1,15 @@
 package com.beau.graduation.service;
 
 import com.beau.graduation.basic.reqdto.AddCartReqDto;
+import com.beau.graduation.basic.reqdto.SyncCartReqDto;
 import com.beau.graduation.basic.resdto.AddCartResDto;
+import com.beau.graduation.basic.resdto.SyncCartResDto;
 import com.beau.graduation.common.PageList;
 import com.beau.graduation.model.Book;
 import com.beau.graduation.model.dto.BookDto;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -72,5 +75,9 @@ public interface BookService {
      * @param addCartReqDto
      * @return
      */
-    AddCartResDto addCart(AddCartReqDto addCartReqDto, HttpServletRequest request);
+    AddCartResDto addCart(AddCartReqDto addCartReqDto, HttpServletRequest request, HttpServletResponse response);
+
+    SyncCartResDto getShoppingCart(SyncCartReqDto syncCartReqDto, HttpServletRequest request, HttpServletResponse response);
+
+    SyncCartResDto syncShoppingCart(SyncCartReqDto syncCartReqDto, HttpServletRequest request);
 }
