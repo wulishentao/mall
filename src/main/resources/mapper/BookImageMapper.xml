@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beau.graduation.dao.BookImageDao">
+
+    <resultMap id="BaseResultMap" type="com.beau.graduation.model.BookImage" >
+        <result column="id" property="id" />
+        <result column="book_id" property="bookId" />
+        <result column="img_url" property="imgUrl" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="remark" property="remark" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `id`,
+        `book_id`,
+        `img_url`,
+        `create_time`,
+        `update_time`,
+        `remark`,
+        `del_flag`
+    </sql>
+
+    <!-- 插入数据 -->
+    <insert id="insert" parameterType="com.beau.graduation.model.BookImage">
+        INSERT INTO tm_book_image
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test ='null != bookImage.id'>
+                `id`,
+            </if>
+            <if test ='null != bookImage.bookId'>
+                `book_id`,
+            </if>
+            <if test ='null != bookImage.imgUrl'>
+                `img_url`,
+            </if>
+            <if test ='null != bookImage.createTime'>
+                `create_time`,
+            </if>
+            <if test ='null != bookImage.updateTime'>
+                `update_time`,
+            </if>
+            <if test ='null != bookImage.remark'>
+                `remark`,
+            </if>
+            <if test ='null != bookImage.delFlag'>
+                `del_flag`
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test ='null != bookImage.id'>
+                #{bookImage.id},
+            </if>
+            <if test ='null != bookImage.bookId'>
+                #{bookImage.bookId},
+            </if>
+            <if test ='null != bookImage.imgUrl'>
+                #{bookImage.imgUrl},
+            </if>
+            <if test ='null != bookImage.createTime'>
+                #{bookImage.createTime},
+            </if>
+            <if test ='null != bookImage.updateTime'>
+                #{bookImage.updateTime},
+            </if>
+            <if test ='null != bookImage.remark'>
+                #{bookImage.remark},
+            </if>
+            <if test ='null != bookImage.delFlag'>
+                #{bookImage.delFlag}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量插入数据 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO tm_book_image ( <include refid="Base_Column_List" /> ) VALUES
+        <foreach collection="list" item="curr" index="index" separator=",">
+            (
+                #{curr.id},
+                #{curr.bookId},
+                #{curr.imgUrl},
+                #{curr.createTime},
+                #{curr.updateTime},
+                #{curr.remark},
+                #{curr.delFlag}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="com.beau.graduation.model.BookImage">
+        UPDATE tm_book_image
+        <set>
+            <if test ='null != bookImage.bookId'>book_id = #{bookImage.bookId},</if>
+            <if test ='null != bookImage.imgUrl'>img_url = #{bookImage.imgUrl},</if>
+            <if test ='null != bookImage.createTime'>create_time = #{bookImage.createTime},</if>
+            <if test ='null != bookImage.updateTime'>update_time = #{bookImage.updateTime},</if>
+            <if test ='null != bookImage.remark'>remark = #{bookImage.remark},</if>
+            <if test ='null != bookImage.delFlag'>del_flag = #{bookImage.delFlag}</if>
+        </set>
+        WHERE id = bookImage.id
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delete">
+        DELETE FROM tm_book_image
+        WHERE id = #{bookImage.bookImage}
+    </delete>
+
+    <!-- 批量删除 -->
+    <delete id="batchDelete" parameterType = "java.util.List">
+        DELETE FROM tm_book_image WHERE id IN
+        <foreach collection="list"  item="item" open="(" separator="," close=")"  >
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 主键查询 -->
+    <select id="selectByObj" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tm_book_image
+        WHERE id = #{bookImage.id}
+    </select>
+
+    <!-- 条件查询 -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tm_book_image
+        <where>
+            <if test ='null != bookImage.id'>
+                and id = #{bookImage.id}
+            </if>
+            <if test ='null != bookImage.bookId'>
+                and bookId = #{bookImage.bookId}
+            </if>
+            <if test ='null != bookImage.imgUrl'>
+                and imgUrl = #{bookImage.imgUrl}
+            </if>
+            <if test ='null != bookImage.createTime'>
+                and createTime = #{bookImage.createTime}
+            </if>
+            <if test ='null != bookImage.updateTime'>
+                and updateTime = #{bookImage.updateTime}
+            </if>
+            <if test ='null != bookImage.remark'>
+                and remark = #{bookImage.remark}
+            </if>
+            <if test ='null != bookImage.delFlag'>
+                and delFlag = #{bookImage.delFlag}
+            </if>
+        </where>
+    </select>
+
+    <!-- 分页条件查询 -->
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tm_book_image
+        <where>
+            <if test ='null != bookImage.id'>
+                and id = #{bookImage.id}
+            </if>
+            <if test ='null != bookImage.bookId'>
+                and bookId = #{bookImage.bookId}
+            </if>
+            <if test ='null != bookImage.imgUrl'>
+                and imgUrl = #{bookImage.imgUrl}
+            </if>
+            <if test ='null != bookImage.createTime'>
+                and createTime = #{bookImage.createTime}
+            </if>
+            <if test ='null != bookImage.updateTime'>
+                and updateTime = #{bookImage.updateTime}
+            </if>
+            <if test ='null != bookImage.remark'>
+                and remark = #{bookImage.remark}
+            </if>
+            <if test ='null != bookImage.delFlag'>
+                and delFlag = #{bookImage.delFlag}
+            </if>
+        </where>
+        limit #{page,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <!-- 总量查询 -->
+    <select id="total" resultType="java.lang.Integer">
+        SELECT count(id) FROM tm_book_image
+        <where>
+            <if test ='null != bookImage.id'>
+                and id = #{bookImage.id}
+            </if>
+            <if test ='null != bookImage.bookId'>
+                and bookId = #{bookImage.bookId}
+            </if>
+            <if test ='null != bookImage.imgUrl'>
+                and imgUrl = #{bookImage.imgUrl}
+            </if>
+            <if test ='null != bookImage.createTime'>
+                and createTime = #{bookImage.createTime}
+            </if>
+            <if test ='null != bookImage.updateTime'>
+                and updateTime = #{bookImage.updateTime}
+            </if>
+            <if test ='null != bookImage.remark'>
+                and remark = #{bookImage.remark}
+            </if>
+            <if test ='null != bookImage.delFlag'>
+                and delFlag = #{bookImage.delFlag}
+            </if>
+        </where>
+    </select>
+</mapper>

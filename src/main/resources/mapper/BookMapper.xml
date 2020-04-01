@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beau.graduation.dao.BookDao">
+
+    <resultMap id="BaseResultMap" type="com.beau.graduation.model.dto.BookDto" >
+        <result column="id" property="id" />
+        <result column="title" property="title" />
+        <result column="author" property="author" />
+        <result column="sale_status" property="saleStatus" />
+        <result column="review_status" property="reviewStatus" />
+        <result column="publish_date" property="publishDate" />
+        <result column="publisher" property="publisher" />
+        <result column="introduction" property="introduction" />
+        <result column="recommend_flag" property="recommendFlag" />
+        <result column="reserve" property="reserve" />
+        <result column="sales" property="sales" />
+        <result column="price" property="price" />
+        <result column="img_url" property="imgUrl"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `tb.id` as id,
+        `tb.title` as title,
+        `tb.author` as author,
+        `tb.sale_status` as sale_status,
+        `tb.review_status` as review_status,
+        `tb.publish_date` as publish_date,
+        `tb.publisher` as publisher,
+        `tb.introduction` as introduction,
+        `tb.recommend_flag` as recommend_flag,
+        `tb.reserve` as reserve,
+        `tb.sales` as sales,
+        `tb.price` as price,
+        tbi.img_url as img_url
+    </sql>
+
+    <!-- 插入数据 -->
+    <insert id="insert" parameterType="com.beau.graduation.model.Book">
+        INSERT INTO tm_book
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test ='null != book.id'>
+                `id`,
+            </if>
+            <if test ='null != book.title'>
+                `title`,
+            </if>
+            <if test ='null != book.author'>
+                `author`,
+            </if>
+            <if test ='null != book.saleStatus'>
+                `sale_status`,
+            </if>
+            <if test ='null != book.reviewStatus'>
+                `review_status`,
+            </if>
+            <if test ='null != book.publishDate'>
+                `publish_date`,
+            </if>
+            <if test ='null != book.publisher'>
+                `publisher`,
+            </if>
+            <if test ='null != book.introduction'>
+                `introduction`,
+            </if>
+            <if test ='null != book.delFlag'>
+                `del_flag`,
+            </if>
+            <if test ='null != book.recommendFlag'>
+                `recommend_flag`,
+            </if>
+            <if test ='null != book.reserve'>
+                `reserve`,
+            </if>
+            <if test ='null != book.sales'>
+                `sales`,
+            </if>
+            <if test ='null != book.price'>
+                `price`
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test ='null != book.id'>
+                #{book.id},
+            </if>
+            <if test ='null != book.title'>
+                #{book.title},
+            </if>
+            <if test ='null != book.author'>
+                #{book.author},
+            </if>
+            <if test ='null != book.saleStatus'>
+                #{book.saleStatus},
+            </if>
+            <if test ='null != book.reviewStatus'>
+                #{book.reviewStatus},
+            </if>
+            <if test ='null != book.publishDate'>
+                #{book.publishDate},
+            </if>
+            <if test ='null != book.publisher'>
+                #{book.publisher},
+            </if>
+            <if test ='null != book.introduction'>
+                #{book.introduction},
+            </if>
+            <if test ='null != book.delFlag'>
+                #{book.delFlag},
+            </if>
+            <if test ='null != book.recommendFlag'>
+                #{book.recommendFlag},
+            </if>
+            <if test ='null != book.reserve'>
+                #{book.reserve},
+            </if>
+            <if test ='null != book.sales'>
+                #{book.sales},
+            </if>
+            <if test ='null != book.price'>
+                #{book.price}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量插入数据 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO tm_book ( <include refid="Base_Column_List" /> ) VALUES
+        <foreach collection="list" item="curr" index="index" separator=",">
+            (
+                #{curr.id},
+                #{curr.title},
+                #{curr.author},
+                #{curr.saleStatus},
+                #{curr.reviewStatus},
+                #{curr.publishDate},
+                #{curr.publisher},
+                #{curr.introduction},
+                #{curr.delFlag},
+                #{curr.recommendFlag},
+                #{curr.reserve},
+                #{curr.sales},
+                #{curr.price}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="com.beau.graduation.model.Book">
+        UPDATE tm_book
+        <set>
+            <if test ='null != book.title'>title = #{book.title},</if>
+            <if test ='null != book.author'>author = #{book.author},</if>
+            <if test ='null != book.saleStatus'>sale_status = #{book.saleStatus},</if>
+            <if test ='null != book.reviewStatus'>review_status = #{book.reviewStatus},</if>
+            <if test ='null != book.publishDate'>publish_date = #{book.publishDate},</if>
+            <if test ='null != book.publisher'>publisher = #{book.publisher},</if>
+            <if test ='null != book.introduction'>introduction = #{book.introduction},</if>
+            <if test ='null != book.delFlag'>del_flag = #{book.delFlag},</if>
+            <if test ='null != book.recommendFlag'>recommend_flag = #{book.recommendFlag},</if>
+            <if test ='null != book.reserve'>reserve = #{book.reserve},</if>
+            <if test ='null != book.sales'>sales = #{book.sales},</if>
+            <if test ='null != book.price'>price = #{book.price}</if>
+        </set>
+        WHERE id = book.id
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delete">
+        DELETE FROM tm_book
+        WHERE id = #{book.book}
+    </delete>
+
+    <!-- 批量删除 -->
+    <delete id="batchDelete" parameterType = "java.util.List">
+        DELETE FROM tm_book WHERE id IN
+        <foreach collection="list"  item="item" open="(" separator="," close=")"  >
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 主键查询 -->
+    <select id="selectByObj" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tm_book
+        WHERE id = #{book.id}
+    </select>
+
+    <!-- 条件查询 -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tm_book
+        <where>
+            <if test ='null != book.id'>
+                and id = #{book.id}
+            </if>
+            <if test ='null != book.title'>
+                and title = #{book.title}
+            </if>
+            <if test ='null != book.author'>
+                and author = #{book.author}
+            </if>
+            <if test ='null != book.saleStatus'>
+                and saleStatus = #{book.saleStatus}
+            </if>
+            <if test ='null != book.reviewStatus'>
+                and reviewStatus = #{book.reviewStatus}
+            </if>
+            <if test ='null != book.publishDate'>
+                and publishDate = #{book.publishDate}
+            </if>
+            <if test ='null != book.publisher'>
+                and publisher = #{book.publisher}
+            </if>
+            <if test ='null != book.introduction'>
+                and introduction = #{book.introduction}
+            </if>
+            <if test ='null != book.delFlag'>
+                and delFlag = #{book.delFlag}
+            </if>
+            <if test ='null != book.recommendFlag'>
+                and recommendFlag = #{book.recommendFlag}
+            </if>
+            <if test ='null != book.reserve'>
+                and reserve = #{book.reserve}
+            </if>
+            <if test ='null != book.sales'>
+                and sales = #{book.sales}
+            </if>
+            <if test ='null != book.price'>
+                and price = #{book.price}
+            </if>
+        </where>
+    </select>
+
+    <!-- 分页条件查询 -->
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tm_book
+        <where>
+            <if test ='null != book.id'>
+                and id = #{book.id}
+            </if>
+            <if test ='null != book.title'>
+                and title = #{book.title}
+            </if>
+            <if test ='null != book.author'>
+                and author = #{book.author}
+            </if>
+            <if test ='null != book.saleStatus'>
+                and saleStatus = #{book.saleStatus}
+            </if>
+            <if test ='null != book.reviewStatus'>
+                and reviewStatus = #{book.reviewStatus}
+            </if>
+            <if test ='null != book.publishDate'>
+                and publishDate = #{book.publishDate}
+            </if>
+            <if test ='null != book.publisher'>
+                and publisher = #{book.publisher}
+            </if>
+            <if test ='null != book.introduction'>
+                and introduction = #{book.introduction}
+            </if>
+            <if test ='null != book.delFlag'>
+                and delFlag = #{book.delFlag}
+            </if>
+            <if test ='null != book.recommendFlag'>
+                and recommendFlag = #{book.recommendFlag}
+            </if>
+            <if test ='null != book.reserve'>
+                and reserve = #{book.reserve}
+            </if>
+            <if test ='null != book.sales'>
+                and sales = #{book.sales}
+            </if>
+            <if test ='null != book.price'>
+                and price = #{book.price}
+            </if>
+        </where>
+        limit #{page,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <!-- 总量查询 -->
+    <select id="total" resultType="java.lang.Integer">
+        SELECT count(id) FROM tm_book
+        <where>
+            <if test ='null != book.id'>
+                and id = #{book.id}
+            </if>
+            <if test ='null != book.title'>
+                and title = #{book.title}
+            </if>
+            <if test ='null != book.author'>
+                and author = #{book.author}
+            </if>
+            <if test ='null != book.saleStatus'>
+                and saleStatus = #{book.saleStatus}
+            </if>
+            <if test ='null != book.reviewStatus'>
+                and reviewStatus = #{book.reviewStatus}
+            </if>
+            <if test ='null != book.publishDate'>
+                and publishDate = #{book.publishDate}
+            </if>
+            <if test ='null != book.publisher'>
+                and publisher = #{book.publisher}
+            </if>
+            <if test ='null != book.introduction'>
+                and introduction = #{book.introduction}
+            </if>
+            <if test ='null != book.delFlag'>
+                and delFlag = #{book.delFlag}
+            </if>
+            <if test ='null != book.recommendFlag'>
+                and recommendFlag = #{book.recommendFlag}
+            </if>
+            <if test ='null != book.reserve'>
+                and reserve = #{book.reserve}
+            </if>
+            <if test ='null != book.sales'>
+                and sales = #{book.sales}
+            </if>
+            <if test ='null != book.price'>
+                and price = #{book.price}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM tm_book tb
+        left join tm_book_image tbi on tb.id=tbi.book_id
+        WHERE id = #{bookId}
+    </select>
+</mapper>

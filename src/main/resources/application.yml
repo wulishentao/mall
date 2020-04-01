@@ -1,0 +1,62 @@
+#端口号
+server:
+  port: 80
+
+#数据源
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/mall?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT
+    username: root
+    password: 135868302
+
+#连接池配置
+    initial-size: 25
+    max-active: 200
+    min-idle: 25
+    # 配置获取连接等待超时的时间
+    max-wait: 60000
+    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    time-between-eviction-runs-millis: 60000
+    # 配置一个连接在池中最小生存的时间，单位是毫秒
+    min-evictable-idle-time-millis: 300000
+    validation-query: SELECT 1 FROM DUAL
+    test-while-idle: true
+    test-on-borrow: false
+    test-on-return: false
+    # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    filters: stat,log4j
+    connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=1000;druid.filter.stat.logSlowSql=true
+    #超过时间限制是否回收
+    remove-abandoned: true
+    #超时时间；单位为秒。180秒=3分钟
+    remove-abandoned-timeout: 180
+    #关闭abanded连接时输出错误日志
+    log-abandoned: true
+
+  #redis配置
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout: 3000
+    lettuce:
+      shutdown-timeout: 200ms
+
+#mybatis配置
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.beau.graduation.model
+
+#slf4j日志配置
+logging:
+  level:
+    com:
+      beau:
+        graduation:
+          dao:
+            DEBUG
+  config: classpath:logback-spring.xml
+
+#文件上传路径
+file-service:
+  profile: D:/profile/

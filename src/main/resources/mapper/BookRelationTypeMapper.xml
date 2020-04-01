@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beau.graduation.dao.BookRelationTypeDao">
+
+    <resultMap id="BaseResultMap" type="com.beau.graduation.model.BookRelationType" >
+        <result column="id" property="id" />
+        <result column="book_id" property="bookId" />
+        <result column="type_id" property="typeId" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `id`,
+        `book_id`,
+        `type_id`,
+        `del_flag`
+    </sql>
+
+    <!-- 插入数据 -->
+    <insert id="insert" parameterType="com.beau.graduation.model.BookRelationType">
+        INSERT INTO tr_book_relation_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test ='null != bookRelationType.id'>
+                `id`,
+            </if>
+            <if test ='null != bookRelationType.bookId'>
+                `book_id`,
+            </if>
+            <if test ='null != bookRelationType.typeId'>
+                `type_id`,
+            </if>
+            <if test ='null != bookRelationType.delFlag'>
+                `del_flag`
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test ='null != bookRelationType.id'>
+                #{bookRelationType.id},
+            </if>
+            <if test ='null != bookRelationType.bookId'>
+                #{bookRelationType.bookId},
+            </if>
+            <if test ='null != bookRelationType.typeId'>
+                #{bookRelationType.typeId},
+            </if>
+            <if test ='null != bookRelationType.delFlag'>
+                #{bookRelationType.delFlag}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量插入数据 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO tr_book_relation_type ( <include refid="Base_Column_List" /> ) VALUES
+        <foreach collection="list" item="curr" index="index" separator=",">
+            (
+                #{curr.id},
+                #{curr.bookId},
+                #{curr.typeId},
+                #{curr.delFlag}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="com.beau.graduation.model.BookRelationType">
+        UPDATE tr_book_relation_type
+        <set>
+            <if test ='null != bookRelationType.bookId'>book_id = #{bookRelationType.bookId},</if>
+            <if test ='null != bookRelationType.typeId'>type_id = #{bookRelationType.typeId},</if>
+            <if test ='null != bookRelationType.delFlag'>del_flag = #{bookRelationType.delFlag}</if>
+        </set>
+        WHERE id = bookRelationType.id
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delete">
+        DELETE FROM tr_book_relation_type
+        WHERE id = #{bookRelationType.bookRelationType}
+    </delete>
+
+    <!-- 批量删除 -->
+    <delete id="batchDelete" parameterType = "java.util.List">
+        DELETE FROM tr_book_relation_type WHERE id IN
+        <foreach collection="list"  item="item" open="(" separator="," close=")"  >
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 主键查询 -->
+    <select id="selectByObj" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tr_book_relation_type
+        WHERE id = #{bookRelationType.id}
+    </select>
+
+    <!-- 条件查询 -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tr_book_relation_type
+        <where>
+            <if test ='null != bookRelationType.id'>
+                and id = #{bookRelationType.id}
+            </if>
+            <if test ='null != bookRelationType.bookId'>
+                and bookId = #{bookRelationType.bookId}
+            </if>
+            <if test ='null != bookRelationType.typeId'>
+                and typeId = #{bookRelationType.typeId}
+            </if>
+            <if test ='null != bookRelationType.delFlag'>
+                and delFlag = #{bookRelationType.delFlag}
+            </if>
+        </where>
+    </select>
+
+    <!-- 分页条件查询 -->
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tr_book_relation_type
+        <where>
+            <if test ='null != bookRelationType.id'>
+                and id = #{bookRelationType.id}
+            </if>
+            <if test ='null != bookRelationType.bookId'>
+                and bookId = #{bookRelationType.bookId}
+            </if>
+            <if test ='null != bookRelationType.typeId'>
+                and typeId = #{bookRelationType.typeId}
+            </if>
+            <if test ='null != bookRelationType.delFlag'>
+                and delFlag = #{bookRelationType.delFlag}
+            </if>
+        </where>
+        limit #{page,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <!-- 总量查询 -->
+    <select id="total" resultType="java.lang.Integer">
+        SELECT count(id) FROM tr_book_relation_type
+        <where>
+            <if test ='null != bookRelationType.id'>
+                and id = #{bookRelationType.id}
+            </if>
+            <if test ='null != bookRelationType.bookId'>
+                and bookId = #{bookRelationType.bookId}
+            </if>
+            <if test ='null != bookRelationType.typeId'>
+                and typeId = #{bookRelationType.typeId}
+            </if>
+            <if test ='null != bookRelationType.delFlag'>
+                and delFlag = #{bookRelationType.delFlag}
+            </if>
+        </where>
+    </select>
+</mapper>

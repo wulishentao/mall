@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beau.graduation.dao.PartnerInfoDao">
+
+    <resultMap id="BaseResultMap" type="com.beau.graduation.model.PartnerInfo" >
+        <result column="id" property="id" />
+        <result column="account_name" property="accountName" />
+        <result column="account_type" property="accountType" />
+        <result column="status" property="status" />
+        <result column="password" property="password" />
+        <result column="address" property="address" />
+        <result column="remark" property="remark" />
+        <result column="phone" property="phone" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="gender" property="gender" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <resultMap id="LoginResMap" type="com.beau.graduation.model.PartnerInfo" >
+        <result column="id" property="id" />
+        <result column="account_name" property="accountName" />
+        <result column="account_type" property="accountType" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `id`,
+        `account_name`,
+        `account_type`,
+        `status`,
+        `password`,
+        `address`,
+        `remark`,
+        `phone`,
+        `create_time`,
+        `update_time`,
+        `gender`,
+        `del_flag`
+    </sql>
+
+    <!-- 插入数据 -->
+    <insert id="insert" parameterType="com.beau.graduation.model.PartnerInfo">
+        INSERT INTO tm_partner_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test ='null != partnerInfo.id'>
+                `id`,
+            </if>
+            <if test ='null != partnerInfo.accountName'>
+                `account_name`,
+            </if>
+            <if test ='null != partnerInfo.accountType'>
+                `account_type`,
+            </if>
+            <if test ='null != partnerInfo.status'>
+                `status`,
+            </if>
+            <if test ='null != partnerInfo.password'>
+                `password`,
+            </if>
+            <if test ='null != partnerInfo.address'>
+                `address`,
+            </if>
+            <if test ='null != partnerInfo.remark'>
+                `remark`,
+            </if>
+            <if test ='null != partnerInfo.phone'>
+                `phone`,
+            </if>
+            <if test ='null != partnerInfo.createTime'>
+                `create_time`,
+            </if>
+            <if test ='null != partnerInfo.updateTime'>
+                `update_time`,
+            </if>
+            <if test ='null != partnerInfo.gender'>
+                `gender`,
+            </if>
+            <if test ='null != partnerInfo.delFlag'>
+                `del_flag`
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test ='null != partnerInfo.id'>
+                #{partnerInfo.id},
+            </if>
+            <if test ='null != partnerInfo.accountName'>
+                #{partnerInfo.accountName},
+            </if>
+            <if test ='null != partnerInfo.accountType'>
+                #{partnerInfo.accountType},
+            </if>
+            <if test ='null != partnerInfo.status'>
+                #{partnerInfo.status},
+            </if>
+            <if test ='null != partnerInfo.password'>
+                #{partnerInfo.password},
+            </if>
+            <if test ='null != partnerInfo.address'>
+                #{partnerInfo.address},
+            </if>
+            <if test ='null != partnerInfo.remark'>
+                #{partnerInfo.remark},
+            </if>
+            <if test ='null != partnerInfo.phone'>
+                #{partnerInfo.phone},
+            </if>
+            <if test ='null != partnerInfo.createTime'>
+                #{partnerInfo.createTime},
+            </if>
+            <if test ='null != partnerInfo.updateTime'>
+                #{partnerInfo.updateTime},
+            </if>
+            <if test ='null != partnerInfo.gender'>
+                #{partnerInfo.gender},
+            </if>
+            <if test ='null != partnerInfo.delFlag'>
+                #{partnerInfo.delFlag}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量插入数据 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO tm_partner_info ( <include refid="Base_Column_List" /> ) VALUES
+        <foreach collection="list" item="curr" index="index" separator=",">
+            (
+                #{curr.id},
+                #{curr.accountName},
+                #{curr.accountType},
+                #{curr.status},
+                #{curr.password},
+                #{curr.address},
+                #{curr.remark},
+                #{curr.phone},
+                #{curr.createTime},
+                #{curr.updateTime},
+                #{curr.gender},
+                #{curr.delFlag}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="com.beau.graduation.model.PartnerInfo">
+        UPDATE tm_partner_info
+        <set>
+            <if test ='null != partnerInfo.accountName'>account_name = #{partnerInfo.accountName},</if>
+            <if test ='null != partnerInfo.accountType'>account_type = #{partnerInfo.accountType},</if>
+            <if test ='null != partnerInfo.status'>status = #{partnerInfo.status},</if>
+            <if test ='null != partnerInfo.password'>password = #{partnerInfo.password},</if>
+            <if test ='null != partnerInfo.address'>address = #{partnerInfo.address},</if>
+            <if test ='null != partnerInfo.remark'>remark = #{partnerInfo.remark},</if>
+            <if test ='null != partnerInfo.phone'>phone = #{partnerInfo.phone},</if>
+            <if test ='null != partnerInfo.createTime'>create_time = #{partnerInfo.createTime},</if>
+            <if test ='null != partnerInfo.updateTime'>update_time = #{partnerInfo.updateTime},</if>
+            <if test ='null != partnerInfo.gender'>gender = #{partnerInfo.gender},</if>
+            <if test ='null != partnerInfo.delFlag'>del_flag = #{partnerInfo.delFlag}</if>
+        </set>
+        WHERE id = partnerInfo.id
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delete">
+        DELETE FROM tm_partner_info
+        WHERE id = #{partnerInfo.partnerInfo}
+    </delete>
+
+    <!-- 批量删除 -->
+    <delete id="batchDelete" parameterType = "java.util.List">
+        DELETE FROM tm_partner_info WHERE id IN
+        <foreach collection="list"  item="item" open="(" separator="," close=")"  >
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 主键查询 -->
+    <select id="selectByObj" resultMap="LoginResMap">
+        SELECT
+            <include refid="Base_Column_List"></include>
+        FROM
+            tm_partner_info
+        <where>
+            <if test="null != partnerInfo.phone">
+                phone = #{partnerInfo.phone}
+            </if>
+            <if test="null != partnerInfo.password">
+                and password = #{partnerInfo.password}
+            </if>
+            <if test="null != partnerInfo.accountType">
+                and account_type = #{partnerInfo.accountType}
+            </if>
+            and del_flag = '0'
+        </where>
+    </select>
+
+    <select id="selectAdmin" resultMap="LoginResMap">
+        SELECT
+            <include refid="Base_Column_List"></include>
+        FROM
+            tm_partner_info
+        <where>
+            <if test="null != partnerInfo.phone">
+                (account_name = #{partnerInfo.phone} or phone = #{partnerInfo.phone})
+            </if>
+            <if test="null != partnerInfo.password">
+                and password = #{partnerInfo.password}
+            </if>
+            <if test="null != partnerInfo.accountType">
+                and account_type = #{partnerInfo.accountType}
+            </if>
+            and del_flag = '0'
+        </where>
+    </select>
+
+    <!-- 条件查询 -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tm_partner_info
+        <where>
+            <if test ='null != partnerInfo.id'>
+                and id = #{partnerInfo.id}
+            </if>
+            <if test ='null != partnerInfo.accountName'>
+                and accountName = #{partnerInfo.accountName}
+            </if>
+            <if test ='null != partnerInfo.accountType'>
+                and accountType = #{partnerInfo.accountType}
+            </if>
+            <if test ='null != partnerInfo.status'>
+                and status = #{partnerInfo.status}
+            </if>
+            <if test ='null != partnerInfo.password'>
+                and password = #{partnerInfo.password}
+            </if>
+            <if test ='null != partnerInfo.address'>
+                and address = #{partnerInfo.address}
+            </if>
+            <if test ='null != partnerInfo.remark'>
+                and remark = #{partnerInfo.remark}
+            </if>
+            <if test ='null != partnerInfo.phone'>
+                and phone = #{partnerInfo.phone}
+            </if>
+            <if test ='null != partnerInfo.createTime'>
+                and createTime = #{partnerInfo.createTime}
+            </if>
+            <if test ='null != partnerInfo.updateTime'>
+                and updateTime = #{partnerInfo.updateTime}
+            </if>
+            <if test ='null != partnerInfo.gender'>
+                and gender = #{partnerInfo.gender}
+            </if>
+            <if test ='null != partnerInfo.delFlag'>
+                and delFlag = #{partnerInfo.delFlag}
+            </if>
+        </where>
+    </select>
+
+    <!-- 分页条件查询 -->
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tm_partner_info
+        <where>
+            <if test ='null != partnerInfo.id'>
+                and id = #{partnerInfo.id}
+            </if>
+            <if test ='null != partnerInfo.accountName'>
+                and accountName = #{partnerInfo.accountName}
+            </if>
+            <if test ='null != partnerInfo.accountType'>
+                and accountType = #{partnerInfo.accountType}
+            </if>
+            <if test ='null != partnerInfo.status'>
+                and status = #{partnerInfo.status}
+            </if>
+            <if test ='null != partnerInfo.password'>
+                and password = #{partnerInfo.password}
+            </if>
+            <if test ='null != partnerInfo.address'>
+                and address = #{partnerInfo.address}
+            </if>
+            <if test ='null != partnerInfo.remark'>
+                and remark = #{partnerInfo.remark}
+            </if>
+            <if test ='null != partnerInfo.phone'>
+                and phone = #{partnerInfo.phone}
+            </if>
+            <if test ='null != partnerInfo.createTime'>
+                and createTime = #{partnerInfo.createTime}
+            </if>
+            <if test ='null != partnerInfo.updateTime'>
+                and updateTime = #{partnerInfo.updateTime}
+            </if>
+            <if test ='null != partnerInfo.gender'>
+                and gender = #{partnerInfo.gender}
+            </if>
+            <if test ='null != partnerInfo.delFlag'>
+                and delFlag = #{partnerInfo.delFlag}
+            </if>
+        </where>
+        limit #{page,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <!-- 总量查询 -->
+    <select id="total" resultType="java.lang.Integer">
+        SELECT count(id) FROM tm_partner_info
+        <where>
+            <if test ='null != partnerInfo.id'>
+                and id = #{partnerInfo.id}
+            </if>
+            <if test ='null != partnerInfo.accountName'>
+                and accountName = #{partnerInfo.accountName}
+            </if>
+            <if test ='null != partnerInfo.accountType'>
+                and accountType = #{partnerInfo.accountType}
+            </if>
+            <if test ='null != partnerInfo.status'>
+                and status = #{partnerInfo.status}
+            </if>
+            <if test ='null != partnerInfo.password'>
+                and password = #{partnerInfo.password}
+            </if>
+            <if test ='null != partnerInfo.address'>
+                and address = #{partnerInfo.address}
+            </if>
+            <if test ='null != partnerInfo.remark'>
+                and remark = #{partnerInfo.remark}
+            </if>
+            <if test ='null != partnerInfo.phone'>
+                and phone = #{partnerInfo.phone}
+            </if>
+            <if test ='null != partnerInfo.createTime'>
+                and createTime = #{partnerInfo.createTime}
+            </if>
+            <if test ='null != partnerInfo.updateTime'>
+                and updateTime = #{partnerInfo.updateTime}
+            </if>
+            <if test ='null != partnerInfo.gender'>
+                and gender = #{partnerInfo.gender}
+            </if>
+            <if test ='null != partnerInfo.delFlag'>
+                and delFlag = #{partnerInfo.delFlag}
+            </if>
+        </where>
+    </select>
+</mapper>

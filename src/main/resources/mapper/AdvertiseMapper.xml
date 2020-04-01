@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beau.graduation.dao.AdvertiseDao">
+
+    <resultMap id="BaseResultMap" type="com.beau.graduation.model.Advertise" >
+        <result column="id" property="id" />
+        <result column="ad_title" property="adTitle" />
+        <result column="begin_time" property="beginTime" />
+        <result column="end_time" property="endTime" />
+        <result column="status" property="status" />
+        <result column="sort" property="sort" />
+        <result column="del_flag" property="delFlag" />
+        <result column="ad_url" property="adUrl" />
+        <result column="ad_img" property="adImg" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `id`,
+        `ad_title`,
+        `begin_time`,
+        `end_time`,
+        `status`,
+        `sort`,
+        `del_flag`,
+        `ad_url`,
+        `ad_img`,
+        `remark`
+    </sql>
+
+    <!-- 插入数据 -->
+    <insert id="insert" parameterType="com.beau.graduation.model.Advertise">
+        INSERT INTO tm_advertise
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test ='null != advertise.id'>
+                `id`,
+            </if>
+            <if test ='null != advertise.adTitle'>
+                `ad_title`,
+            </if>
+            <if test ='null != advertise.beginTime'>
+                `begin_time`,
+            </if>
+            <if test ='null != advertise.endTime'>
+                `end_time`,
+            </if>
+            <if test ='null != advertise.status'>
+                `status`,
+            </if>
+            <if test ='null != advertise.sort'>
+                `sort`,
+            </if>
+            <if test ='null != advertise.delFlag'>
+                `del_flag`,
+            </if>
+            <if test ='null != advertise.adUrl'>
+                `ad_url`,
+            </if>
+            <if test ='null != advertise.adImg'>
+                `ad_img`,
+            </if>
+            <if test ='null != advertise.remark'>
+                `remark`
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test ='null != advertise.id'>
+                #{advertise.id},
+            </if>
+            <if test ='null != advertise.adTitle'>
+                #{advertise.adTitle},
+            </if>
+            <if test ='null != advertise.beginTime'>
+                #{advertise.beginTime},
+            </if>
+            <if test ='null != advertise.endTime'>
+                #{advertise.endTime},
+            </if>
+            <if test ='null != advertise.status'>
+                #{advertise.status},
+            </if>
+            <if test ='null != advertise.sort'>
+                #{advertise.sort},
+            </if>
+            <if test ='null != advertise.delFlag'>
+                #{advertise.delFlag},
+            </if>
+            <if test ='null != advertise.adUrl'>
+                #{advertise.adUrl},
+            </if>
+            <if test ='null != advertise.adImg'>
+                #{advertise.adImg},
+            </if>
+            <if test ='null != advertise.remark'>
+                #{advertise.remark}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量插入数据 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO tm_advertise ( <include refid="Base_Column_List" /> ) VALUES
+        <foreach collection="list" item="curr" index="index" separator=",">
+            (
+                #{curr.id},
+                #{curr.adTitle},
+                #{curr.beginTime},
+                #{curr.endTime},
+                #{curr.status},
+                #{curr.sort},
+                #{curr.delFlag},
+                #{curr.adUrl},
+                #{curr.adImg},
+                #{curr.remark}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="com.beau.graduation.model.Advertise">
+        UPDATE tm_advertise
+        <set>
+            <if test ='null != advertise.adTitle'>ad_title = #{advertise.adTitle},</if>
+            <if test ='null != advertise.beginTime'>begin_time = #{advertise.beginTime},</if>
+            <if test ='null != advertise.endTime'>end_time = #{advertise.endTime},</if>
+            <if test ='null != advertise.status'>status = #{advertise.status},</if>
+            <if test ='null != advertise.sort'>sort = #{advertise.sort},</if>
+            <if test ='null != advertise.delFlag'>del_flag = #{advertise.delFlag},</if>
+            <if test ='null != advertise.adUrl'>ad_url = #{advertise.adUrl},</if>
+            <if test ='null != advertise.adImg'>ad_img = #{advertise.adImg},</if>
+            <if test ='null != advertise.remark'>remark = #{advertise.remark}</if>
+        </set>
+        WHERE id = advertise.id
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delete">
+        DELETE FROM tm_advertise
+        WHERE id = #{advertise.advertise}
+    </delete>
+
+    <!-- 批量删除 -->
+    <delete id="batchDelete" parameterType = "java.util.List">
+        DELETE FROM tm_advertise WHERE id IN
+        <foreach collection="list"  item="item" open="(" separator="," close=")"  >
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 主键查询 -->
+    <select id="selectByObj" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tm_advertise
+        WHERE id = #{advertise.id}
+    </select>
+
+    <!-- 条件查询 -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tm_advertise
+        <where>
+            <if test ='null != advertise.id'>
+                and id = #{advertise.id}
+            </if>
+            <if test ='null != advertise.adTitle'>
+                and adTitle = #{advertise.adTitle}
+            </if>
+            <if test ='null != advertise.beginTime'>
+                and beginTime = #{advertise.beginTime}
+            </if>
+            <if test ='null != advertise.endTime'>
+                and endTime = #{advertise.endTime}
+            </if>
+            <if test ='null != advertise.status'>
+                and status = #{advertise.status}
+            </if>
+            <if test ='null != advertise.sort'>
+                and sort = #{advertise.sort}
+            </if>
+            <if test ='null != advertise.delFlag'>
+                and delFlag = #{advertise.delFlag}
+            </if>
+            <if test ='null != advertise.adUrl'>
+                and adUrl = #{advertise.adUrl}
+            </if>
+            <if test ='null != advertise.adImg'>
+                and adImg = #{advertise.adImg}
+            </if>
+            <if test ='null != advertise.remark'>
+                and remark = #{advertise.remark}
+            </if>
+        </where>
+    </select>
+
+    <!-- 分页条件查询 -->
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tm_advertise
+        <where>
+            <if test ='null != advertise.id'>
+                and id = #{advertise.id}
+            </if>
+            <if test ='null != advertise.adTitle'>
+                and adTitle = #{advertise.adTitle}
+            </if>
+            <if test ='null != advertise.beginTime'>
+                and beginTime = #{advertise.beginTime}
+            </if>
+            <if test ='null != advertise.endTime'>
+                and endTime = #{advertise.endTime}
+            </if>
+            <if test ='null != advertise.status'>
+                and status = #{advertise.status}
+            </if>
+            <if test ='null != advertise.sort'>
+                and sort = #{advertise.sort}
+            </if>
+            <if test ='null != advertise.delFlag'>
+                and delFlag = #{advertise.delFlag}
+            </if>
+            <if test ='null != advertise.adUrl'>
+                and adUrl = #{advertise.adUrl}
+            </if>
+            <if test ='null != advertise.adImg'>
+                and adImg = #{advertise.adImg}
+            </if>
+            <if test ='null != advertise.remark'>
+                and remark = #{advertise.remark}
+            </if>
+        </where>
+        limit #{page,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <!-- 总量查询 -->
+    <select id="total" resultType="java.lang.Integer">
+        SELECT count(id) FROM tm_advertise
+        <where>
+            <if test ='null != advertise.id'>
+                and id = #{advertise.id}
+            </if>
+            <if test ='null != advertise.adTitle'>
+                and adTitle = #{advertise.adTitle}
+            </if>
+            <if test ='null != advertise.beginTime'>
+                and beginTime = #{advertise.beginTime}
+            </if>
+            <if test ='null != advertise.endTime'>
+                and endTime = #{advertise.endTime}
+            </if>
+            <if test ='null != advertise.status'>
+                and status = #{advertise.status}
+            </if>
+            <if test ='null != advertise.sort'>
+                and sort = #{advertise.sort}
+            </if>
+            <if test ='null != advertise.delFlag'>
+                and delFlag = #{advertise.delFlag}
+            </if>
+            <if test ='null != advertise.adUrl'>
+                and adUrl = #{advertise.adUrl}
+            </if>
+            <if test ='null != advertise.adImg'>
+                and adImg = #{advertise.adImg}
+            </if>
+            <if test ='null != advertise.remark'>
+                and remark = #{advertise.remark}
+            </if>
+        </where>
+    </select>
+</mapper>
