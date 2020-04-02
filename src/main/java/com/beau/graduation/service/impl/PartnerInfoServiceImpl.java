@@ -5,17 +5,22 @@ import com.beau.graduation.Enum.LoginTypeEnum;
 import com.beau.graduation.Enum.ResultCode;
 import com.beau.graduation.Enum.StatusEnum;
 import com.beau.graduation.basic.reqdto.LoginReqDto;
+import com.beau.graduation.basic.reqdto.LogoutReqDto;
 import com.beau.graduation.basic.reqdto.RegisterReqDto;
 import com.beau.graduation.basic.resdto.LoginResDto;
+import com.beau.graduation.basic.resdto.LogoutResDto;
 import com.beau.graduation.basic.resdto.RegisterResDto;
 import com.beau.graduation.common.ApiResult;
 import com.beau.graduation.common.PageList;
+import com.beau.graduation.controller.OpenApiController;
 import com.beau.graduation.dao.PartnerInfoDao;
 import com.beau.graduation.model.PartnerInfo;
 import com.beau.graduation.model.ShoppingCart;
 import com.beau.graduation.model.dto.BookDto;
 import com.beau.graduation.service.PartnerInfoService;
 import com.beau.graduation.utils.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.support.SimpleTriggerContext;
 import org.springframework.stereotype.Service;
@@ -24,6 +29,7 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +43,10 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class PartnerInfoServiceImpl implements PartnerInfoService {
+
 	private static final Long storeTime = 15L;
+
+	private static final Logger logger = LoggerFactory.getLogger(PartnerInfoServiceImpl.class);
 
     @Autowired
 	PartnerInfoDao dao;
@@ -155,31 +164,37 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 	private void storageWithId(HttpServletRequest request, Long userId) {
 		String cart_uuid = CookieUtil.getCookieValue(request, "cart_uuid");
 		String key = "cart_" + userId;
-		ShoppingCart cart = new ShoppingCart();
-		if (redisUtil.hasKey(key)) {
-			cart = redisUtil.get(key, ShoppingCart.class);
-		}
-		cart.setUserId(userId);
-		if (!StringUtils.isEmpty(cart_uuid)) {
-			ShoppingCart shoppingCart = redisUtil.get(cart_uuid, ShoppingCart.class);
-			if (shoppingCart != null) {
-				List<BookDto> bookDtoList = shoppingCart.getBookDtoList();
-				List<BookDto> cartList = cart.getBookDtoList();
-				for (BookDto bookDto : bookDtoList) {
-					for (BookDto dto : cartList) {
-						if (dto.getId().equals(bookDto.getId())) {
-							dto.setAmount(dto.getAmount() + bookDto.getAmount());
-							bookDto = null;
+		ShoppingCart shoppingCart = redisUtil.get(cart_uuid, ShoppingCart.class);
+		ShoppingCart cart = redisUtil.get(key, ShoppingCart.class);
+
+		if (cart == null) {
+			// 若登录用户购物车为空,则将未登录的购物车直接添加进登录购物车
+			cart = shoppingCart;
+		} else {
+			if (!StringUtils.isEmpty(cart_uuid)) {
+				if (shoppingCart != null) {
+					List<BookDto> bookDtoList = shoppingCart.getBookDtoList();
+					List<BookDto> cartList = cart.getBookDtoList();
+					ArrayList<BookDto> dtoList = new ArrayList<>();
+					for (BookDto bookDto : cartList) {
+						for (BookDto dto : bookDtoList) {
+							if (dto.getId().equals(bookDto.getId())) {
+								bookDto.setAmount(dto.getAmount() + bookDto.getAmount());
+								dtoList.add(dto);
+							}
 						}
 					}
+					bookDtoList.removeAll(dtoList);
+					cartList.addAll(bookDtoList);
+					cart.setBookDtoList(cartList);
 				}
-				cartList.addAll(bookDtoList);
-				cart.setBookDtoList(cartList);
 			}
-			// 将cart_uuid所存储的购物车信息清空
-			redisUtil.delete(cart_uuid);
 		}
+		// 将cart_uuid所存储的购物车信息清空
+		redisUtil.delete(cart_uuid);
+
 		// 将合并过的购物车信息重新存入redis中
+		cart.setUserId(userId);
 		redisUtil.set(key, JSON.toJSONString(cart));
 	}
 
@@ -216,5 +231,30 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 	@Override
 	public int total(PartnerInfo partnerInfo) {
 		return dao.total(partnerInfo);
+	}
+
+	@Override
+	public LogoutResDto logout(LogoutReqDto reqDto, HttpServletRequest request, HttpServletResponse response) {
+		LogoutResDto resDto = new LogoutResDto();
+		String userRequestUri = "/openApi";
+		String requestURI = request.getRequestURI();
+		String token;
+		String tokenName;
+
+		if (requestURI.contains(userRequestUri)) {
+			// 普通用户注销登录
+			token = CookieUtil.getCookieValue(request, "user_token");
+			tokenName = "user_token";
+		} else {
+			// 管理员登录注销
+			token = CookieUtil.getCookieValue(request, "admin_token");
+			tokenName = "admin_token";
+		}
+		// 从缓存中删除登录信息
+		loginUtil.removeUser(token);
+		CookieUtil.removeCookie(response, tokenName, null);
+		resDto.setCode(ResultCode.SUCCESS.getCode());
+		resDto.setMsg("注销登录成功");
+		return resDto;
 	}
 }

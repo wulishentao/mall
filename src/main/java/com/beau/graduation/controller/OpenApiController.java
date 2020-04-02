@@ -1,13 +1,7 @@
 package com.beau.graduation.controller;
 
-import com.beau.graduation.basic.reqdto.AddCartReqDto;
-import com.beau.graduation.basic.reqdto.LoginReqDto;
-import com.beau.graduation.basic.reqdto.RegisterReqDto;
-import com.beau.graduation.basic.reqdto.SyncCartReqDto;
-import com.beau.graduation.basic.resdto.AddCartResDto;
-import com.beau.graduation.basic.resdto.LoginResDto;
-import com.beau.graduation.basic.resdto.RegisterResDto;
-import com.beau.graduation.basic.resdto.SyncCartResDto;
+import com.beau.graduation.basic.reqdto.*;
+import com.beau.graduation.basic.resdto.*;
 import com.beau.graduation.common.ApiResult;
 import com.beau.graduation.Enum.ResultCode;
 import com.beau.graduation.service.BookService;
@@ -67,13 +61,12 @@ public class OpenApiController {
 
     @PostMapping(value = "/user/logout", produces = "application/json")
     @ApiOperation("用户注销")
-    public ApiResult logout(@RequestBody LoginReqDto reqDto, HttpServletRequest request, HttpServletResponse response) {
-        ApiResult<LoginResDto> res = new ApiResult<>();
+    public ApiResult logout(@RequestBody LogoutReqDto reqDto, HttpServletRequest request, HttpServletResponse response) {
+        ApiResult<LogoutResDto> res = new ApiResult<>();
         try {
-            LoginResDto resDto = partnerInfoService.selectByObj(reqDto, request, response);
+            LogoutResDto resDto = partnerInfoService.logout(reqDto, request, response);
             res.setCode(resDto.getCode());
-            res.setData(resDto);
-            resDto.setMsg(resDto.getMsg());
+            res.setMsg(resDto.getMsg());
         } catch (Exception e) {
             logger.error("logout error: ", e);
             res.setCode(ResultCode.FAILED.getCode());

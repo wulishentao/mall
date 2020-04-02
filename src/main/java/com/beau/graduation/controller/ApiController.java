@@ -2,7 +2,9 @@ package com.beau.graduation.controller;
 
 import com.beau.graduation.Enum.ResultCode;
 import com.beau.graduation.basic.reqdto.LoginReqDto;
+import com.beau.graduation.basic.reqdto.LogoutReqDto;
 import com.beau.graduation.basic.resdto.LoginResDto;
+import com.beau.graduation.basic.resdto.LogoutResDto;
 import com.beau.graduation.common.ApiResult;
 import com.beau.graduation.service.PartnerInfoService;
 import com.beau.graduation.utils.CookieUtil;
@@ -56,6 +58,26 @@ public class ApiController {
         return res;
     }
 
-
+    /**
+     * 管理员注销
+     * @method: logout
+     * @param: [reqDto, request, response]
+     * @return: com.beau.graduation.common.ApiResult
+     */
+    @PostMapping(value = "/admin/logout", produces = "application/json")
+    @ApiOperation("管理员注销")
+    public ApiResult logout(@RequestBody LogoutReqDto reqDto, HttpServletRequest request, HttpServletResponse response) {
+        ApiResult<LogoutResDto> res = new ApiResult<>();
+        try {
+            LogoutResDto resDto = partnerInfoService.logout(reqDto, request, response);
+            res.setCode(resDto.getCode());
+            resDto.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("logout error: ", e);
+            res.setCode(ResultCode.FAILED.getCode());
+            res.setMsg("管理员注销异常");
+        }
+        return res;
+    }
 
 }

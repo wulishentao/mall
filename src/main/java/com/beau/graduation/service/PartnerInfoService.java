@@ -1,8 +1,10 @@
 package com.beau.graduation.service;
 
 import com.beau.graduation.basic.reqdto.LoginReqDto;
+import com.beau.graduation.basic.reqdto.LogoutReqDto;
 import com.beau.graduation.basic.reqdto.RegisterReqDto;
 import com.beau.graduation.basic.resdto.LoginResDto;
+import com.beau.graduation.basic.resdto.LogoutResDto;
 import com.beau.graduation.basic.resdto.RegisterResDto;
 import com.beau.graduation.common.ApiResult;
 import com.beau.graduation.common.PageList;
@@ -69,4 +71,6 @@ public interface PartnerInfoService {
      * [总量查询]
      **/
     int total(PartnerInfo partnerInfo);
+
+    LogoutResDto logout(LogoutReqDto reqDto, HttpServletRequest request, HttpServletResponse response);
 }

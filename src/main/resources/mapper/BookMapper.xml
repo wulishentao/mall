@@ -7,8 +7,6 @@
         <result column="id" property="id" />
         <result column="title" property="title" />
         <result column="author" property="author" />
-        <result column="sale_status" property="saleStatus" />
-        <result column="review_status" property="reviewStatus" />
         <result column="publish_date" property="publishDate" />
         <result column="publisher" property="publisher" />
         <result column="introduction" property="introduction" />
@@ -20,18 +18,24 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        `tb.id` as id,
-        `tb.title` as title,
-        `tb.author` as author,
-        `tb.sale_status` as sale_status,
-        `tb.review_status` as review_status,
-        `tb.publish_date` as publish_date,
-        `tb.publisher` as publisher,
-        `tb.introduction` as introduction,
-        `tb.recommend_flag` as recommend_flag,
-        `tb.reserve` as reserve,
-        `tb.sales` as sales,
-        `tb.price` as price,
+        tb.id as id,
+        tb.title as title,
+        tb.author as author,
+        tb.publish_date as publish_date,
+        tb.publisher as publisher,
+        tb.introduction as introduction,
+        tb.recommend_flag as recommend_flag,
+        tb.reserve as reserve,
+        tb.sales as sales,
+        tb.price as price,
+        tbi.img_url as img_url
+    </sql>
+
+    <sql id="shopping_cart_column">
+        tb.id as id,
+        tb.title as title,
+        tb.author as author,
+        tb.price as price,
         tbi.img_url as img_url
     </sql>
 
@@ -327,9 +331,17 @@
     </select>
 
     <select id="selectById" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="shopping_cart_column"/>
         FROM tm_book tb
         left join tm_book_image tbi on tb.id=tbi.book_id
-        WHERE id = #{bookId}
+        <where>
+            <if test="null != bookId">
+                tb.id = #{bookId}
+            </if>
+            and tb.review_status = '1'
+            and tb.sale_status = '1'
+            and tb.del_flag = '0'
+        </where>
     </select>
 </mapper>

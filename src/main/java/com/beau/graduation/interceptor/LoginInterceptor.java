@@ -7,6 +7,7 @@ import com.beau.graduation.Enum.ResultCode;
 import com.beau.graduation.model.PartnerInfo;
 import com.beau.graduation.utils.CookieUtil;
 import com.beau.graduation.utils.LoginUtil;
+import com.beau.graduation.utils.UuidUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @classname: LoginInterceptor.java
@@ -49,16 +51,31 @@ public class LoginInterceptor implements HandlerInterceptor {
             return false;
         }
         try {
-            PartnerInfo pi;
+            String token = UuidUtil.getUuid();
             // 若请求路径为"/api",则判断是否有管理员登录
             if (requestURI.contains(apiURI)) {
-                pi = loginUtil.getUser(adminToken);
+                PartnerInfo pi = loginUtil.getUser(adminToken);
+                if (pi != null) {
+                    // 清空之前的登录信息
+                    loginUtil.removeUser(adminToken);
+                    CookieUtil.removeCookie(response, "admin_token", null);
+                    // 重新存储登录信息
+                    loginUtil.setUser(token, pi, 15L, TimeUnit.DAYS);
+                    CookieUtil.addCookie(response, "admin_token", token, null, 3600 * 24 * 15);
+                    return true;
+                }
             } else {
                 // 请求路径为"/openApi",则判断是否有用户登录
-                pi = loginUtil.getUser(userToken);
-            }
-            if (pi != null) {
-                return true;
+                PartnerInfo pi = loginUtil.getUser(userToken);
+                if (pi != null) {
+                    // 清空之前的登录信息
+                    loginUtil.removeUser(userToken);
+                    CookieUtil.removeCookie(response, "user_token", null);
+                    // 重新存储登录信息
+                    loginUtil.setUser(token, pi, 15L, TimeUnit.DAYS);
+                    CookieUtil.addCookie(response, "user_token", token, null, 3600 * 24 * 15);
+                    return true;
+                }
             }
         } catch (Exception e) {
             logger.error("preHandler error: ", e);

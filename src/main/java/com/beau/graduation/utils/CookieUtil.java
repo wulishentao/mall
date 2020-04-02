@@ -96,7 +96,7 @@ public class CookieUtil {
             cookie.setDomain(domain);
         }
         if (expireSeconds == 0) {
-            cookie.setMaxAge(12 * 30 * 24 * 3600);
+            cookie.setMaxAge(10 * 12 * 30 * 24 * 3600);
         } else {
             cookie.setMaxAge(expireSeconds);
         }

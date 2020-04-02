@@ -24,6 +24,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -119,6 +120,7 @@ public class BookServiceImpl implements BookService {
 	public AddCartResDto addCart(AddCartReqDto reqDto, HttpServletRequest request, HttpServletResponse response) {
 		ShoppingCart cart = new ShoppingCart();
 		AddCartResDto resDto = new AddCartResDto();
+		List<BookDto> bookList = new ArrayList<>();
 		// 先根据bookId查出图书所有信息
 		Long bookId = reqDto.getBookId();
 		BookDto bookDto = selectById(bookId);
@@ -143,7 +145,8 @@ public class BookServiceImpl implements BookService {
 
 		// 未登录状态下
 		String cart_uuid = CookieUtil.getCookieValue(request, "cart_uuid");
-		cart.getBookDtoList().add(bookDto);
+		bookList.add(bookDto);
+		cart.setBookDtoList(bookList);
 		if (!StringUtils.isEmpty(cart_uuid)) {
 			if (redisUtil.hasKey(cart_uuid)) {
 				// redis里面存储了cart_uuid
@@ -192,21 +195,19 @@ public class BookServiceImpl implements BookService {
 
 		// 未登录状态
 		String cartUuid = CookieUtil.getCookieValue(request, "cart_uuid");
+		ShoppingCart cart = new ShoppingCart();
 		if (!StringUtils.isEmpty(cartUuid)) {
 			if (redisUtil.hasKey(cartUuid)) {
-				ShoppingCart shoppingCart = redisUtil.get(cartUuid, ShoppingCart.class);
-				resDto.setCode(ResultCode.SUCCESS.getCode());
-				resDto.setShoppingCart(shoppingCart);
+				cart = redisUtil.get(cartUuid, ShoppingCart.class);
 			} else {
-				resDto.setCode(ResultCode.FAILED.getCode());
-				resDto.setMsg("购物车异常");
+				redisUtil.set(cartUuid, JSON.toJSONString(cart));
 			}
-			return resDto;
+		} else {
+			String uuid = UuidUtil.getUuid();
+			cart = new ShoppingCart();
+			redisUtil.set(uuid, JSON.toJSONString(cart));
+			CookieUtil.addCookie(response, "cart_uuid", cartUuid, null);
 		}
-		String uuid = UuidUtil.getUuid();
-		ShoppingCart cart = new ShoppingCart();
-		redisUtil.set(uuid, JSON.toJSONString(cart));
-		CookieUtil.addCookie(response, "cart_uuid", cartUuid, null);
 		resDto.setShoppingCart(cart);
 		resDto.setCode(ResultCode.SUCCESS.getCode());
 		return resDto;
@@ -257,13 +258,11 @@ public class BookServiceImpl implements BookService {
 		if ("1".equals(syncCartReqDto.getDelFlag())) {
 			List<BookDto> collect = shoppingCart.getBookDtoList().stream().filter(bookDto -> {
 				if (bookDto.getId().equals(syncCartReqDto.getBookId())) {
-					bookDto = null;
+					return false;
 				}
 				return true;
 			}).collect(Collectors.toList());
 			shoppingCart.setBookDtoList(collect);
-			redisUtil.set(key, JSON.toJSONString(shoppingCart));
-
 		} else {
 			List<BookDto> collect = shoppingCart.getBookDtoList().stream().filter(bookDto -> {
 				if (bookDto.getId().equals(syncCartReqDto.getBookId())) {
@@ -272,8 +271,8 @@ public class BookServiceImpl implements BookService {
 				return true;
 			}).collect(Collectors.toList());
 			shoppingCart.setBookDtoList(collect);
-			redisUtil.set(key, JSON.toJSONString(shoppingCart));
 		}
+		redisUtil.set(key, JSON.toJSONString(shoppingCart));
 	}
 
 	/**
@@ -282,16 +281,26 @@ public class BookServiceImpl implements BookService {
 	 * @param cart
 	 */
 	private void addToFormer(BookDto bookDto, ShoppingCart cart) {
-		List<BookDto> collect = cart.getBookDtoList().stream().filter(dto -> {
-			if (bookDto.getId().equals(dto.getId())) {
-				dto.setAmount(dto.getAmount() + bookDto.getAmount());
-				bookDto.setExist(true);
+		if (cart.getBookDtoList() == null) {
+			List<BookDto> bookDtoList = new ArrayList<>();
+			bookDtoList.add(bookDto);
+			cart.setBookDtoList(bookDtoList);
+		} else {
+			List<BookDto> collect = cart.getBookDtoList().stream().filter(dto -> {
+				if (bookDto.getId().equals(dto.getId())) {
+					dto.setAmount(dto.getAmount() + bookDto.getAmount());
+					if (!dto.getPrice().equals(bookDto.getPrice())) {
+						dto.setPrice(bookDto.getPrice());
+					}
+					bookDto.setExist(true);
+				}
+				return true;
+			}).collect(Collectors.toList());
+			if (!bookDto.getExist()) {
+				collect.add(bookDto);
 			}
-			return true;
-		}).collect(Collectors.toList());
-		if (!bookDto.getExist()) {
-			collect.add(bookDto);
+			cart.setBookDtoList(collect);
 		}
-		cart.setBookDtoList(collect);
+
 	}
 }
