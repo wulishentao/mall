@@ -17,9 +17,67 @@ public class BookDto extends Book implements Serializable {
      */
     private Long amount;
 
+    /**
+     * 书籍图片地址
+     */
     private String imgUrl;
 
     private Boolean exist;
+
+
+
+    /**
+     * 销量
+     */
+    private Long sales;
+
+    /**
+     * 开始日期
+     */
+    private String beginDate;
+
+    /**
+     * 结束日期
+     */
+    private String endDate;
+
+    /**
+     * 书籍所属类型
+     */
+    private String bookType;
+
+
+    public String getBookType() {
+        return bookType;
+    }
+
+    public void setBookType(String bookType) {
+        this.bookType = bookType;
+    }
+
+    public String getBeginDate() {
+        return beginDate;
+    }
+
+    public void setBeginDate(String beginDate) {
+        this.beginDate = beginDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public Long getSales() {
+        return sales;
+    }
+
+    public void setSales(Long sales) {
+        this.sales = sales;
+    }
 
     public Boolean getExist() {
         return exist;

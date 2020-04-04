@@ -13,7 +13,7 @@ public class PageUtil {
     public static HashMap<String, Integer> getBeginAndSize(Integer pageNo, Integer pageSize) {
         HashMap<String, Integer> map = new HashMap<>(5);
         int beginIndex = (pageNo - 1) * pageSize;
-        map.put("begin", beginIndex);
+        map.put("index", beginIndex);
         map.put("size", pageSize);
         return map;
     }

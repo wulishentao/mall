@@ -3,8 +3,10 @@ package com.beau.graduation.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.beau.graduation.Enum.ResultCode;
 import com.beau.graduation.basic.reqdto.AddCartReqDto;
+import com.beau.graduation.basic.reqdto.GetCommodityReqDto;
 import com.beau.graduation.basic.reqdto.SyncCartReqDto;
 import com.beau.graduation.basic.resdto.AddCartResDto;
+import com.beau.graduation.basic.resdto.GetCommodityResDto;
 import com.beau.graduation.basic.resdto.SyncCartResDto;
 import com.beau.graduation.common.Page;
 import com.beau.graduation.dao.BookDao;
@@ -13,10 +15,7 @@ import com.beau.graduation.model.PartnerInfo;
 import com.beau.graduation.model.ShoppingCart;
 import com.beau.graduation.model.dto.BookDto;
 import com.beau.graduation.service.BookService;
-import com.beau.graduation.utils.CookieUtil;
-import com.beau.graduation.utils.LoginUtil;
-import com.beau.graduation.utils.RedisUtil;
-import com.beau.graduation.utils.UuidUtil;
+import com.beau.graduation.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -300,6 +299,40 @@ public class BookServiceImpl implements BookService {
 			}
 			cart.setBookDtoList(collect);
 		}
+	}
 
+	@Override
+	public GetCommodityResDto getCommodityPage(GetCommodityReqDto reqDto) {
+		GetCommodityResDto resDto = new GetCommodityResDto();
+		BookDto entity = new BookDto();
+
+		if (StringUtils.isNotEmpty(reqDto.getTitle())) {
+			entity.setTitle(reqDto.getTitle());
+		}
+		if (StringUtils.isNotEmpty(reqDto.getBookType())) {
+			entity.setBookType(reqDto.getBookType());
+		}
+		if (StringUtils.isNotEmpty(reqDto.getSaleStatus())) {
+			entity.setSaleStatus(reqDto.getSaleStatus());
+		}
+		if (StringUtils.isNotEmpty(reqDto.getReviewStatus())) {
+			entity.setReviewStatus(reqDto.getReviewStatus());
+		}
+		if (StringUtils.isNotEmpty(reqDto.getBeginDate())) {
+			entity.setBeginDate(reqDto.getBeginDate());
+		}
+		if (StringUtils.isNotEmpty(reqDto.getBeginDate())) {
+			entity.setEndDate(reqDto.getEndDate());
+		}
+
+		int total = dao.totalByDto(entity);
+		Integer pageNo = reqDto.getPageNo();
+		Integer pageSize = reqDto.getPageSize();
+
+		List<BookDto> bookDtoList = dao.getCommodityPage(entity, PageUtil.getBeginAndSize(pageNo, pageSize));
+		Page<BookDto> page = new Page<>(total, bookDtoList);
+		resDto.setBookDtoPage(page);
+		resDto.setCode(ResultCode.SUCCESS.getCode());
+		return resDto;
 	}
 }

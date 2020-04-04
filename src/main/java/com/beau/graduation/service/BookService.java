@@ -1,8 +1,10 @@
 package com.beau.graduation.service;
 
 import com.beau.graduation.basic.reqdto.AddCartReqDto;
+import com.beau.graduation.basic.reqdto.GetCommodityReqDto;
 import com.beau.graduation.basic.reqdto.SyncCartReqDto;
 import com.beau.graduation.basic.resdto.AddCartResDto;
+import com.beau.graduation.basic.resdto.GetCommodityResDto;
 import com.beau.graduation.basic.resdto.SyncCartResDto;
 import com.beau.graduation.common.Page;
 import com.beau.graduation.model.Book;
@@ -80,4 +82,6 @@ public interface BookService {
     SyncCartResDto getShoppingCart(SyncCartReqDto syncCartReqDto, HttpServletRequest request, HttpServletResponse response);
 
     SyncCartResDto syncShoppingCart(SyncCartReqDto syncCartReqDto, HttpServletRequest request);
+
+    GetCommodityResDto getCommodityPage(GetCommodityReqDto reqDto);
 }

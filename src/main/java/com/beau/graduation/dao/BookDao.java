@@ -4,6 +4,7 @@ import com.beau.graduation.model.Book;
 import com.beau.graduation.model.dto.BookDto;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -59,5 +60,21 @@ public interface BookDao {
      **/
     int total(@Param("book") Book book);
 
+    /**
+     * 查询满足条件书籍总量
+     * @param dto
+     * @return
+     */
+    int totalByDto(@Param("bookDto") BookDto dto);
+
     BookDto selectById(Long bookId);
+
+    /**
+     * 获取满足条件的书籍
+     * @param entity
+     *
+     * @param beginAndSize
+     * @return
+     */
+    List<BookDto> getCommodityPage(@Param("bookDto") BookDto entity,@Param("page") HashMap<String, Integer> beginAndSize);
 }

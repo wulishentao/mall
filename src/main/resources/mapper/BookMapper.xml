@@ -15,7 +15,11 @@
         <result column="sales" property="sales" />
         <result column="price" property="price" />
         <result column="img_url" property="imgUrl"/>
+        <result column="type_name" property="bookType"/>
+        <result column="review_status" property="reviewStatus"/>
+        <result column="sale_status" property="saleStatus"/>
     </resultMap>
+
 
     <sql id="Base_Column_List">
         tb.id as id,
@@ -330,6 +334,81 @@
         </where>
     </select>
 
+    <select id="totalByDto" resultType="java.lang.Integer">
+        SELECT
+            count(distinct (tb.id))
+        FROM tm_book tb
+        left join tr_book_relation_type brt on tb.id=brt.book_id
+        <where>
+            tb.del_flag = '0'
+            <if test ='null != bookDto.title'>
+                and (tb.title like concat('%',#{bookDto.title},'%')
+                or tb.author like concat('%',#{bookDto.title},'%') or tb.publisher like concat('%',#{bookDto.title},'%'))
+            </if>
+            <if test ='null != bookDto.saleStatus'>
+                and tb.sale_status = #{bookDto.saleStatus}
+            </if>
+            <if test ='null != bookDto.reviewStatus'>
+                and tb.review_status = #{bookDto.reviewStatus}
+            </if>
+            <if test ='null != bookDto.beginDate || null != bookDto.endDate'>
+                and (tb.create_time between #{bookDto.beginDate} and #{bookDto.endDate})
+            </if>
+            <if test ='null != bookDto.bookType'>
+                and brt.type_id = #{bookDto.bookType}
+            </if>
+        </where>
+    </select>
+
+    <select id="getCommodityPage" resultMap="BaseResultMap">
+        SELECT
+        tb.id AS id,
+        tbi.img_url AS img_url,
+        tb.title AS title,
+        tb.price AS price,
+        GROUP_CONCAT( tbt.`name` separator'-') AS type_name,
+        tb.recommend_flag AS recommend_flag,
+        tb.reserve AS reserve,
+        (
+            SELECT
+                sum( CASE WHEN tbo.amount != 0 THEN tbo.amount ELSE 0 END )
+            FROM
+                tm_book_order tbo
+            WHERE
+                tb.id = tbo.book_id
+        ) AS sales,
+        tb.review_status AS review_status,
+        tb.sale_status AS sale_status
+        FROM tm_book tb
+        left join tr_book_relation_type brt on tb.id=brt.book_id
+        left join tm_book_type tbt on brt.type_id=tbt.id
+        left join tm_book_image tbi on tb.id=tbi.book_id
+        <where>
+            tb.del_flag = '0'
+            and brt.del_flag = '0'
+            and tbi.del_flag = '0'
+            <if test ='null != bookDto.title'>
+                and (tb.title like concat('%',#{bookDto.title},'%')
+                or tb.author like concat('%',#{bookDto.title},'%') or tb.publisher like concat('%',#{bookDto.title},'%'))
+            </if>
+            <if test ='null != bookDto.saleStatus'>
+                and tb.sale_status = #{bookDto.saleStatus}
+            </if>
+            <if test ='null != bookDto.reviewStatus'>
+                and tb.review_status = #{bookDto.reviewStatus}
+            </if>
+            <if test ='null != bookDto.beginDate || null != bookDto.endDate'>
+                and (tb.create_time between #{bookDto.beginDate} and #{bookDto.endDate})
+            </if>
+            <if test ='null != bookDto.bookType'>
+                and brt.type_id = #{bookDto.bookType}
+            </if>
+        </where>
+        group by tb.id
+        order by tb.recommend_flag desc
+        limit #{page.index},#{page.size}
+    </select>
+
     <select id="selectById" resultMap="BaseResultMap">
         SELECT
         <include refid="shopping_cart_column"/>
@@ -344,4 +423,5 @@
             and tb.del_flag = '0'
         </where>
     </select>
+
 </mapper>

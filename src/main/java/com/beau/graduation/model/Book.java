@@ -1,5 +1,7 @@
 package com.beau.graduation.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -31,7 +33,7 @@ public class Book implements Serializable {
 
 
     /**
-     * sale_status  图书销售状态:[{key:sale_status,values:[{no:0,alias:disable,remark:下架},{no:1,alias:enable,remark:在售},{no:2,alias:disable,remark:售罄}]}]
+     * sale_status  图书销售状态:[{key:sale_status,values:[{no:-1,alias:disable,remark:下架},{no:0,alias:enable,remark:在售},{no:1,alias:disable,remark:售罄}]}]
      */
     private String saleStatus;
 
@@ -45,7 +47,7 @@ public class Book implements Serializable {
     /**
      * publish_date  出版日期
      */
-    private Date publishDate;
+    private String publishDate;
 
 
     /**
@@ -79,10 +81,20 @@ public class Book implements Serializable {
 
 
     /**
-     * sales  销量
+     * price  商品单价
      */
-    private Long sales;
+    private BigDecimal price;
 
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
     public Long getId() {
         return id;
@@ -124,11 +136,11 @@ public class Book implements Serializable {
         this.reviewStatus = reviewStatus;
     }
 
-    public Date getPublishDate() {
+    public String getPublishDate() {
         return publishDate;
     }
 
-    public void setPublishDate(Date publishDate) {
+    public void setPublishDate(String publishDate) {
         this.publishDate = publishDate;
     }
 
@@ -172,14 +184,6 @@ public class Book implements Serializable {
         this.reserve = reserve;
     }
 
-    public Long getSales() {
-        return sales;
-    }
-
-    public void setSales(Long sales) {
-        this.sales = sales;
-    }
-
     public BigDecimal getPrice() {
         return price;
     }
@@ -188,9 +192,6 @@ public class Book implements Serializable {
         this.price = price;
     }
 
-    /**
-     * price  商品单价
-     */
-    private BigDecimal price;
+
 
 }

@@ -234,11 +234,11 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 	public LogoutResDto logout(LogoutReqDto reqDto, HttpServletRequest request, HttpServletResponse response) {
 		LogoutResDto resDto = new LogoutResDto();
 		String userRequestUri = "/openApi";
-		String requestURI = request.getRequestURI();
+		String requestUri = request.getRequestURI();
 		String token;
 		String tokenName;
 
-		if (requestURI.contains(userRequestUri)) {
+		if (requestUri.contains(userRequestUri)) {
 			// 普通用户注销登录
 			token = CookieUtil.getCookieValue(request, "user_token");
 			tokenName = "user_token";

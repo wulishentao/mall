@@ -1,13 +1,16 @@
 package com.beau.graduation.controller;
 
 import com.beau.graduation.Enum.ResultCode;
+import com.beau.graduation.basic.reqdto.GetCommodityReqDto;
 import com.beau.graduation.basic.reqdto.GetPartnerReqDto;
 import com.beau.graduation.basic.reqdto.LoginReqDto;
 import com.beau.graduation.basic.reqdto.LogoutReqDto;
+import com.beau.graduation.basic.resdto.GetCommodityResDto;
 import com.beau.graduation.basic.resdto.GetPartnerResDto;
 import com.beau.graduation.basic.resdto.LoginResDto;
 import com.beau.graduation.basic.resdto.LogoutResDto;
 import com.beau.graduation.common.ApiResult;
+import com.beau.graduation.service.BookService;
 import com.beau.graduation.service.PartnerInfoService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -34,6 +37,9 @@ public class ApiController {
 
     @Autowired
     private PartnerInfoService partnerInfoService;
+
+    @Autowired
+    private BookService bookService;
 
     /**
      * 管理员登录
@@ -104,4 +110,20 @@ public class ApiController {
         return res;
     }
 
+    @PostMapping(value = "/private/getCommodityPage", produces = "application/json")
+    @ApiOperation("获取商品书籍列表")
+    public ApiResult getCommodityPage(@RequestBody GetCommodityReqDto reqDto) {
+        ApiResult<GetCommodityResDto> res = new ApiResult<>();
+        try {
+            GetCommodityResDto resDto = bookService.getCommodityPage(reqDto);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            resDto.setMsg("获取商品书籍列表成功");
+        } catch (Exception e) {
+            logger.error("getCommodityPage error: ", e);
+            res.setCode(ResultCode.FAILED.getCode());
+            res.setMsg("获取商品列表异常");
+        }
+        return res;
+    }
 }

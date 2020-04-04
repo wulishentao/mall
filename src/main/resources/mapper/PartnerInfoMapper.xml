@@ -369,6 +369,6 @@
                 and phone like concat('%',#{partnerInfo.phone},'%')
             </if>
         </where>
-        limit #{page.begin},#{page.size}
+        limit #{page.index},#{page.size}
     </select>
 </mapper>

@@ -1,5 +1,7 @@
 package com.beau.graduation.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -26,13 +28,13 @@ public class Advertise implements Serializable {
     /**
      * begin_time  广告开始时间
      */
-    private Date beginTime;
+    private String beginTime;
 
 
     /**
      * end_time  广告结束时间
      */
-    private Date endTime;
+    private String endTime;
 
 
     /**
@@ -86,19 +88,19 @@ public class Advertise implements Serializable {
         this.adTitle = adTitle;
     }
 
-    public Date getBeginTime() {
+    public String getBeginTime() {
         return beginTime;
     }
 
-    public void setBeginTime(Date beginTime) {
+    public void setBeginTime(String beginTime) {
         this.beginTime = beginTime;
     }
 
-    public Date getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
