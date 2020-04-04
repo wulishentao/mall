@@ -1,6 +1,6 @@
 package com.beau.graduation.service.impl;
 
-import com.beau.graduation.common.PageList;
+import com.beau.graduation.common.Page;
 import com.beau.graduation.dao.BookTypeDao;
 import com.beau.graduation.model.BookType;
 import com.beau.graduation.service.BookTypeService;
@@ -57,8 +57,8 @@ public class BookTypeServiceImpl implements BookTypeService {
 	}
 
 	@Override
-	public PageList<BookType> selectPage(BookType bookType, Integer offset, Integer pageSize) {
-		PageList<BookType> pageList = new PageList<>();
+	public Page<BookType> selectPage(BookType bookType, Integer offset, Integer pageSize) {
+		Page<BookType> pageList = new Page<>();
 
 		int total = this.total(bookType);
 

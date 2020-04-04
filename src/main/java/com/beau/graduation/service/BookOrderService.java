@@ -1,6 +1,6 @@
 package com.beau.graduation.service;
 
-import com.beau.graduation.common.PageList;
+import com.beau.graduation.common.Page;
 import com.beau.graduation.model.BookOrder;
 
 import java.util.List;
@@ -51,7 +51,7 @@ public interface BookOrderService {
     /**
      * [分页条件查询]
      **/
-    PageList<BookOrder> selectPage (BookOrder bookOrder, Integer page, Integer pageSize);
+    Page<BookOrder> selectPage (BookOrder bookOrder, Integer page, Integer pageSize);
 
     /**
      * [总量查询]

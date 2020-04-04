@@ -1,6 +1,6 @@
 package com.beau.graduation.service.impl;
 
-import com.beau.graduation.common.PageList;
+import com.beau.graduation.common.Page;
 import com.beau.graduation.dao.BookCommentDao;
 import com.beau.graduation.model.BookComment;
 import com.beau.graduation.service.BookCommentService;
@@ -57,8 +57,8 @@ public class BookCommentServiceImpl implements BookCommentService {
 	}
 
 	@Override
-	public PageList<BookComment> selectPage(BookComment bookComment, Integer offset, Integer pageSize) {
-		PageList<BookComment> pageList = new PageList<>();
+	public Page<BookComment> selectPage(BookComment bookComment, Integer offset, Integer pageSize) {
+		Page<BookComment> pageList = new Page<>();
 
 		int total = this.total(bookComment);
 

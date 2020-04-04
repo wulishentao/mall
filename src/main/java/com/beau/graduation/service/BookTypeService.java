@@ -1,6 +1,6 @@
 package com.beau.graduation.service;
 
-import com.beau.graduation.common.PageList;
+import com.beau.graduation.common.Page;
 import com.beau.graduation.model.BookType;
 
 import java.util.List;
@@ -51,7 +51,7 @@ public interface BookTypeService {
     /**
      * [分页条件查询]
      **/
-    PageList<BookType> selectPage(BookType bookType, Integer page, Integer pageSize);
+    Page<BookType> selectPage(BookType bookType, Integer page, Integer pageSize);
 
     /**
      * [总量查询]

@@ -1,6 +1,6 @@
 package com.beau.graduation.service.impl;
 
-import com.beau.graduation.common.PageList;
+import com.beau.graduation.common.Page;
 import com.beau.graduation.dao.AdvertiseDao;
 import com.beau.graduation.model.Advertise;
 import com.beau.graduation.service.AdvertiseService;
@@ -57,8 +57,8 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 	}
 
 	@Override
-	public PageList<Advertise> selectPage(Advertise advertise, Integer offset, Integer pageSize) {
-		PageList<Advertise> pageList = new PageList<>();
+	public Page<Advertise> selectPage(Advertise advertise, Integer offset, Integer pageSize) {
+		Page<Advertise> pageList = new Page<>();
 
 		int total = this.total(advertise);
 

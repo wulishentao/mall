@@ -4,6 +4,7 @@ import com.beau.graduation.basic.resdto.LoginResDto;
 import com.beau.graduation.model.PartnerInfo;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -63,4 +64,12 @@ public interface PartnerInfoDao {
      * [总量查询]
      **/
     int total(@Param("partnerInfo") PartnerInfo partnerInfo);
+
+    /**
+     * 获取满足条件的用户
+     * @param partnerInfo
+     * @param page
+     * @return
+     */
+    List<PartnerInfo> getPartnerPage(@Param("partnerInfo") PartnerInfo partnerInfo,@Param("page") HashMap<String,Integer> page);
 }

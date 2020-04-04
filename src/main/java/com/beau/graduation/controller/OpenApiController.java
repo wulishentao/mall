@@ -66,7 +66,7 @@ public class OpenApiController {
         try {
             LogoutResDto resDto = partnerInfoService.logout(reqDto, request, response);
             res.setCode(resDto.getCode());
-            res.setMsg(resDto.getMsg());
+            res.setMsg("注销登录成功");
         } catch (Exception e) {
             logger.error("logout error: ", e);
             res.setCode(ResultCode.FAILED.getCode());

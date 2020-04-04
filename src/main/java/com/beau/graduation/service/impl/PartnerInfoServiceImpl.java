@@ -4,15 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.beau.graduation.Enum.LoginTypeEnum;
 import com.beau.graduation.Enum.ResultCode;
 import com.beau.graduation.Enum.StatusEnum;
+import com.beau.graduation.basic.reqdto.GetPartnerReqDto;
 import com.beau.graduation.basic.reqdto.LoginReqDto;
 import com.beau.graduation.basic.reqdto.LogoutReqDto;
 import com.beau.graduation.basic.reqdto.RegisterReqDto;
+import com.beau.graduation.basic.resdto.GetPartnerResDto;
 import com.beau.graduation.basic.resdto.LoginResDto;
 import com.beau.graduation.basic.resdto.LogoutResDto;
 import com.beau.graduation.basic.resdto.RegisterResDto;
-import com.beau.graduation.common.ApiResult;
-import com.beau.graduation.common.PageList;
-import com.beau.graduation.controller.OpenApiController;
+import com.beau.graduation.common.Page;
 import com.beau.graduation.dao.PartnerInfoDao;
 import com.beau.graduation.model.PartnerInfo;
 import com.beau.graduation.model.ShoppingCart;
@@ -22,15 +22,12 @@ import com.beau.graduation.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.support.SimpleTriggerContext;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -44,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class PartnerInfoServiceImpl implements PartnerInfoService {
 
-	private static final Long storeTime = 15L;
+	private static final Long STORE_TIME = 15L;
 
 	private static final Logger logger = LoggerFactory.getLogger(PartnerInfoServiceImpl.class);
 
@@ -143,7 +140,7 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 		resDto.setAccountType(partnerInfo.getAccountType());
 		String uuToken = UuidUtil.getUuid();
 		// 将登录信息存入redis缓存
-		loginUtil.setUser(uuToken, resDto, storeTime, TimeUnit.DAYS);
+		loginUtil.setUser(uuToken, resDto, STORE_TIME, TimeUnit.DAYS);
 		// 将token存入cookie中
 		if (LoginTypeEnum.ADMIN.getCode().equals(resDto.getAccountType())) {
 			CookieUtil.addCookie(response, "admin_token", uuToken, null, 3600 * 24 * 15);
@@ -171,7 +168,7 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 			// 若登录用户购物车为空,则将未登录的购物车直接添加进登录购物车
 			cart = shoppingCart;
 		} else {
-			if (!StringUtils.isEmpty(cart_uuid)) {
+			if (StringUtils.isNotEmpty(cart_uuid)) {
 				if (shoppingCart != null) {
 					List<BookDto> bookDtoList = shoppingCart.getBookDtoList();
 					List<BookDto> cartList = cart.getBookDtoList();
@@ -204,8 +201,8 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 	}
 
 	@Override
-	public PageList<PartnerInfo> selectPage(PartnerInfo partnerInfo, Integer offset, Integer pageSize) {
-		PageList<PartnerInfo> pageList = new PageList<>();
+	public Page<PartnerInfo> selectPage(PartnerInfo partnerInfo, Integer offset, Integer pageSize) {
+		Page<PartnerInfo> pageList = new Page<>();
 
 		int total = this.total(partnerInfo);
 
@@ -254,7 +251,39 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 		loginUtil.removeUser(token);
 		CookieUtil.removeCookie(response, tokenName, null);
 		resDto.setCode(ResultCode.SUCCESS.getCode());
-		resDto.setMsg("注销登录成功");
+		return resDto;
+	}
+
+	/**
+	 * 获取注册用户列表
+	 * @method: getPartnerPage
+	 * @param: [reqDto]
+	 * @return: com.beau.graduation.basic.resdto.GetPartnerResDto
+	 */
+	@Override
+	public GetPartnerResDto getPartnerPage(GetPartnerReqDto reqDto) {
+		GetPartnerResDto resDto = new GetPartnerResDto();
+		PartnerInfo pi = new PartnerInfo();
+
+		if (StringUtils.isNotEmpty(reqDto.getAccountName())) {
+			pi.setAccountName(reqDto.getAccountName());
+		}
+		if (StringUtils.isNotEmpty(reqDto.getAccountStatus())) {
+			pi.setStatus(reqDto.getAccountStatus());
+		}
+		if (StringUtils.isNotEmpty(reqDto.getPhone())) {
+			pi.setPhone(reqDto.getPhone());
+		}
+		// 查出总记录数
+		int total = dao.total(pi);
+		// 查出满足条件数据
+		Integer pageNo = reqDto.getPageNo();
+		Integer pageSize = reqDto.getPageSize();
+		List<PartnerInfo> partnerPage = dao.getPartnerPage(pi, PageUtil.getBeginAndSize(pageNo, pageSize));
+		Page<PartnerInfo> page = new Page<>(total, partnerPage);
+
+		resDto.setCode(ResultCode.SUCCESS.getCode());
+		resDto.setInfoPage(page);
 		return resDto;
 	}
 }

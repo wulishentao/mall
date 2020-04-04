@@ -1,13 +1,12 @@
 package com.beau.graduation.service.impl;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.beau.graduation.Enum.ResultCode;
 import com.beau.graduation.basic.reqdto.AddCartReqDto;
 import com.beau.graduation.basic.reqdto.SyncCartReqDto;
 import com.beau.graduation.basic.resdto.AddCartResDto;
 import com.beau.graduation.basic.resdto.SyncCartResDto;
-import com.beau.graduation.common.PageList;
+import com.beau.graduation.common.Page;
 import com.beau.graduation.dao.BookDao;
 import com.beau.graduation.model.Book;
 import com.beau.graduation.model.PartnerInfo;
@@ -18,9 +17,9 @@ import com.beau.graduation.utils.CookieUtil;
 import com.beau.graduation.utils.LoginUtil;
 import com.beau.graduation.utils.RedisUtil;
 import com.beau.graduation.utils.UuidUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -87,8 +86,8 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	public PageList<Book> selectPage(Book book, Integer offset, Integer pageSize) {
-		PageList<Book> pageList = new PageList<>();
+	public Page<Book> selectPage(Book book, Integer offset, Integer pageSize) {
+		Page<Book> pageList = new Page<>();
 
 		int total = this.total(book);
 
@@ -129,7 +128,7 @@ public class BookServiceImpl implements BookService {
 
 		// 先查询用户是否登录
 		String userToken = CookieUtil.getCookieValue(request, "user_token");
-		if (!StringUtils.isEmpty(userToken)) {
+		if (StringUtils.isNotEmpty(userToken)) {
 			PartnerInfo pi = loginUtil.getUser(userToken);
 			if (pi != null) {
 				String key = "cart_" + pi.getId();
@@ -147,7 +146,7 @@ public class BookServiceImpl implements BookService {
 		String cart_uuid = CookieUtil.getCookieValue(request, "cart_uuid");
 		bookList.add(bookDto);
 		cart.setBookDtoList(bookList);
-		if (!StringUtils.isEmpty(cart_uuid)) {
+		if (StringUtils.isNotEmpty(cart_uuid)) {
 			if (redisUtil.hasKey(cart_uuid)) {
 				// redis里面存储了cart_uuid
 				cart = redisUtil.get(cart_uuid, ShoppingCart.class);
@@ -181,7 +180,7 @@ public class BookServiceImpl implements BookService {
 		SyncCartResDto resDto = new SyncCartResDto();
 		// 判断是否登录
 		String userToken = CookieUtil.getCookieValue(request, "user_token");
-		if (!StringUtils.isEmpty(userToken)) {
+		if (StringUtils.isNotEmpty(userToken)) {
 			PartnerInfo pi = loginUtil.getUser(userToken);
 			if (pi != null) {
 				// 已登录
@@ -196,7 +195,7 @@ public class BookServiceImpl implements BookService {
 		// 未登录状态
 		String cartUuid = CookieUtil.getCookieValue(request, "cart_uuid");
 		ShoppingCart cart = new ShoppingCart();
-		if (!StringUtils.isEmpty(cartUuid)) {
+		if (StringUtils.isNotEmpty(cartUuid)) {
 			if (redisUtil.hasKey(cartUuid)) {
 				cart = redisUtil.get(cartUuid, ShoppingCart.class);
 			} else {
@@ -225,7 +224,7 @@ public class BookServiceImpl implements BookService {
 
 		// 校验是否登录
 		String userToken = CookieUtil.getCookieValue(request, "user_token");
-		if (!StringUtils.isEmpty(userToken)) {
+		if (StringUtils.isNotEmpty(userToken)) {
 			// 已登录
 			PartnerInfo pi = loginUtil.getUser(userToken);
 			if (pi != null) {
@@ -239,7 +238,7 @@ public class BookServiceImpl implements BookService {
 
 		// 未登录
 		String cartUuid = CookieUtil.getCookieValue(request, "cart_uuid");
-		if (!StringUtils.isEmpty(cartUuid)) {
+		if (StringUtils.isNotEmpty(cartUuid)) {
 			ShoppingCart cart = redisUtil.get(cartUuid, ShoppingCart.class);
 			if (cart != null) {
 				syncCartWithKey(cartUuid, syncCartReqDto);

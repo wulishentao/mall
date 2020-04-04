@@ -1,13 +1,14 @@
 package com.beau.graduation.service;
 
+import com.beau.graduation.basic.reqdto.GetPartnerReqDto;
 import com.beau.graduation.basic.reqdto.LoginReqDto;
 import com.beau.graduation.basic.reqdto.LogoutReqDto;
 import com.beau.graduation.basic.reqdto.RegisterReqDto;
+import com.beau.graduation.basic.resdto.GetPartnerResDto;
 import com.beau.graduation.basic.resdto.LoginResDto;
 import com.beau.graduation.basic.resdto.LogoutResDto;
 import com.beau.graduation.basic.resdto.RegisterResDto;
-import com.beau.graduation.common.ApiResult;
-import com.beau.graduation.common.PageList;
+import com.beau.graduation.common.Page;
 import com.beau.graduation.model.PartnerInfo;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,7 +66,7 @@ public interface PartnerInfoService {
     /**
      * [分页条件查询]
      **/
-    PageList<PartnerInfo> selectPage (PartnerInfo partnerInfo, Integer page, Integer pageSize);
+    Page<PartnerInfo> selectPage (PartnerInfo partnerInfo, Integer page, Integer pageSize);
 
     /**
      * [总量查询]
@@ -73,4 +74,7 @@ public interface PartnerInfoService {
     int total(PartnerInfo partnerInfo);
 
     LogoutResDto logout(LogoutReqDto reqDto, HttpServletRequest request, HttpServletResponse response);
+
+
+    GetPartnerResDto getPartnerPage(GetPartnerReqDto reqDto);
 }

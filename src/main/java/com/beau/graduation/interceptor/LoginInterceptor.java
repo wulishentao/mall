@@ -1,7 +1,6 @@
 package com.beau.graduation.interceptor;
 
 import com.alibaba.fastjson.JSON;
-import com.beau.graduation.basic.resdto.LoginResDto;
 import com.beau.graduation.common.ApiResult;
 import com.beau.graduation.Enum.ResultCode;
 import com.beau.graduation.model.PartnerInfo;
@@ -12,12 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.print.DocFlavor;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -31,8 +27,7 @@ import java.util.concurrent.TimeUnit;
  **/
 @Component
 public class LoginInterceptor implements HandlerInterceptor {
-    private static final String apiURI = "/api";
-    private static final String openApiURI = "/openApi";
+    private static final String API_URI = "/api";
 
     private static final Logger logger = LoggerFactory.getLogger(LoginInterceptor.class);
     @Autowired
@@ -53,7 +48,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         try {
             String token = UuidUtil.getUuid();
             // 若请求路径为"/api",则判断是否有管理员登录
-            if (requestURI.contains(apiURI)) {
+            if (requestURI.contains(API_URI)) {
                 PartnerInfo pi = loginUtil.getUser(adminToken);
                 if (pi != null) {
                     // 清空之前的登录信息

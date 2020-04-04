@@ -15,7 +15,6 @@
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="gender" property="gender" />
-        <result column="del_flag" property="delFlag" />
     </resultMap>
 
     <resultMap id="LoginResMap" type="com.beau.graduation.model.PartnerInfo" >
@@ -344,5 +343,32 @@
                 and delFlag = #{partnerInfo.delFlag}
             </if>
         </where>
+    </select>
+
+    <select id="getPartnerPage" resultMap="BaseResultMap">
+        select
+        id,
+        account_name,
+        phone,
+        status,
+        address
+        from
+        tm_partner_info
+        <where>
+            del_flag = '0'
+            and account_type = '1'
+            <if test='null != partnerInfo.accountName'>
+                and account_name like concat('%',#{partnerInfo.accountName},'%')
+            </if>
+
+            <if test="null != partnerInfo.status">
+                and status = #{partnerInfo.status}
+            </if>
+
+            <if test='null != partnerInfo.phone'>
+                and phone like concat('%',#{partnerInfo.phone},'%')
+            </if>
+        </where>
+        limit #{page.begin},#{page.size}
     </select>
 </mapper>

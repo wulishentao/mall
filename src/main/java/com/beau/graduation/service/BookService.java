@@ -4,7 +4,7 @@ import com.beau.graduation.basic.reqdto.AddCartReqDto;
 import com.beau.graduation.basic.reqdto.SyncCartReqDto;
 import com.beau.graduation.basic.resdto.AddCartResDto;
 import com.beau.graduation.basic.resdto.SyncCartResDto;
-import com.beau.graduation.common.PageList;
+import com.beau.graduation.common.Page;
 import com.beau.graduation.model.Book;
 import com.beau.graduation.model.dto.BookDto;
 
@@ -63,7 +63,7 @@ public interface BookService {
     /**
      * [分页条件查询]
      **/
-    PageList<Book> selectPage (Book book, Integer page, Integer pageSize);
+    Page<Book> selectPage (Book book, Integer page, Integer pageSize);
 
     /**
      * [总量查询]

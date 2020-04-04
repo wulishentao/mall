@@ -1,6 +1,6 @@
 package com.beau.graduation.service;
 
-import com.beau.graduation.common.PageList;
+import com.beau.graduation.common.Page;
 import com.beau.graduation.model.BookImage;
 
 import java.util.List;
@@ -51,7 +51,7 @@ public interface BookImageService {
     /**
      * [分页条件查询]
      **/
-    PageList<BookImage> selectPage (BookImage bookImage, Integer page, Integer pageSize);
+    Page<BookImage> selectPage (BookImage bookImage, Integer page, Integer pageSize);
 
     /**
      * [总量查询]

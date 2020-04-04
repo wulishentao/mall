@@ -9,7 +9,7 @@ import java.util.List;
  * @author beau
  * @date 2020/03/28
  */
-public class PageList<T extends Serializable> {
+public class Page<T extends Serializable> {
 
     /**
      * 总记录数
@@ -35,6 +35,14 @@ public class PageList<T extends Serializable> {
      * 对象集合
      */
     private List<T> list;
+
+    public Page(int totalCount, List<T> list) {
+        this.totalCount = totalCount;
+        this.list = list;
+    }
+
+    public Page() {
+    }
 
     public int getTotalCount() {
         return totalCount;

@@ -1,6 +1,6 @@
 package com.beau.graduation.service;
 
-import com.beau.graduation.common.PageList;
+import com.beau.graduation.common.Page;
 import com.beau.graduation.model.Advertise;
 
 import java.util.List;
@@ -51,7 +51,7 @@ public interface AdvertiseService {
     /**
      * [分页条件查询]
      **/
-    PageList<Advertise> selectPage (Advertise advertise, Integer page, Integer pageSize);
+    Page<Advertise> selectPage (Advertise advertise, Integer page, Integer pageSize);
 
     /**
      * [总量查询]
