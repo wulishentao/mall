@@ -1,16 +1,11 @@
 package com.beau.graduation.controller;
 
 import com.beau.graduation.Enum.ResultCode;
-import com.beau.graduation.basic.reqdto.GetCommodityReqDto;
-import com.beau.graduation.basic.reqdto.GetPartnerReqDto;
-import com.beau.graduation.basic.reqdto.LoginReqDto;
-import com.beau.graduation.basic.reqdto.LogoutReqDto;
-import com.beau.graduation.basic.resdto.GetCommodityResDto;
-import com.beau.graduation.basic.resdto.GetPartnerResDto;
-import com.beau.graduation.basic.resdto.LoginResDto;
-import com.beau.graduation.basic.resdto.LogoutResDto;
+import com.beau.graduation.basic.reqdto.*;
+import com.beau.graduation.basic.resdto.*;
 import com.beau.graduation.common.ApiResult;
 import com.beau.graduation.service.BookService;
+import com.beau.graduation.service.BookTypeService;
 import com.beau.graduation.service.PartnerInfoService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -40,6 +35,9 @@ public class ApiController {
 
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private BookTypeService bookTypeService;
 
     /**
      * 管理员登录
@@ -93,7 +91,7 @@ public class ApiController {
      * @param: [reqDto]
      * @return: com.beau.graduation.common.ApiResult
      */
-    @PostMapping(value = "/private/getPartnerPage", produces = "application/json")
+    @PostMapping(value = "/private/user/getPartnerPage", produces = "application/json")
     @ApiOperation("获取注册用户列表")
     public ApiResult getPartnerPage(@RequestBody GetPartnerReqDto reqDto) {
         ApiResult<GetPartnerResDto> res = new ApiResult<>();
@@ -110,7 +108,7 @@ public class ApiController {
         return res;
     }
 
-    @PostMapping(value = "/private/getCommodityPage", produces = "application/json")
+    @PostMapping(value = "/private/commodity/getCommodityPage", produces = "application/json")
     @ApiOperation("获取商品书籍列表")
     public ApiResult getCommodityPage(@RequestBody GetCommodityReqDto reqDto) {
         ApiResult<GetCommodityResDto> res = new ApiResult<>();
@@ -123,6 +121,57 @@ public class ApiController {
             logger.error("getCommodityPage error: ", e);
             res.setCode(ResultCode.FAILED.getCode());
             res.setMsg("获取商品列表异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/private/commodity/addCommodity", produces = "application/json")
+    @ApiOperation("添加书籍")
+    public ApiResult addCommodity(@RequestBody AddCommodityReqDto reqDto) {
+        ApiResult<AddCommodityResDto> res = new ApiResult<>();
+        try {
+            AddCommodityResDto resDto = bookService.addCommodity(reqDto);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            resDto.setMsg("添加书籍成功");
+        } catch (Exception e) {
+            logger.error("addCommodity error: ", e);
+            res.setCode(ResultCode.FAILED.getCode());
+            res.setMsg("添加书籍异常");
+        }
+        return res;
+    }
+
+
+    @PostMapping(value = "/private/commodity/getCommodityTypePage", produces = "application/json")
+    @ApiOperation("获取书籍标签列表")
+    public ApiResult getCommodityTypePage(@RequestBody GetCommodityTypeReqDto reqDto) {
+        ApiResult<GetCommodityTypeResDto> res = new ApiResult<>();
+        try {
+            GetCommodityTypeResDto resDto = bookTypeService.getCommodityTypePage(reqDto);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            resDto.setMsg("获取书籍标签列表成功");
+        } catch (Exception e) {
+            logger.error("getCommodityTypePage error: ", e);
+            res.setCode(ResultCode.FAILED.getCode());
+            res.setMsg("获取书籍标签列表异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/private/commodity/addCommodityType", produces = "application/json")
+    @ApiOperation("添加书籍标签")
+    public ApiResult addCommodityType(@RequestBody AddCommodityTypeReqDto reqDto) {
+        ApiResult<AddCommodityTypeResDto> res = new ApiResult<>();
+        try {
+            AddCommodityTypeResDto resDto = bookTypeService.addCommodityType(reqDto);
+            res.setCode(resDto.getCode());
+            resDto.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("addCommodityType error: ", e);
+            res.setCode(ResultCode.FAILED.getCode());
+            res.setMsg("添加书籍标签异常");
         }
         return res;
     }

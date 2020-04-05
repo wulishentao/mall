@@ -341,20 +341,20 @@
         left join tr_book_relation_type brt on tb.id=brt.book_id
         <where>
             tb.del_flag = '0'
-            <if test ='null != bookDto.title'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.title)'>
                 and (tb.title like concat('%',#{bookDto.title},'%')
                 or tb.author like concat('%',#{bookDto.title},'%') or tb.publisher like concat('%',#{bookDto.title},'%'))
             </if>
-            <if test ='null != bookDto.saleStatus'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.saleStatus)'>
                 and tb.sale_status = #{bookDto.saleStatus}
             </if>
-            <if test ='null != bookDto.reviewStatus'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.reviewStatus)'>
                 and tb.review_status = #{bookDto.reviewStatus}
             </if>
-            <if test ='null != bookDto.beginDate || null != bookDto.endDate'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.beginDate) || @com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.endDate)'>
                 and (tb.create_time between #{bookDto.beginDate} and #{bookDto.endDate})
             </if>
-            <if test ='null != bookDto.bookType'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.bookType)'>
                 and brt.type_id = #{bookDto.bookType}
             </if>
         </where>
@@ -378,7 +378,8 @@
                 tb.id = tbo.book_id
         ) AS sales,
         tb.review_status AS review_status,
-        tb.sale_status AS sale_status
+        tb.sale_status AS sale_status,
+        tb.author as author
         FROM tm_book tb
         left join tr_book_relation_type brt on tb.id=brt.book_id
         left join tm_book_type tbt on brt.type_id=tbt.id
@@ -387,20 +388,20 @@
             tb.del_flag = '0'
             and brt.del_flag = '0'
             and tbi.del_flag = '0'
-            <if test ='null != bookDto.title'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.title)'>
                 and (tb.title like concat('%',#{bookDto.title},'%')
                 or tb.author like concat('%',#{bookDto.title},'%') or tb.publisher like concat('%',#{bookDto.title},'%'))
             </if>
-            <if test ='null != bookDto.saleStatus'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.saleStatus)'>
                 and tb.sale_status = #{bookDto.saleStatus}
             </if>
-            <if test ='null != bookDto.reviewStatus'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.reviewStatus)'>
                 and tb.review_status = #{bookDto.reviewStatus}
             </if>
-            <if test ='null != bookDto.beginDate || null != bookDto.endDate'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.beginDate) || @com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.endDate)'>
                 and (tb.create_time between #{bookDto.beginDate} and #{bookDto.endDate})
             </if>
-            <if test ='null != bookDto.bookType'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.bookType)'>
                 and brt.type_id = #{bookDto.bookType}
             </if>
         </where>

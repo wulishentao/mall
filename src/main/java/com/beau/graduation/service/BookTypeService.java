@@ -1,5 +1,9 @@
 package com.beau.graduation.service;
 
+import com.beau.graduation.basic.reqdto.AddCommodityTypeReqDto;
+import com.beau.graduation.basic.reqdto.GetCommodityTypeReqDto;
+import com.beau.graduation.basic.resdto.AddCommodityTypeResDto;
+import com.beau.graduation.basic.resdto.GetCommodityTypeResDto;
 import com.beau.graduation.common.Page;
 import com.beau.graduation.model.BookType;
 
@@ -49,12 +53,11 @@ public interface BookTypeService {
     List<BookType> selectList(BookType bookType);
 
     /**
-     * [分页条件查询]
-     **/
-    Page<BookType> selectPage(BookType bookType, Integer page, Integer pageSize);
-
-    /**
      * [总量查询]
      **/
     int total(BookType bookType);
+
+    GetCommodityTypeResDto getCommodityTypePage(GetCommodityTypeReqDto reqDto);
+
+    AddCommodityTypeResDto addCommodityType(AddCommodityTypeReqDto reqDto);
 }

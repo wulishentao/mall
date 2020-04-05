@@ -17,7 +17,7 @@ public class MapperUtil {
         }else if(obj instanceof Boolean){
             return (Boolean)obj;
         } else if (obj instanceof Collection) {
-            return obj != null && ((Collection) obj).size() > 0;
+            return ((Collection) obj).size() > 0;
         } else{
             return obj != null;
         }

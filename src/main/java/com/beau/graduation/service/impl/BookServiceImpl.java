@@ -2,12 +2,8 @@ package com.beau.graduation.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.beau.graduation.Enum.ResultCode;
-import com.beau.graduation.basic.reqdto.AddCartReqDto;
-import com.beau.graduation.basic.reqdto.GetCommodityReqDto;
-import com.beau.graduation.basic.reqdto.SyncCartReqDto;
-import com.beau.graduation.basic.resdto.AddCartResDto;
-import com.beau.graduation.basic.resdto.GetCommodityResDto;
-import com.beau.graduation.basic.resdto.SyncCartResDto;
+import com.beau.graduation.basic.reqdto.*;
+import com.beau.graduation.basic.resdto.*;
 import com.beau.graduation.common.Page;
 import com.beau.graduation.dao.BookDao;
 import com.beau.graduation.model.Book;
@@ -335,4 +331,22 @@ public class BookServiceImpl implements BookService {
 		resDto.setCode(ResultCode.SUCCESS.getCode());
 		return resDto;
 	}
+
+	/**
+	 * 添加商品
+	 * @method: addCommodity
+	 * @param: [reqDto]
+	 * @return: com.beau.graduation.basic.resdto.AddCommodityResDto
+	 */
+	@Override
+	public AddCommodityResDto addCommodity(AddCommodityReqDto reqDto) {
+		AddCommodityResDto resDto = new AddCommodityResDto();
+
+
+		return null;
+	}
+
+
+
+
 }

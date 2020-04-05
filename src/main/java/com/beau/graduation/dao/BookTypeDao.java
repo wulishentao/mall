@@ -3,6 +3,7 @@ package com.beau.graduation.dao;
 import com.beau.graduation.model.BookType;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -51,7 +52,7 @@ public interface BookTypeDao {
     /**
      * [分页条件查询]
      **/
-    List<BookType> selectPage(@Param("bookType") BookType bookType, @Param("page") Integer page, @Param("pageSize") Integer pageSize);
+    List<BookType> selectPage(@Param("bookType") BookType bookType, @Param("page") HashMap<String, Integer> page);
 
     /**
      * [总量查询]

@@ -1,12 +1,20 @@
 package com.beau.graduation.service.impl;
 
+import com.beau.graduation.Enum.ResultCode;
+import com.beau.graduation.basic.reqdto.AddCommodityTypeReqDto;
+import com.beau.graduation.basic.reqdto.GetCommodityTypeReqDto;
+import com.beau.graduation.basic.resdto.AddCommodityTypeResDto;
+import com.beau.graduation.basic.resdto.GetCommodityTypeResDto;
 import com.beau.graduation.common.Page;
 import com.beau.graduation.dao.BookTypeDao;
 import com.beau.graduation.model.BookType;
 import com.beau.graduation.service.BookTypeService;
+import com.beau.graduation.utils.PageUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -56,33 +64,64 @@ public class BookTypeServiceImpl implements BookTypeService {
 		return dao.selectList(bookType);
 	}
 
-	@Override
-	public Page<BookType> selectPage(BookType bookType, Integer offset, Integer pageSize) {
-		Page<BookType> pageList = new Page<>();
-
-		int total = this.total(bookType);
-
-		Integer totalPage;
-		if (total % pageSize != 0) {
-			totalPage = (total /pageSize) + 1;
-		} else {
-			totalPage = total /pageSize;
-		}
-
-		int page = (offset - 1) * pageSize;
-
-		List<BookType> list = dao.selectPage(bookType, page, pageSize);
-
-		pageList.setList(list);
-		pageList.setStartPageNo(offset);
-		pageList.setPageSize(pageSize);
-		pageList.setTotalCount(total);
-		pageList.setTotalPageCount(totalPage);
-		return pageList;
-	}
 
 	@Override
 	public int total(BookType bookType) {
 		return dao.total(bookType);
+	}
+
+	/**
+	 * 获取书籍标签列表
+	 * @method: getCommodityTypePage
+	 * @param: [reqDto]
+	 * @return: com.beau.graduation.basic.resdto.GetCommodityTypeResDto
+	 */
+	@Override
+	public GetCommodityTypeResDto getCommodityTypePage(GetCommodityTypeReqDto reqDto) {
+		GetCommodityTypeResDto resDto = new GetCommodityTypeResDto();
+		Integer pageNo = reqDto.getPageNo();
+		Integer pageSize = reqDto.getPageSize();
+
+		BookType entity = new BookType();
+		if (StringUtils.isNotEmpty(reqDto.getTypeName())) {
+			entity.setName(reqDto.getTypeName());
+		}
+		int total = dao.total(entity);
+
+		List<BookType> bookTypes = dao.selectPage(entity, PageUtil.getBeginAndSize(pageNo, pageSize));
+		Page<BookType> page = new Page<>(total, bookTypes);
+		resDto.setPage(page);
+		resDto.setCode(ResultCode.SUCCESS.getCode());
+		return resDto;
+	}
+
+	/**
+	 * 添加商品标签
+	 * @method: addCommodityType
+	 * @param: [reqDto]
+	 * @return: com.beau.graduation.basic.resdto.AddCommodityTypeResDto
+	 */
+	@Override
+	public AddCommodityTypeResDto addCommodityType(AddCommodityTypeReqDto reqDto) {
+		AddCommodityTypeResDto resDto = new AddCommodityTypeResDto();
+
+		BookType entity = new BookType();
+		if (StringUtils.isNotEmpty(reqDto.getTitle())) {
+			entity.setName(reqDto.getTitle());
+		}
+		if (StringUtils.isNotEmpty(reqDto.getTitle())) {
+			entity.setRemark(reqDto.getRemark());
+		}
+		entity.setCreateTime(new Date());
+
+		int insert = dao.insert(entity);
+		if (insert > 0) {
+			resDto.setCode(ResultCode.SUCCESS.getCode());
+			resDto.setMsg("添加标签成功");
+		} else {
+			resDto.setCode(ResultCode.FAILED.getCode());
+			resDto.setMsg("添加标签失败");
+		}
+		return resDto;
 	}
 }

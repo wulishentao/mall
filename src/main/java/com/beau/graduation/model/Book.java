@@ -88,6 +88,19 @@ public class Book implements Serializable {
     @JSONField(format="yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    /**
+     * 排序规则,数字越大优先级越高(0~9)
+     */
+    private String sort;
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
