@@ -81,5 +81,5 @@ public interface BookService {
 
     GetCommodityResDto getCommodityPage(GetCommodityReqDto reqDto);
 
-    AddCommodityResDto addCommodity(AddCommodityReqDto reqDto);
+    AddCommodityResDto addCommodity(AddCommodityReqDto reqDto) throws Exception;
 }

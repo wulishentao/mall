@@ -44,88 +44,82 @@
     </sql>
 
     <!-- 插入数据 -->
-    <insert id="insert" parameterType="com.beau.graduation.model.Book">
+    <insert id="insert" parameterType="com.beau.graduation.model.Book" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO tm_book
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test ='null != book.id'>
-                `id`,
-            </if>
-            <if test ='null != book.title'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.title)'>
                 `title`,
             </if>
-            <if test ='null != book.author'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.author)'>
                 `author`,
             </if>
-            <if test ='null != book.saleStatus'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.saleStatus)'>
                 `sale_status`,
             </if>
-            <if test ='null != book.reviewStatus'>
-                `review_status`,
-            </if>
-            <if test ='null != book.publishDate'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.publishDate)'>
                 `publish_date`,
             </if>
-            <if test ='null != book.publisher'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.publisher)'>
                 `publisher`,
             </if>
-            <if test ='null != book.introduction'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.introduction)'>
                 `introduction`,
             </if>
-            <if test ='null != book.delFlag'>
-                `del_flag`,
-            </if>
-            <if test ='null != book.recommendFlag'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.recommendFlag)'>
                 `recommend_flag`,
             </if>
-            <if test ='null != book.reserve'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.reserve)'>
                 `reserve`,
             </if>
-            <if test ='null != book.sales'>
-                `sales`,
-            </if>
-            <if test ='null != book.price'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.price)'>
                 `price`
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.createTime)'>
+                `create_time`
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.updateTime)'>
+                `update_time`
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.sort)'>
+                `sort`
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test ='null != book.id'>
-                #{book.id},
-            </if>
-            <if test ='null != book.title'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.title)'>
                 #{book.title},
             </if>
-            <if test ='null != book.author'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.author)'>
                 #{book.author},
             </if>
-            <if test ='null != book.saleStatus'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.saleStatus)'>
                 #{book.saleStatus},
             </if>
-            <if test ='null != book.reviewStatus'>
-                #{book.reviewStatus},
-            </if>
-            <if test ='null != book.publishDate'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.publishDate)'>
                 #{book.publishDate},
             </if>
-            <if test ='null != book.publisher'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.publisher)'>
                 #{book.publisher},
             </if>
-            <if test ='null != book.introduction'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.introduction)'>
                 #{book.introduction},
             </if>
-            <if test ='null != book.delFlag'>
-                #{book.delFlag},
-            </if>
-            <if test ='null != book.recommendFlag'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.recommendFlag)'>
                 #{book.recommendFlag},
             </if>
-            <if test ='null != book.reserve'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.reserve)'>
                 #{book.reserve},
             </if>
-            <if test ='null != book.sales'>
-                #{book.sales},
-            </if>
-            <if test ='null != book.price'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.price)'>
                 #{book.price}
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.createTime)'>
+                #{book.createTime}
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.updateTime)'>
+                #{book.updateTime}
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.sort)'>
+                #{book.sort}
             </if>
         </trim>
     </insert>

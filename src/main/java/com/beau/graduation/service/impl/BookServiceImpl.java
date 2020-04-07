@@ -2,23 +2,30 @@ package com.beau.graduation.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.beau.graduation.Enum.ResultCode;
+import com.beau.graduation.Enum.SaleStatusEnum;
 import com.beau.graduation.basic.reqdto.*;
 import com.beau.graduation.basic.resdto.*;
 import com.beau.graduation.common.Page;
+import com.beau.graduation.config.UploadConfig;
 import com.beau.graduation.dao.BookDao;
-import com.beau.graduation.model.Book;
-import com.beau.graduation.model.PartnerInfo;
-import com.beau.graduation.model.ShoppingCart;
+import com.beau.graduation.model.*;
 import com.beau.graduation.model.dto.BookDto;
+import com.beau.graduation.service.BookImageService;
+import com.beau.graduation.service.BookRelationTypeService;
 import com.beau.graduation.service.BookService;
 import com.beau.graduation.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +40,12 @@ public class BookServiceImpl implements BookService {
 
     @Autowired
     BookDao dao;
+
+	@Autowired
+	private BookImageService bookImageService;
+
+	@Autowired
+	private BookRelationTypeService relationTypeService;
 
 	@Autowired
 	private RedisUtil redisUtil;
@@ -132,7 +145,7 @@ public class BookServiceImpl implements BookService {
 				addToFormer(bookDto, cart);
 				// 将合并的购物车信息重新存入redis中
 				redisUtil.set(key, JSON.toJSONString(cart));
-				resDto.setCode(ResultCode.SUCCESS.getCode());
+				resDto.setCode(ResultCode.success.getCode());
 				return resDto;
 			}
 		}
@@ -149,7 +162,7 @@ public class BookServiceImpl implements BookService {
 			}
 			// 将合并的购物车信息重新存入redis中
 			redisUtil.set(cart_uuid, JSON.toJSONString(cart));
-			resDto.setCode(ResultCode.SUCCESS.getCode());
+			resDto.setCode(ResultCode.success.getCode());
 			return resDto;
 		}
 
@@ -159,7 +172,7 @@ public class BookServiceImpl implements BookService {
 		redisUtil.set(cartUuid,JSON.toJSONString(cart));
 		// 将cart_uuid存入cookie中
 		CookieUtil.addCookie(response, "cart_uuid", cartUuid, null);
-		resDto.setCode(ResultCode.SUCCESS.getCode());
+		resDto.setCode(ResultCode.success.getCode());
 		return resDto;
 	}
 
@@ -182,7 +195,7 @@ public class BookServiceImpl implements BookService {
 				String key = "cart_" + pi.getId();
 				ShoppingCart shoppingCart = redisUtil.get(key, ShoppingCart.class);
 				resDto.setShoppingCart(shoppingCart);
-				resDto.setCode(ResultCode.SUCCESS.getCode());
+				resDto.setCode(ResultCode.success.getCode());
 				return resDto;
 			}
 		}
@@ -203,7 +216,7 @@ public class BookServiceImpl implements BookService {
 			CookieUtil.addCookie(response, "cart_uuid", cartUuid, null);
 		}
 		resDto.setShoppingCart(cart);
-		resDto.setCode(ResultCode.SUCCESS.getCode());
+		resDto.setCode(ResultCode.success.getCode());
 		return resDto;
 	}
 
@@ -225,7 +238,7 @@ public class BookServiceImpl implements BookService {
 			if (pi != null) {
 				String key = "cart_" + pi.getId();
 				syncCartWithKey(key, syncCartReqDto);
-				resDto.setCode(ResultCode.SUCCESS.getCode());
+				resDto.setCode(ResultCode.success.getCode());
 				resDto.setMsg("同步成功");
 				return resDto;
 			}
@@ -237,12 +250,12 @@ public class BookServiceImpl implements BookService {
 			ShoppingCart cart = redisUtil.get(cartUuid, ShoppingCart.class);
 			if (cart != null) {
 				syncCartWithKey(cartUuid, syncCartReqDto);
-				resDto.setCode(ResultCode.SUCCESS.getCode());
+				resDto.setCode(ResultCode.success.getCode());
 				resDto.setMsg("同步成功");
 				return resDto;
 			}
 		}
-		resDto.setCode(ResultCode.FAILED.getCode());
+		resDto.setCode(ResultCode.failed.getCode());
 		resDto.setMsg("同步失败");
 		return resDto;
 	}
@@ -328,7 +341,7 @@ public class BookServiceImpl implements BookService {
 		List<BookDto> bookDtoList = dao.getCommodityPage(entity, PageUtil.getBeginAndSize(pageNo, pageSize));
 		Page<BookDto> page = new Page<>(total, bookDtoList);
 		resDto.setBookDtoPage(page);
-		resDto.setCode(ResultCode.SUCCESS.getCode());
+		resDto.setCode(ResultCode.success.getCode());
 		return resDto;
 	}
 
@@ -339,11 +352,74 @@ public class BookServiceImpl implements BookService {
 	 * @return: com.beau.graduation.basic.resdto.AddCommodityResDto
 	 */
 	@Override
-	public AddCommodityResDto addCommodity(AddCommodityReqDto reqDto) {
+	@Transactional(rollbackFor = Exception.class)
+	public AddCommodityResDto addCommodity(AddCommodityReqDto reqDto) throws Exception {
 		AddCommodityResDto resDto = new AddCommodityResDto();
 
+		if (StringUtils.isEmpty(reqDto.getTitle())) {
+			throw new Exception("图书名称不能为空");
+		}
+		if (StringUtils.isEmpty(reqDto.getTypeIds())) {
+			throw new Exception("图书标签不能为空");
+		}
+		if (StringUtils.isEmpty(reqDto.getAuthor())) {
+			throw new Exception("图书作者不能为空");
+		}
+		if (StringUtils.isEmpty(reqDto.getPublisher())) {
+			throw new Exception("图书出版商不能为空");
+		}
+		if (StringUtils.isEmpty(reqDto.getPublishDate())) {
+			throw new Exception("图书出版日期不能为空");
+		}
+		// 存储图书基本信息
+		Book entity = new Book();
+		entity.setTitle(reqDto.getTitle());
+		entity.setAuthor(reqDto.getAuthor());
+		entity.setIntroduction(reqDto.getIntroduction());
+		entity.setRecommendFlag(reqDto.getRecommendFlg());
+		entity.setCreateTime(new Date());
+		entity.setUpdateTime(new Date());
+		entity.setPrice(reqDto.getPrice());
+		entity.setPublishDate(reqDto.getPublishDate());
+		entity.setPublisher(reqDto.getPublisher());
+		entity.setReserve(reqDto.getReserve());
+		if (reqDto.getReserve() == 0) {
+			entity.setSaleStatus(SaleStatusEnum.sold_out.getCode());
+		}
+		entity.setSort(reqDto.getSort());
+		dao.insert(entity);
 
-		return null;
+		// 将图书封面图片存入指定地址
+		MultipartFile file = reqDto.getFile();
+		if (file.isEmpty()) {
+			throw new Exception("上传图片不能为空");
+		}
+		String filePath = FileUploadsUtil.uploadPicture(UploadConfig.getUploadPath(), file);
+
+		// 将图书封面图片地址存入数据库
+		BookImage image = new BookImage();
+		image.setBookId(entity.getId());
+		image.setCreateTime(new Date());
+		image.setUpdateTime(new Date());
+		image.setImgUrl(filePath);
+		bookImageService.insert(image);
+
+		// 将图书标签存入数据库中
+		ArrayList<BookRelationType> list = new ArrayList<>();
+		if (StringUtils.isEmpty(reqDto.getTypeIds())) {
+			throw new Exception("书籍标签不能为空");
+		}
+		String[] typeIds = reqDto.getTypeIds().split(",");
+		for (String typeId : typeIds) {
+			BookRelationType relationType = new BookRelationType();
+			relationType.setBookId(entity.getId());
+			relationType.setTypeId(Long.valueOf(typeId));
+			list.add(relationType);
+		}
+		relationTypeService.batchInsert(list);
+
+		resDto.setCode(ResultCode.success.getCode());
+		return resDto;
 	}
 
 

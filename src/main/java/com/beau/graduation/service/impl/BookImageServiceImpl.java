@@ -6,6 +6,7 @@ import com.beau.graduation.model.BookImage;
 import com.beau.graduation.service.BookImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class BookImageServiceImpl implements BookImageService {
     BookImageDao dao;
 
     @Override
+	@Transactional(rollbackFor = Exception.class)
     public int insert(BookImage bookImage) {
         return dao.insert(bookImage);
     }

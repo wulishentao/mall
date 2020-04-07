@@ -10,7 +10,6 @@
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="remark" property="remark" />
-        <result column="del_flag" property="delFlag" />
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -19,57 +18,37 @@
         `img_url`,
         `create_time`,
         `update_time`,
-        `remark`,
-        `del_flag`
     </sql>
 
     <!-- 插入数据 -->
     <insert id="insert" parameterType="com.beau.graduation.model.BookImage">
         INSERT INTO tm_book_image
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test ='null != bookImage.id'>
-                `id`,
-            </if>
-            <if test ='null != bookImage.bookId'>
-                `book_id`,
-            </if>
-            <if test ='null != bookImage.imgUrl'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookImage.imgUrl)'>
                 `img_url`,
             </if>
-            <if test ='null != bookImage.createTime'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookImage.createTime)'>
                 `create_time`,
             </if>
-            <if test ='null != bookImage.updateTime'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookImage.updateTime)'>
                 `update_time`,
             </if>
-            <if test ='null != bookImage.remark'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookImage.remark)'>
                 `remark`,
-            </if>
-            <if test ='null != bookImage.delFlag'>
-                `del_flag`
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test ='null != bookImage.id'>
-                #{bookImage.id},
-            </if>
-            <if test ='null != bookImage.bookId'>
-                #{bookImage.bookId},
-            </if>
-            <if test ='null != bookImage.imgUrl'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookImage.imgUrl)'>
                 #{bookImage.imgUrl},
             </if>
-            <if test ='null != bookImage.createTime'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookImage.createTime)'>
                 #{bookImage.createTime},
             </if>
-            <if test ='null != bookImage.updateTime'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookImage.updateTime)'>
                 #{bookImage.updateTime},
             </if>
-            <if test ='null != bookImage.remark'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookImage.remark)'>
                 #{bookImage.remark},
-            </if>
-            <if test ='null != bookImage.delFlag'>
-                #{bookImage.delFlag}
             </if>
         </trim>
     </insert>
@@ -94,7 +73,7 @@
     <update id="update" parameterType="com.beau.graduation.model.BookImage">
         UPDATE tm_book_image
         <set>
-            <if test ='null != bookImage.bookId'>book_id = #{bookImage.bookId},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookImage.bookId)'>book_id = #{bookImage.bookId},</if>
             <if test ='null != bookImage.imgUrl'>img_url = #{bookImage.imgUrl},</if>
             <if test ='null != bookImage.createTime'>create_time = #{bookImage.createTime},</if>
             <if test ='null != bookImage.updateTime'>update_time = #{bookImage.updateTime},</if>

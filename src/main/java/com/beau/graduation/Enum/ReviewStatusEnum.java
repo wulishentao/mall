@@ -1,32 +1,33 @@
 package com.beau.graduation.Enum;
 
-/***
- * 返回码
- */
-public enum ResultCode {
-
+/**
+ * @classname: ReviewStatusEnum.java
+ * @author: Beau
+ * @create: 2020/04/07 14:18
+ * @version: 1.0.0
+ **/
+public enum ReviewStatusEnum {
     /**
-    * 请求响应成功
-    */
-    success ("1", "请求响应成功"),
-
-    /**
-    * 请求响应失败
-    */
-    failed ("0", "请求响应失败"),
-
-    /**
-     * 需登录后才能进行操作
+     * 审核未通过
      */
-    login_required ("999","操作需登录"),
+    failed ("-1", "审核未通过"),
 
+    /**
+     * 未审核
+     */
+    unreviewed("0", "未审核"),
+
+    /**
+     * 审核通过
+     */
+    passed ("1", "审核通过")
     ;
 
     private String code;
 
     private String descr;
 
-    ResultCode(String code, String descr) {
+    ReviewStatusEnum(String code, String descr) {
         this.code = code;
         this.descr = descr;
     }

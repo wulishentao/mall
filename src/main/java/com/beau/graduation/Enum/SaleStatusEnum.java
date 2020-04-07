@@ -1,32 +1,33 @@
 package com.beau.graduation.Enum;
 
-/***
- * 返回码
- */
-public enum ResultCode {
-
+/**
+ * @classname: SaleStatusEnum.java
+ * @author: Beau
+ * @create: 2020/04/07 14:14
+ * @version: 1.0.0
+ **/
+public enum SaleStatusEnum {
     /**
-    * 请求响应成功
-    */
-    success ("1", "请求响应成功"),
-
-    /**
-    * 请求响应失败
-    */
-    failed ("0", "请求响应失败"),
-
-    /**
-     * 需登录后才能进行操作
+     * 已下架
      */
-    login_required ("999","操作需登录"),
+    removed ("-1", "已下架"),
 
+    /**
+     * 在售
+     */
+    in_stock ("0", "在售"),
+
+    /**
+     * 售罄
+     */
+    sold_out ("1", "售罄")
     ;
 
     private String code;
 
     private String descr;
 
-    ResultCode(String code, String descr) {
+    SaleStatusEnum(String code, String descr) {
         this.code = code;
         this.descr = descr;
     }

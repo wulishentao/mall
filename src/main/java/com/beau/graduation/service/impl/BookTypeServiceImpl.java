@@ -91,7 +91,7 @@ public class BookTypeServiceImpl implements BookTypeService {
 		List<BookType> bookTypes = dao.selectPage(entity, PageUtil.getBeginAndSize(pageNo, pageSize));
 		Page<BookType> page = new Page<>(total, bookTypes);
 		resDto.setPage(page);
-		resDto.setCode(ResultCode.SUCCESS.getCode());
+		resDto.setCode(ResultCode.success.getCode());
 		return resDto;
 	}
 
@@ -116,10 +116,10 @@ public class BookTypeServiceImpl implements BookTypeService {
 
 		int insert = dao.insert(entity);
 		if (insert > 0) {
-			resDto.setCode(ResultCode.SUCCESS.getCode());
+			resDto.setCode(ResultCode.success.getCode());
 			resDto.setMsg("添加标签成功");
 		} else {
-			resDto.setCode(ResultCode.FAILED.getCode());
+			resDto.setCode(ResultCode.failed.getCode());
 			resDto.setMsg("添加标签失败");
 		}
 		return resDto;

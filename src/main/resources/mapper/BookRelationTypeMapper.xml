@@ -7,14 +7,11 @@
         <result column="id" property="id" />
         <result column="book_id" property="bookId" />
         <result column="type_id" property="typeId" />
-        <result column="del_flag" property="delFlag" />
     </resultMap>
 
     <sql id="Base_Column_List">
-        `id`,
         `book_id`,
-        `type_id`,
-        `del_flag`
+        `type_id`
     </sql>
 
     <!-- 插入数据 -->
@@ -44,9 +41,6 @@
             <if test ='null != bookRelationType.typeId'>
                 #{bookRelationType.typeId},
             </if>
-            <if test ='null != bookRelationType.delFlag'>
-                #{bookRelationType.delFlag}
-            </if>
         </trim>
     </insert>
 
@@ -55,10 +49,12 @@
         INSERT INTO tr_book_relation_type ( <include refid="Base_Column_List" /> ) VALUES
         <foreach collection="list" item="curr" index="index" separator=",">
             (
-                #{curr.id},
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(curr.bookId)'>
                 #{curr.bookId},
-                #{curr.typeId},
-                #{curr.delFlag}
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(curr.typeId)'>
+                #{curr.typeId}
+            </if>
             )
         </foreach>
     </insert>

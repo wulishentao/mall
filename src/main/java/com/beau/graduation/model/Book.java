@@ -85,13 +85,30 @@ public class Book implements Serializable {
      */
     private BigDecimal price;
 
+    /**
+     * 书籍创建日期
+     */
     @JSONField(format="yyyy-MM-dd HH:mm:ss")
     private Date createTime;
+
+    /**
+     * 书籍更新日期
+     */
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
 
     /**
      * 排序规则,数字越大优先级越高(0~9)
      */
     private String sort;
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public String getSort() {
         return sort;

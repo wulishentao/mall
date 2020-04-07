@@ -40,7 +40,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         String userToken = CookieUtil.getCookieValue(request, "user_token");
         String adminToken = CookieUtil.getCookieValue(request, "admin_token");
         if (StringUtils.isEmpty(userToken) && StringUtils.isEmpty(adminToken)) {
-            res.setCode(ResultCode.LOGIN_REQUIRED.getCode());
+            res.setCode(ResultCode.login_required.getCode());
             res.setMsg("您还未登录,请登录");
             write(request, response, JSON.toJSONString(res));
             return false;
@@ -75,7 +75,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         } catch (Exception e) {
             logger.error("preHandler error: ", e);
         }
-        res.setCode(ResultCode.LOGIN_REQUIRED.getCode());
+        res.setCode(ResultCode.login_required.getCode());
         res.setMsg("您还未登录,请登录");
         write(request,response,JSON.toJSONString(res));
         return false;

@@ -57,7 +57,7 @@ public class ApiController {
             resDto.setMsg(resDto.getMsg());
         } catch (Exception e) {
             logger.error("login error: ", e);
-            res.setCode(ResultCode.FAILED.getCode());
+            res.setCode(ResultCode.failed.getCode());
             res.setMsg("管理员登录异常");
         }
         return res;
@@ -79,7 +79,7 @@ public class ApiController {
             resDto.setMsg("注销登录成功");
         } catch (Exception e) {
             logger.error("logout error: ", e);
-            res.setCode(ResultCode.FAILED.getCode());
+            res.setCode(ResultCode.failed.getCode());
             res.setMsg("管理员注销异常");
         }
         return res;
@@ -102,7 +102,7 @@ public class ApiController {
             resDto.setMsg("获取注册用户列表成功");
         } catch (Exception e) {
             logger.error("getPartnerPage error: ", e);
-            res.setCode(ResultCode.FAILED.getCode());
+            res.setCode(ResultCode.failed.getCode());
             res.setMsg("获取注册用户列表异常");
         }
         return res;
@@ -119,7 +119,7 @@ public class ApiController {
             resDto.setMsg("获取商品书籍列表成功");
         } catch (Exception e) {
             logger.error("getCommodityPage error: ", e);
-            res.setCode(ResultCode.FAILED.getCode());
+            res.setCode(ResultCode.failed.getCode());
             res.setMsg("获取商品列表异常");
         }
         return res;
@@ -136,7 +136,7 @@ public class ApiController {
             resDto.setMsg("添加书籍成功");
         } catch (Exception e) {
             logger.error("addCommodity error: ", e);
-            res.setCode(ResultCode.FAILED.getCode());
+            res.setCode(ResultCode.failed.getCode());
             res.setMsg("添加书籍异常");
         }
         return res;
@@ -154,7 +154,7 @@ public class ApiController {
             resDto.setMsg("获取书籍标签列表成功");
         } catch (Exception e) {
             logger.error("getCommodityTypePage error: ", e);
-            res.setCode(ResultCode.FAILED.getCode());
+            res.setCode(ResultCode.failed.getCode());
             res.setMsg("获取书籍标签列表异常");
         }
         return res;
@@ -170,7 +170,7 @@ public class ApiController {
             resDto.setMsg(resDto.getMsg());
         } catch (Exception e) {
             logger.error("addCommodityType error: ", e);
-            res.setCode(ResultCode.FAILED.getCode());
+            res.setCode(ResultCode.failed.getCode());
             res.setMsg("添加书籍标签异常");
         }
         return res;

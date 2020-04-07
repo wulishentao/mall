@@ -10,12 +10,12 @@ public enum LoginTypeEnum {
     /**
      * 普通用户
      */
-    USER ("1", "普通用户"),
+    user ("1", "普通用户"),
 
     /**
      * 管理员
      */
-    ADMIN ("0", "管理员")
+    admin ("0", "管理员")
     ;
 
     private String code;

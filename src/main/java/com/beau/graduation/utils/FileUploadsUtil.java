@@ -1,6 +1,7 @@
 package com.beau.graduation.utils;
 
 import com.beau.graduation.config.UploadConfig;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -85,7 +86,6 @@ public class FileUploadsUtil {
      * @throws IOException 比如读写文件出错时
      */
     public static final String upload(String baseDir, MultipartFile file, String extension) throws Exception {
-
         int fileNameLength = file.getOriginalFilename().length();
         if (fileNameLength > FileUploadsUtil.DEFAULT_FILE_NAME_LENGTH) {
             throw new Exception("文件名长度超出限定长度");
@@ -93,19 +93,19 @@ public class FileUploadsUtil {
 
         assertAllowed(file);
 
-        String fileName = extractFilename(file, extension);
+        String fileName = baseDir + extractFilename(extension);
 
-        File desc = getAbsoluteFile(baseDir, baseDir + fileName);
+        File desc = getAbsoluteFile(fileName);
         file.transferTo(desc);
         return fileName;
     }
 
-    public static final String extractFilename(MultipartFile file, String extension) {
-        String filename = DateUtil.datePath() + "/" + UuidUtil.getUuid() + extension;
+    public static final String extractFilename(String extension) {
+        String filename = DateUtil.datePath() + "/" + "mall_" + UuidUtil.getUuid() + extension;
         return filename;
     }
 
-    private static final File getAbsoluteFile(String uploadDir, String filename) throws IOException {
+    private static final File getAbsoluteFile(String filename) throws IOException {
         File desc = new File(File.separator + filename);
 
         if (!desc.getParentFile().exists()) {

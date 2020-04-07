@@ -6,6 +6,7 @@ import com.beau.graduation.model.BookRelationType;
 import com.beau.graduation.service.BookRelationTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class BookRelationTypeServiceImpl implements BookRelationTypeService {
     }
 
     @Override
+	@Transactional(rollbackFor = Exception.class)
     public int batchInsert(List<BookRelationType> list) {
     	return dao.batchInsert(list);
     }

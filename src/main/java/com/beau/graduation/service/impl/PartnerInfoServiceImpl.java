@@ -66,7 +66,7 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 		pi.setPhone(reqDto.getPhone());
 		PartnerInfo partnerInfo = dao.selectByObj(pi);
 		if (partnerInfo != null) {
-			resDto.setCode(ResultCode.FAILED.getCode());
+			resDto.setCode(ResultCode.failed.getCode());
 			resDto.setMsg("此电话号码已被注册");
 			return resDto;
 		}
@@ -80,11 +80,11 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 
 		int total = dao.insert(pi);
 		if (total == 0) {
-			resDto.setCode(ResultCode.FAILED.getCode());
+			resDto.setCode(ResultCode.failed.getCode());
 			resDto.setMsg("注册失败");
 			return resDto;
 		}
-		resDto.setCode(ResultCode.SUCCESS.getCode());
+		resDto.setCode(ResultCode.success.getCode());
 		resDto.setMsg("注册成功");
 		return resDto;
 	}
@@ -118,19 +118,19 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 		pi.setAccountType(reqDto.getAccountType());
 		pi.setPassword(PasswordUtil.Md5Hex(reqDto.getPassword()));
 		PartnerInfo partnerInfo;
-		if (pi.getAccountType().equals(LoginTypeEnum.ADMIN.getCode())) {
+		if (pi.getAccountType().equals(LoginTypeEnum.admin.getCode())) {
 			partnerInfo = dao.selectAdmin(pi);
 		} else {
 			partnerInfo = dao.selectByObj(pi);
 		}
 
 		if (partnerInfo == null) {
-			resDto.setCode(ResultCode.FAILED.getCode());
+			resDto.setCode(ResultCode.failed.getCode());
 			resDto.setMsg("用户名或密码错误");
 			return resDto;
 		}
 		if (StatusEnum.disable.getCode().equals(partnerInfo.getStatus())) {
-			resDto.setCode(ResultCode.FAILED.getCode());
+			resDto.setCode(ResultCode.failed.getCode());
 			resDto.setMsg("该用户账号当前被禁用");
 			return resDto;
 		}
@@ -142,14 +142,14 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 		// 将登录信息存入redis缓存
 		loginUtil.setUser(uuToken, resDto, STORE_TIME, TimeUnit.DAYS);
 		// 将token存入cookie中
-		if (LoginTypeEnum.ADMIN.getCode().equals(resDto.getAccountType())) {
+		if (LoginTypeEnum.admin.getCode().equals(resDto.getAccountType())) {
 			CookieUtil.addCookie(response, "admin_token", uuToken, null, 3600 * 24 * 15);
 		} else {
 			storageWithId(request, partnerInfo.getId());
 			CookieUtil.addCookie(response, "user_token", uuToken, null, 3600 * 24 * 15);
 		}
 
-		resDto.setCode(ResultCode.SUCCESS.getCode());
+		resDto.setCode(ResultCode.success.getCode());
 		resDto.setMsg("登录成功");
 		return resDto;
 	}
@@ -250,7 +250,7 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 		// 从缓存中删除登录信息
 		loginUtil.removeUser(token);
 		CookieUtil.removeCookie(response, tokenName, null);
-		resDto.setCode(ResultCode.SUCCESS.getCode());
+		resDto.setCode(ResultCode.success.getCode());
 		return resDto;
 	}
 
@@ -282,7 +282,7 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 		List<PartnerInfo> partnerPage = dao.getPartnerPage(pi, PageUtil.getBeginAndSize(pageNo, pageSize));
 		Page<PartnerInfo> page = new Page<>(total, partnerPage);
 
-		resDto.setCode(ResultCode.SUCCESS.getCode());
+		resDto.setCode(ResultCode.success.getCode());
 		resDto.setInfoPage(page);
 		return resDto;
 	}

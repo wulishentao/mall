@@ -53,7 +53,7 @@ public class OpenApiController {
             resDto.setMsg(resDto.getMsg());
         } catch (Exception e) {
             logger.error("login error: ", e);
-            res.setCode(ResultCode.FAILED.getCode());
+            res.setCode(ResultCode.failed.getCode());
             res.setMsg("用户登录异常");
         }
         return res;
@@ -69,7 +69,7 @@ public class OpenApiController {
             res.setMsg("注销登录成功");
         } catch (Exception e) {
             logger.error("logout error: ", e);
-            res.setCode(ResultCode.FAILED.getCode());
+            res.setCode(ResultCode.failed.getCode());
             res.setMsg("用户注销异常");
         }
         return res;
@@ -91,7 +91,7 @@ public class OpenApiController {
             res.setCode(resDto.getCode());
         } catch (Exception e) {
             logger.error("register error: ", e);
-            res.setCode(ResultCode.FAILED.getCode());
+            res.setCode(ResultCode.failed.getCode());
             res.setMsg("注册异常");
         }
         return res;
@@ -114,7 +114,7 @@ public class OpenApiController {
             res.setMsg("添加购物车成功");
         } catch (Exception e) {
             logger.error("addShoppingCart error: ", e);
-            res.setCode(ResultCode.FAILED.getCode());
+            res.setCode(ResultCode.failed.getCode());
             res.setMsg("加入购物车异常");
         }
         return res;
@@ -137,7 +137,7 @@ public class OpenApiController {
             res.setMsg(resDto.getMsg());
         } catch (Exception e) {
             logger.error("getShoppingCart error: ", e);
-            res.setCode(ResultCode.FAILED.getCode());
+            res.setCode(ResultCode.failed.getCode());
             res.setMsg("查看购物车异常");
         }
         return res;
@@ -160,7 +160,7 @@ public class OpenApiController {
             res.setMsg(resDto.getMsg());
         } catch (Exception e) {
             logger.error("syncShoppingCart error: ", e);
-            res.setCode(ResultCode.FAILED.getCode());
+            res.setCode(ResultCode.failed.getCode());
             res.setMsg("同步购物车异常");
         }
         return res;

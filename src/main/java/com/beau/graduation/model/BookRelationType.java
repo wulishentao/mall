@@ -1,6 +1,7 @@
 package com.beau.graduation.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * BookRelationType
@@ -27,12 +28,6 @@ public class BookRelationType implements Serializable {
      */
     private Long typeId;
 
-
-    /**
-     * del_flag  是否删除，0-否，1-是
-     */
-    private String delFlag;
-
     public Long getId() {
         return id;
     }
@@ -57,11 +52,4 @@ public class BookRelationType implements Serializable {
         this.typeId = typeId;
     }
 
-    public String getDelFlag() {
-        return delFlag;
-    }
-
-    public void setDelFlag(String delFlag) {
-        this.delFlag = delFlag;
-    }
 }
