@@ -32,16 +32,6 @@ public class GetCommodityReqDto extends CommonReqDTO implements Serializable {
     private String reviewStatus;
 
     /**
-     * 开始日期
-     */
-    private String beginDate;
-
-    /**
-     * 结束日期
-     */
-    private String endDate;
-
-    /**
      * 页码
      */
     private Integer pageNo;
@@ -97,22 +87,6 @@ public class GetCommodityReqDto extends CommonReqDTO implements Serializable {
 
     public void setReviewStatus(String reviewStatus) {
         this.reviewStatus = reviewStatus;
-    }
-
-    public String getBeginDate() {
-        return beginDate;
-    }
-
-    public void setBeginDate(String beginDate) {
-        this.beginDate = beginDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
     }
 
 }

@@ -7,14 +7,14 @@ import com.beau.graduation.common.ApiResult;
 import com.beau.graduation.service.BookService;
 import com.beau.graduation.service.BookTypeService;
 import com.beau.graduation.service.PartnerInfoService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -127,13 +127,12 @@ public class ApiController {
 
     @PostMapping(value = "/private/commodity/addCommodity", produces = "application/json")
     @ApiOperation("添加书籍")
-    public ApiResult addCommodity(@RequestBody AddCommodityReqDto reqDto) {
+    public ApiResult addCommodity(AddCommodityReqDto reqDto) {
         ApiResult<AddCommodityResDto> res = new ApiResult<>();
         try {
             AddCommodityResDto resDto = bookService.addCommodity(reqDto);
-            res.setData(resDto);
             res.setCode(resDto.getCode());
-            resDto.setMsg("添加书籍成功");
+            res.setMsg("添加书籍成功");
         } catch (Exception e) {
             logger.error("addCommodity error: ", e);
             res.setCode(ResultCode.failed.getCode());
@@ -151,7 +150,7 @@ public class ApiController {
             GetCommodityTypeResDto resDto = bookTypeService.getCommodityTypePage(reqDto);
             res.setData(resDto);
             res.setCode(resDto.getCode());
-            resDto.setMsg("获取书籍标签列表成功");
+            res.setMsg("获取书籍标签列表成功");
         } catch (Exception e) {
             logger.error("getCommodityTypePage error: ", e);
             res.setCode(ResultCode.failed.getCode());
@@ -167,7 +166,7 @@ public class ApiController {
         try {
             AddCommodityTypeResDto resDto = bookTypeService.addCommodityType(reqDto);
             res.setCode(resDto.getCode());
-            resDto.setMsg(resDto.getMsg());
+            res.setMsg(resDto.getMsg());
         } catch (Exception e) {
             logger.error("addCommodityType error: ", e);
             res.setCode(ResultCode.failed.getCode());

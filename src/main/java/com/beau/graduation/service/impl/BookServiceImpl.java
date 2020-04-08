@@ -23,10 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -327,12 +324,6 @@ public class BookServiceImpl implements BookService {
 		if (StringUtils.isNotEmpty(reqDto.getReviewStatus())) {
 			entity.setReviewStatus(reqDto.getReviewStatus());
 		}
-		if (StringUtils.isNotEmpty(reqDto.getBeginDate())) {
-			entity.setBeginDate(reqDto.getBeginDate());
-		}
-		if (StringUtils.isNotEmpty(reqDto.getBeginDate())) {
-			entity.setEndDate(reqDto.getEndDate());
-		}
 
 		int total = dao.totalByDto(entity);
 		Integer pageNo = reqDto.getPageNo();
@@ -347,6 +338,7 @@ public class BookServiceImpl implements BookService {
 
 	/**
 	 * 添加商品
+	 *
 	 * @method: addCommodity
 	 * @param: [reqDto]
 	 * @return: com.beau.graduation.basic.resdto.AddCommodityResDto
@@ -359,7 +351,7 @@ public class BookServiceImpl implements BookService {
 		if (StringUtils.isEmpty(reqDto.getTitle())) {
 			throw new Exception("图书名称不能为空");
 		}
-		if (StringUtils.isEmpty(reqDto.getTypeIds())) {
+		if (reqDto.getTypeId() == 0) {
 			throw new Exception("图书标签不能为空");
 		}
 		if (StringUtils.isEmpty(reqDto.getAuthor())) {
@@ -383,6 +375,7 @@ public class BookServiceImpl implements BookService {
 		entity.setPublishDate(reqDto.getPublishDate());
 		entity.setPublisher(reqDto.getPublisher());
 		entity.setReserve(reqDto.getReserve());
+		entity.setTypeId(reqDto.getTypeId());
 		if (reqDto.getReserve() == 0) {
 			entity.setSaleStatus(SaleStatusEnum.sold_out.getCode());
 		}
@@ -403,20 +396,6 @@ public class BookServiceImpl implements BookService {
 		image.setUpdateTime(new Date());
 		image.setImgUrl(filePath);
 		bookImageService.insert(image);
-
-		// 将图书标签存入数据库中
-		ArrayList<BookRelationType> list = new ArrayList<>();
-		if (StringUtils.isEmpty(reqDto.getTypeIds())) {
-			throw new Exception("书籍标签不能为空");
-		}
-		String[] typeIds = reqDto.getTypeIds().split(",");
-		for (String typeId : typeIds) {
-			BookRelationType relationType = new BookRelationType();
-			relationType.setBookId(entity.getId());
-			relationType.setTypeId(Long.valueOf(typeId));
-			list.add(relationType);
-		}
-		relationTypeService.batchInsert(list);
 
 		resDto.setCode(ResultCode.success.getCode());
 		return resDto;

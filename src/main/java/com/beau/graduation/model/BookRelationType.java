@@ -1,6 +1,9 @@
 package com.beau.graduation.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,6 +30,35 @@ public class BookRelationType implements Serializable {
      * type_id  类别id
      */
     private Long typeId;
+
+
+    /**
+     * create_time  创建时间
+     */
+    @JSONField
+    private Date createTime;
+
+    /**
+     * update_time  更新时间
+     */
+    @JSONField
+    private Date updateTime;
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public Long getId() {
         return id;

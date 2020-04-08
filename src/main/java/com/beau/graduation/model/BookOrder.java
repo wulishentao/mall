@@ -53,14 +53,14 @@ public class BookOrder implements Serializable {
     /**
      * create_time  订单创建时间
      */
-    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    @JSONField
     private Date createTime;
 
 
     /**
      * update_time  订单修改时间
      */
-    @JSONField (format="yyyy-MM-dd HH:mm:ss")
+    @JSONField
     private Date updateTime;
 
 

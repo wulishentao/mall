@@ -28,14 +28,14 @@ public class BookComment implements Serializable {
     /**
      * create_time  评论创建时间
      */
-    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    @JSONField
     private Date createTime;
 
 
     /**
      * update_time  评论修改时间
      */
-    @JSONField (format="yyyy-MM-dd HH:mm:ss")
+    @JSONField
     private Date updateTime;
 
 

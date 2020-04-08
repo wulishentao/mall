@@ -24,6 +24,9 @@
     <insert id="insert" parameterType="com.beau.graduation.model.BookImage">
         INSERT INTO tm_book_image
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookImage.bookId)'>
+                `book_id`,
+            </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookImage.imgUrl)'>
                 `img_url`,
             </if>
@@ -38,6 +41,9 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookImage.bookId)'>
+                #{bookImage.bookId},
+            </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookImage.imgUrl)'>
                 #{bookImage.imgUrl},
             </if>

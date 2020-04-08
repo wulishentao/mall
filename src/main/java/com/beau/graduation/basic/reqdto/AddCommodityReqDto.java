@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @classname: AddCommodityReqDto.java
@@ -19,9 +20,9 @@ public class AddCommodityReqDto extends CommonReqDTO implements Serializable {
     private String title;
 
     /**
-     * 商品标签id集合
+     * 商品标签id
      */
-    private String typeIds;
+    private Long typeId;
 
     /**
      * 书籍作者
@@ -66,7 +67,7 @@ public class AddCommodityReqDto extends CommonReqDTO implements Serializable {
     /**
      * 商品图片
      */
-    private MultipartFile file;
+    private List<MultipartFile> files;
 
     public String getTitle() {
         return title;
@@ -76,12 +77,12 @@ public class AddCommodityReqDto extends CommonReqDTO implements Serializable {
         this.title = title;
     }
 
-    public String getTypeIds() {
-        return typeIds;
+    public Long getTypeId() {
+        return typeId;
     }
 
-    public void setTypeIds(String typeIds) {
-        this.typeIds = typeIds;
+    public void setTypeId(Long typeId) {
+        this.typeId = typeId;
     }
 
     public String getAuthor() {
@@ -148,11 +149,11 @@ public class AddCommodityReqDto extends CommonReqDTO implements Serializable {
         this.sort = sort;
     }
 
-    public MultipartFile getFile() {
-        return file;
+    public List<MultipartFile> getFiles() {
+        return files;
     }
 
-    public void setFile(MultipartFile file) {
-        this.file = file;
+    public void setFiles(List<MultipartFile> files) {
+        this.files = files;
     }
 }

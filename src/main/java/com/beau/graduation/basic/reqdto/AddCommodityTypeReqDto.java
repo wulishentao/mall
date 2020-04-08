@@ -17,9 +17,22 @@ public class AddCommodityTypeReqDto extends CommonReqDTO implements Serializable
     private String title;
 
     /**
+     * 父级id(若为-1则为一级类别)
+     */
+    private Long parentId;
+
+    /**
      * 标签备注
      */
     private String remark;
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
 
     public String getTitle() {
         return title;

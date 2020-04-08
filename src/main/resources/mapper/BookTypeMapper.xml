@@ -5,6 +5,7 @@
 
     <resultMap id="BaseResultMap" type="com.beau.graduation.model.BookType" >
         <result column="id" property="id" />
+        <result column="parent_id" property="parentId"/>
         <result column="name" property="name" />
         <result column="create_time" property="createTime" />
         <result column="remark" property="remark" />
@@ -12,6 +13,7 @@
 
     <sql id="Base_Column_List">
         `id`,
+        parent_id,
         `name`,
         `create_time`,
         `remark`
@@ -27,8 +29,14 @@
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookType.createTime)'>
                 `create_time`,
             </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookType.updateTime)'>
+                `update_time`,
+            </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookType.remark)'>
-                `remark`
+                `remark`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookType.parentId)'>
+                `parent_id`
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -38,8 +46,14 @@
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookType.createTime)'>
                 #{bookType.createTime},
             </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookType.updateTime)'>
+                #{bookType.updateTime},
+            </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookType.remark)'>
-                #{bookType.remark}
+                #{bookType.remark},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookType.parentId)'>
+                #{bookType.parentId}
             </if>
         </trim>
     </insert>
@@ -96,14 +110,8 @@
         SELECT <include refid="Base_Column_List" />
         FROM tm_book_type
         <where>
-            <if test ='null != bookType.id'>
-                and id = #{bookType.id}
-            </if>
             <if test ='null != bookType.name'>
                 and name = #{bookType.name}
-            </if>
-            <if test ='null != bookType.delFlag'>
-                and delFlag = #{bookType.delFlag}
             </if>
             <if test ='null != bookType.createTime'>
                 and createTime = #{bookType.createTime}
@@ -124,6 +132,9 @@
             <if test='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookType.name)'>
                 and name like concat('%',#{bookType.name},'%')
             </if>
+            <if test='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookType.parentId)'>
+                and parent_id = #{bookType.parentId}
+            </if>
         </where>
         limit #{page.index,jdbcType=INTEGER}, #{page.size,jdbcType=INTEGER}
     </select>
@@ -135,6 +146,9 @@
             del_flag = '0'
             <if test='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookType.name)'>
                 and name like concat('%',#{bookType.name},'%')
+            </if>
+            <if test='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookType.parentId)'>
+                and parent_id = #{bookType.parentId}
             </if>
         </where>
     </select>

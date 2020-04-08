@@ -16,8 +16,10 @@
         <result column="price" property="price" />
         <result column="img_url" property="imgUrl"/>
         <result column="type_name" property="bookType"/>
+        <result column="type_id" property="typeId"/>
         <result column="review_status" property="reviewStatus"/>
         <result column="sale_status" property="saleStatus"/>
+        <result column="sort" property="sort"/>
     </resultMap>
 
 
@@ -72,16 +74,19 @@
                 `reserve`,
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.price)'>
-                `price`
+                `price`,
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.createTime)'>
-                `create_time`
+                `create_time`,
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.updateTime)'>
-                `update_time`
+                `update_time`,
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.sort)'>
-                `sort`
+                `sort`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.typeId)'>
+                type_id
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -110,16 +115,19 @@
                 #{book.reserve},
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.price)'>
-                #{book.price}
+                #{book.price},
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.createTime)'>
-                #{book.createTime}
+                #{book.createTime},
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.updateTime)'>
-                #{book.updateTime}
+                #{book.updateTime},
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.sort)'>
-                #{book.sort}
+                #{book.sort},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.typeId)'>
+                #{book.typeId},
             </if>
         </trim>
     </insert>
@@ -332,7 +340,6 @@
         SELECT
             count(distinct (tb.id))
         FROM tm_book tb
-        left join tr_book_relation_type brt on tb.id=brt.book_id
         <where>
             tb.del_flag = '0'
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.title)'>
@@ -345,11 +352,8 @@
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.reviewStatus)'>
                 and tb.review_status = #{bookDto.reviewStatus}
             </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.beginDate) || @com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.endDate)'>
-                and (tb.create_time between #{bookDto.beginDate} and #{bookDto.endDate})
-            </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.bookType)'>
-                and brt.type_id = #{bookDto.bookType}
+                and tb.type_id = #{bookDto.bookType}
             </if>
         </where>
     </select>
@@ -359,28 +363,31 @@
         tb.id AS id,
         tbi.img_url AS img_url,
         tb.title AS title,
+        tb.introduction as introduction,
         tb.price AS price,
-        GROUP_CONCAT( tbt.`name` separator'-') AS type_name,
+        tb.type_id as type_id,
+        tbt.name AS type_name,
         tb.recommend_flag AS recommend_flag,
         tb.reserve AS reserve,
         (
-            SELECT
-                sum( CASE WHEN tbo.amount != 0 THEN tbo.amount ELSE 0 END )
-            FROM
-                tm_book_order tbo
-            WHERE
-                tb.id = tbo.book_id
+        SELECT
+            sum( CASE WHEN tbo.amount != 0 THEN tbo.amount ELSE 0 END )
+        FROM
+            tm_book_order tbo
+        WHERE
+            tb.id = tbo.book_id
         ) AS sales,
         tb.review_status AS review_status,
+        tb.publisher as publisher,
+        tb.publish_date as publish_date,
+        tb.sort as sort,
         tb.sale_status AS sale_status,
         tb.author as author
         FROM tm_book tb
-        left join tr_book_relation_type brt on tb.id=brt.book_id
-        left join tm_book_type tbt on brt.type_id=tbt.id
+        left join tm_book_type tbt on tb.type_id=tbt.id
         left join tm_book_image tbi on tb.id=tbi.book_id
         <where>
             tb.del_flag = '0'
-            and brt.del_flag = '0'
             and tbi.del_flag = '0'
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.title)'>
                 and (tb.title like concat('%',#{bookDto.title},'%')
@@ -392,15 +399,12 @@
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.reviewStatus)'>
                 and tb.review_status = #{bookDto.reviewStatus}
             </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.beginDate) || @com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.endDate)'>
-                and (tb.create_time between #{bookDto.beginDate} and #{bookDto.endDate})
-            </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.bookType)'>
-                and brt.type_id = #{bookDto.bookType}
+                and tb.type_id = #{bookDto.bookType}
             </if>
         </where>
         group by tb.id
-        order by tb.recommend_flag desc
+        order by tb.recommend_flag desc,tb.create_time desc
         limit #{page.index},#{page.size}
     </select>
 

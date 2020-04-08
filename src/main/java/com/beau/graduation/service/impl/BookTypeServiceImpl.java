@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -86,6 +87,7 @@ public class BookTypeServiceImpl implements BookTypeService {
 		if (StringUtils.isNotEmpty(reqDto.getTypeName())) {
 			entity.setName(reqDto.getTypeName());
 		}
+		entity.setParentId(reqDto.getParentId());
 		int total = dao.total(entity);
 
 		List<BookType> bookTypes = dao.selectPage(entity, PageUtil.getBeginAndSize(pageNo, pageSize));
@@ -112,7 +114,9 @@ public class BookTypeServiceImpl implements BookTypeService {
 		if (StringUtils.isNotEmpty(reqDto.getTitle())) {
 			entity.setRemark(reqDto.getRemark());
 		}
+		entity.setParentId(reqDto.getParentId());
 		entity.setCreateTime(new Date());
+		entity.setUpdateTime(new Date());
 
 		int insert = dao.insert(entity);
 		if (insert > 0) {

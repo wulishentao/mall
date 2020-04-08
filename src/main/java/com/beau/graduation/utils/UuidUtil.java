@@ -1,6 +1,9 @@
 package com.beau.graduation.utils;
 
 
+import com.alibaba.fastjson.JSON;
+
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -16,5 +19,6 @@ public class UuidUtil {
 
     public static void main(String[] args) {
         System.out.println(getUuid());
+        System.out.println(DateUtil.getTime());
     }
 }

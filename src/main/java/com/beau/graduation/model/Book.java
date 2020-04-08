@@ -25,6 +25,11 @@ public class Book implements Serializable {
      */
     private String title;
 
+    /**
+     * 书籍类别id
+     */
+    private Long typeId;
+
 
     /**
      * author  作者
@@ -62,11 +67,6 @@ public class Book implements Serializable {
     private String introduction;
 
 
-    /**
-     * del_flag  是否删除，0-否，1-是
-     */
-    private String delFlag;
-
 
     /**
      * recommend_flag  编辑推荐，0-否，1-是
@@ -88,19 +88,27 @@ public class Book implements Serializable {
     /**
      * 书籍创建日期
      */
-    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    @JSONField
     private Date createTime;
 
     /**
      * 书籍更新日期
      */
-    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    @JSONField
     private Date updateTime;
 
     /**
      * 排序规则,数字越大优先级越高(0~9)
      */
     private String sort;
+
+    public Long getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Long typeId) {
+        this.typeId = typeId;
+    }
 
     public Date getUpdateTime() {
         return updateTime;
@@ -188,14 +196,6 @@ public class Book implements Serializable {
 
     public void setIntroduction(String introduction) {
         this.introduction = introduction;
-    }
-
-    public String getDelFlag() {
-        return delFlag;
-    }
-
-    public void setDelFlag(String delFlag) {
-        this.delFlag = delFlag;
     }
 
     public String getRecommendFlag() {

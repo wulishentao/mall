@@ -23,6 +23,7 @@ public class BookRelationTypeServiceImpl implements BookRelationTypeService {
 	BookRelationTypeDao dao;
 
     @Override
+	@Transactional(rollbackFor = Exception.class)
     public int insert(BookRelationType bookRelationType) {
         return dao.insert(bookRelationType);
     }

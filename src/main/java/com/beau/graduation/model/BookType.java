@@ -24,6 +24,10 @@ public class BookType implements Serializable {
      */
     private String name;
 
+    /**
+     * 父级ID(若为-1则为一级类别)
+     */
+    private Long parentId;
 
     /**
      * del_flag  是否删除，0-否，1-是
@@ -34,15 +38,36 @@ public class BookType implements Serializable {
     /**
      * create_time  创建时间
      */
-    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    @JSONField
     private Date createTime;
+
+    /**
+     * update_time  更新时间
+     */
+    @JSONField
+    private Date updateTime;
 
 
     /**
      * remark  类别备注
      */
-    @JSONField (format="yyyy-MM-dd HH:mm:ss")
     private String remark;
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public Long getId() {
         return id;

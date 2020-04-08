@@ -12,8 +12,17 @@ import java.io.Serializable;
  **/
 public class GetCommodityTypeReqDto extends CommonReqDTO implements Serializable {
     private String typeName;
+    private Long parentId;
     private Integer pageNo;
     private Integer pageSize;
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
 
     public String getTypeName() {
         return typeName;
