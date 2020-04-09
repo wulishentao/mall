@@ -9,15 +9,13 @@
         <result column="img_url" property="imgUrl" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
-        <result column="remark" property="remark" />
     </resultMap>
 
     <sql id="Base_Column_List">
-        `id`,
         `book_id`,
         `img_url`,
         `create_time`,
-        `update_time`,
+        `update_time`
     </sql>
 
     <!-- 插入数据 -->
@@ -54,7 +52,7 @@
                 #{bookImage.updateTime},
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookImage.remark)'>
-                #{bookImage.remark},
+                #{bookImage.remark}
             </if>
         </trim>
     </insert>
@@ -64,13 +62,10 @@
         INSERT INTO tm_book_image ( <include refid="Base_Column_List" /> ) VALUES
         <foreach collection="list" item="curr" index="index" separator=",">
             (
-                #{curr.id},
                 #{curr.bookId},
                 #{curr.imgUrl},
                 #{curr.createTime},
-                #{curr.updateTime},
-                #{curr.remark},
-                #{curr.delFlag}
+                #{curr.updateTime}
             )
         </foreach>
     </insert>

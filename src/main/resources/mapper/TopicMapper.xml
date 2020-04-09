@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beau.graduation.dao.TopicDao">
+
+    <resultMap id="BaseResultMap" type="com.beau.graduation.model.Topic" >
+        <result column="id" property="id" />
+        <result column="topic_title" property="topicTitle" />
+        <result column="topic_introduce" property="topicIntroduce" />
+        <result column="begin_time" property="beginTime" />
+        <result column="end_time" property="endTime" />
+        <result column="status" property="status" />
+        <result column="sort" property="sort" />
+        <result column="topic_img" property="topicImg" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `id`,
+        `topic_title`,
+        `topic_introduce`,
+        `begin_time`,
+        `end_time`,
+        `status`,
+        `sort`,
+        `topic_img`,
+        `remark`
+    </sql>
+
+    <!-- 插入数据 -->
+    <insert id="insert" parameterType="com.beau.graduation.model.Topic">
+        INSERT INTO tm_topic
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.topicTitle)'>
+                `topic_title`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.topicIntroduce)'>
+                `topic_introduce`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.beginTime)'>
+                `begin_time`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.endTime)'>
+                `end_time`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.status)'>
+                `status`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.sort)'>
+                `sort`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.topicImg)'>
+                `topic_img`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.remark)'>
+                `remark`
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.topicTitle)'>
+                #{topic.topicTitle},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.topicIntroduce)'>
+                #{topic.topicIntroduce},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.beginTime)'>
+                #{topic.beginTime},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.endTime)'>
+                #{topic.endTime},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.status)'>
+                #{topic.status},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.sort)'>
+                #{topic.sort},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.topicImg)'>
+                #{topic.topicImg},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.remark)'>
+                #{topic.remark}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量插入数据 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO tm_topic ( <include refid="Base_Column_List" /> ) VALUES
+        <foreach collection="list" item="curr" index="index" separator=",">
+            (
+                #{curr.id},
+                #{curr.topicTitle},
+                #{curr.topicIntroduce},
+                #{curr.beginTime},
+                #{curr.endTime},
+                #{curr.status},
+                #{curr.sort},
+                #{curr.topicImg},
+                #{curr.remark},
+                #{curr.delFlag}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="com.beau.graduation.model.Topic">
+        UPDATE tm_topic
+        <set>
+            <if test ='null != topic.topicTitle'>topic_title = #{topic.topicTitle},</if>
+            <if test ='null != topic.topicIntroduce'>topic_introduce = #{topic.topicIntroduce},</if>
+            <if test ='null != topic.beginTime'>begin_time = #{topic.beginTime},</if>
+            <if test ='null != topic.endTime'>end_time = #{topic.endTime},</if>
+            <if test ='null != topic.status'>status = #{topic.status},</if>
+            <if test ='null != topic.sort'>sort = #{topic.sort},</if>
+            <if test ='null != topic.topicImg'>topic_img = #{topic.topicImg},</if>
+            <if test ='null != topic.remark'>remark = #{topic.remark},</if>
+            <if test ='null != topic.delFlag'>del_flag = #{topic.delFlag}</if>
+        </set>
+        WHERE id = topic.id
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delete">
+        DELETE FROM tm_topic
+        WHERE id = #{topic.topic}
+    </delete>
+
+    <!-- 批量删除 -->
+    <delete id="batchDelete" parameterType = "java.util.List">
+        DELETE FROM tm_topic WHERE id IN
+        <foreach collection="list"  item="item" open="(" separator="," close=")"  >
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 主键查询 -->
+    <select id="selectByObj" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tm_topic
+        WHERE id = #{topic.id}
+    </select>
+
+    <!-- 条件查询 -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tm_topic
+        <where>
+            <if test ='null != topic.id'>
+                and id = #{topic.id}
+            </if>
+            <if test ='null != topic.topicTitle'>
+                and topicTitle = #{topic.topicTitle}
+            </if>
+            <if test ='null != topic.topicIntroduce'>
+                and topicIntroduce = #{topic.topicIntroduce}
+            </if>
+            <if test ='null != topic.beginTime'>
+                and beginTime = #{topic.beginTime}
+            </if>
+            <if test ='null != topic.endTime'>
+                and endTime = #{topic.endTime}
+            </if>
+            <if test ='null != topic.status'>
+                and status = #{topic.status}
+            </if>
+            <if test ='null != topic.sort'>
+                and sort = #{topic.sort}
+            </if>
+            <if test ='null != topic.topicImg'>
+                and topicImg = #{topic.topicImg}
+            </if>
+            <if test ='null != topic.remark'>
+                and remark = #{topic.remark}
+            </if>
+            <if test ='null != topic.delFlag'>
+                and delFlag = #{topic.delFlag}
+            </if>
+        </where>
+    </select>
+
+    <!-- 分页条件查询 -->
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tm_topic
+        <where>
+            <if test ='null != topic.id'>
+                and id = #{topic.id}
+            </if>
+            <if test ='null != topic.topicTitle'>
+                and topicTitle = #{topic.topicTitle}
+            </if>
+            <if test ='null != topic.topicIntroduce'>
+                and topicIntroduce = #{topic.topicIntroduce}
+            </if>
+            <if test ='null != topic.beginTime'>
+                and beginTime = #{topic.beginTime}
+            </if>
+            <if test ='null != topic.endTime'>
+                and endTime = #{topic.endTime}
+            </if>
+            <if test ='null != topic.status'>
+                and status = #{topic.status}
+            </if>
+            <if test ='null != topic.sort'>
+                and sort = #{topic.sort}
+            </if>
+            <if test ='null != topic.topicImg'>
+                and topicImg = #{topic.topicImg}
+            </if>
+            <if test ='null != topic.remark'>
+                and remark = #{topic.remark}
+            </if>
+            <if test ='null != topic.delFlag'>
+                and delFlag = #{topic.delFlag}
+            </if>
+        </where>
+        limit #{page,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <!-- 总量查询 -->
+    <select id="total" resultType="java.lang.Integer">
+        SELECT count(id) FROM tm_topic
+        <where>
+            <if test ='null != topic.id'>
+                and id = #{topic.id}
+            </if>
+            <if test ='null != topic.topicTitle'>
+                and topicTitle = #{topic.topicTitle}
+            </if>
+            <if test ='null != topic.topicIntroduce'>
+                and topicIntroduce = #{topic.topicIntroduce}
+            </if>
+            <if test ='null != topic.beginTime'>
+                and beginTime = #{topic.beginTime}
+            </if>
+            <if test ='null != topic.endTime'>
+                and endTime = #{topic.endTime}
+            </if>
+            <if test ='null != topic.status'>
+                and status = #{topic.status}
+            </if>
+            <if test ='null != topic.sort'>
+                and sort = #{topic.sort}
+            </if>
+            <if test ='null != topic.topicImg'>
+                and topicImg = #{topic.topicImg}
+            </if>
+            <if test ='null != topic.remark'>
+                and remark = #{topic.remark}
+            </if>
+            <if test ='null != topic.delFlag'>
+                and delFlag = #{topic.delFlag}
+            </if>
+        </where>
+    </select>
+</mapper>

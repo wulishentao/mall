@@ -7,14 +7,19 @@ import com.beau.graduation.basic.reqdto.*;
 import com.beau.graduation.basic.resdto.*;
 import com.beau.graduation.common.Page;
 import com.beau.graduation.config.UploadConfig;
+import com.beau.graduation.controller.ApiController;
 import com.beau.graduation.dao.BookDao;
 import com.beau.graduation.model.*;
 import com.beau.graduation.model.dto.BookDto;
 import com.beau.graduation.service.BookImageService;
+import com.beau.graduation.service.BookRelationTopicService;
 import com.beau.graduation.service.BookRelationTypeService;
 import com.beau.graduation.service.BookService;
 import com.beau.graduation.utils.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -23,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,6 +40,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class BookServiceImpl implements BookService {
+	private static final Logger logger = LoggerFactory.getLogger(BookServiceImpl.class);
 
     @Autowired
     BookDao dao;
@@ -42,13 +49,13 @@ public class BookServiceImpl implements BookService {
 	private BookImageService bookImageService;
 
 	@Autowired
-	private BookRelationTypeService relationTypeService;
-
-	@Autowired
 	private RedisUtil redisUtil;
 
 	@Autowired
 	private LoginUtil loginUtil;
+
+	@Autowired
+	private BookRelationTopicService relationTopicService;
 
     @Override
     public int insert(Book book) {
@@ -83,41 +90,6 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public BookDto selectById(Long bookId) {
 		return dao.selectById(bookId);
-	}
-
-	@Override
-	public List<Book> selectList(Book book) {
-		return dao.selectList(book);
-	}
-
-	@Override
-	public Page<Book> selectPage(Book book, Integer offset, Integer pageSize) {
-		Page<Book> pageList = new Page<>();
-
-		int total = this.total(book);
-
-		Integer totalPage;
-		if (total % pageSize != 0) {
-			totalPage = (total /pageSize) + 1;
-		} else {
-			totalPage = total /pageSize;
-		}
-
-		int page = (offset - 1) * pageSize;
-
-		List<Book> list = dao.selectPage(book, page, pageSize);
-
-		pageList.setList(list);
-		pageList.setStartPageNo(offset);
-		pageList.setPageSize(pageSize);
-		pageList.setTotalCount(total);
-		pageList.setTotalPageCount(totalPage);
-		return pageList;
-	}
-
-	@Override
-	public int total(Book book) {
-		return dao.total(book);
 	}
 
 	@Override
@@ -372,7 +344,7 @@ public class BookServiceImpl implements BookService {
 		entity.setCreateTime(new Date());
 		entity.setUpdateTime(new Date());
 		entity.setPrice(reqDto.getPrice());
-		entity.setPublishDate(reqDto.getPublishDate());
+		entity.setPublishDate(DateUtil.parseDate(reqDto.getPublishDate()));
 		entity.setPublisher(reqDto.getPublisher());
 		entity.setReserve(reqDto.getReserve());
 		entity.setTypeId(reqDto.getTypeId());
@@ -383,25 +355,75 @@ public class BookServiceImpl implements BookService {
 		dao.insert(entity);
 
 		// 将图书封面图片存入指定地址
-		MultipartFile file = reqDto.getFile();
-		if (file.isEmpty()) {
+		List<MultipartFile> files = reqDto.getFiles();
+		if (files.size() == 0) {
 			throw new Exception("上传图片不能为空");
 		}
-		String filePath = FileUploadsUtil.uploadPicture(UploadConfig.getUploadPath(), file);
+		List<String> filePaths = new ArrayList<>();
+		for (MultipartFile file : files) {
+			String filePath = FileUploadsUtil.uploadPicture(UploadConfig.getBookPicUploadPath(), file);
+			filePaths.add(filePath);
+		}
 
 		// 将图书封面图片地址存入数据库
-		BookImage image = new BookImage();
-		image.setBookId(entity.getId());
-		image.setCreateTime(new Date());
-		image.setUpdateTime(new Date());
-		image.setImgUrl(filePath);
-		bookImageService.insert(image);
+		List<BookImage> bookImages = new ArrayList<>();
+		for (String filePath : filePaths) {
+			BookImage image = new BookImage();
+			image.setBookId(entity.getId());
+			image.setCreateTime(new Date());
+			image.setUpdateTime(new Date());
+			image.setImgUrl(filePath);
+			bookImages.add(image);
+		}
+		bookImageService.batchInsert(bookImages);
+
+		// 存储关联专题关系
+		String topicIds = reqDto.getTopicIds();
+		if (StringUtils.isNotEmpty(topicIds)) {
+			List<BookRelationTopic> relationTopics = new ArrayList<>();
+			String[] split = topicIds.split(",");
+			for (String s : split) {
+				BookRelationTopic relationTopic = new BookRelationTopic();
+				relationTopic.setBookId(entity.getId());
+				relationTopic.setTopicId(Long.valueOf(s));
+				relationTopic.setCreateTime(new Date());
+				relationTopic.setUpdateTime(new Date());
+				relationTopics.add(relationTopic);
+			}
+			relationTopicService.batchInsert(relationTopics);
+		}
 
 		resDto.setCode(ResultCode.success.getCode());
 		return resDto;
 	}
 
+	/**
+	 * 编辑书籍信息
+	 * @method: editCommodity
+	 * @param: [reqDto]
+	 * @return: com.beau.graduation.basic.resdto.EditCommodityResDto
+	 */
+	@Override
+	public EditCommodityResDto editCommodity(EditCommodityReqDto reqDto) {
+		return null;
+	}
 
+	/**
+	 * 书籍详情页
+	 * @method: commodityDetailed
+	 * @param: [reqDto]
+	 * @return: com.beau.graduation.basic.resdto.CommodityDetailedResDto
+	 */
+	@Override
+	public CommodityDetailedResDto commodityDetailed(CommodityDetailedReqDto reqDto) throws Exception {
+		CommodityDetailedResDto resDto = new CommodityDetailedResDto();
 
-
+		if (reqDto.getBookId() == 0 || reqDto.getBookId() == null) {
+			throw new Exception("书籍id不能为空");
+		}
+		Book book = new Book();
+		book.setId(reqDto.getBookId());
+		BookDto bookDto = dao.selectByObj(book);
+		return null;
+	}
 }

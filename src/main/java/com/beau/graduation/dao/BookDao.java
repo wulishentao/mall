@@ -46,21 +46,6 @@ public interface BookDao {
     BookDto selectByObj(@Param("book") Book book);
 
     /**
-     * [条件查询]
-     **/
-    List<Book> selectList (@Param("book") Book book);
-
-    /**
-     * [分页条件查询]
-     **/
-    List<Book> selectPage (@Param("book") Book book, @Param("page") Integer page, @Param("pageSize") Integer pageSize);
-
-    /**
-     * [总量查询]
-     **/
-    int total(@Param("book") Book book);
-
-    /**
      * 查询满足条件书籍总量
      * @param dto
      * @return

@@ -145,17 +145,16 @@
     <update id="update" parameterType="com.beau.graduation.model.PartnerInfo">
         UPDATE tm_partner_info
         <set>
-            <if test ='null != partnerInfo.accountName'>account_name = #{partnerInfo.accountName},</if>
-            <if test ='null != partnerInfo.accountType'>account_type = #{partnerInfo.accountType},</if>
-            <if test ='null != partnerInfo.status'>status = #{partnerInfo.status},</if>
-            <if test ='null != partnerInfo.password'>password = #{partnerInfo.password},</if>
-            <if test ='null != partnerInfo.address'>address = #{partnerInfo.address},</if>
-            <if test ='null != partnerInfo.remark'>remark = #{partnerInfo.remark},</if>
-            <if test ='null != partnerInfo.phone'>phone = #{partnerInfo.phone},</if>
-            <if test ='null != partnerInfo.createTime'>create_time = #{partnerInfo.createTime},</if>
-            <if test ='null != partnerInfo.updateTime'>update_time = #{partnerInfo.updateTime},</if>
-            <if test ='null != partnerInfo.gender'>gender = #{partnerInfo.gender},</if>
-            <if test ='null != partnerInfo.delFlag'>del_flag = #{partnerInfo.delFlag}</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(partnerInfo.accountName)'>account_name = #{partnerInfo.accountName},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(partnerInfo.accountType)'>account_type = #{partnerInfo.accountType},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(partnerInfo.status)'>status = #{partnerInfo.status},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(partnerInfo.password)'>password = #{partnerInfo.password},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(partnerInfo.address)'>address = #{partnerInfo.address},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(partnerInfo.remark)'>remark = #{partnerInfo.remark},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(partnerInfo.phone)'>phone = #{partnerInfo.phone},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(partnerInfo.createTime)'>create_time = #{partnerInfo.createTime},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(partnerInfo.updateTime)'>update_time = #{partnerInfo.updateTime},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(partnerInfo.gender)'>gender = #{partnerInfo.gender}</if>
         </set>
         WHERE id = partnerInfo.id
     </update>

@@ -13,14 +13,6 @@ class MallWebApplicationTests {
 
     @Test
     void contextLoads() {
-        System.out.println(FileUploadsUtil.getDefaultBaseDir());
-        System.out.println(FileUploadsUtil.extractFilename(".jpg"));
-        System.out.println(File.separator + UploadConfig.getUploadPath() + FileUploadsUtil.extractFilename(".jpg"));
-        File file = new File(File.separator + UploadConfig.getUploadPath() + FileUploadsUtil.extractFilename(".jpg"));
-        File file1 = new File("D:" + File.separator + "pro" + File.separator + "a.txt");
-        System.out.println("file1 = " + file1);
-
-        System.out.println("file = " + file);
     }
 
 }

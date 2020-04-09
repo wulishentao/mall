@@ -42,10 +42,18 @@ public class UploadConfig {
     }
 
     /**
-     * 获取上传路径
+     * 获取图书封面上传路径
      * @return
      */
-    public static String getUploadPath() {
-        return profile + "upload/";
+    public static String getBookPicUploadPath() {
+        return profile + "book_pic/";
+    }
+
+    /**
+     * 获取专题封面上传路径
+     * @return
+     */
+    public static String getTopicPicUploadPath() {
+        return profile + "topic_pic/";
     }
 }

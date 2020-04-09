@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beau.graduation.dao.BookRelationTopicDao">
+
+    <resultMap id="BaseResultMap" type="com.beau.graduation.model.BookRelationTopic" >
+        <result column="id" property="id" />
+        <result column="book_id" property="bookId" />
+        <result column="topic_id" property="topicId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `book_id`,
+        `topic_id`,
+        `create_time`,
+        `update_time`
+    </sql>
+
+    <!-- 插入数据 -->
+    <insert id="insert" parameterType="com.beau.graduation.model.BookRelationTopic">
+        INSERT INTO tr_book_relation_topic
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test ='null != bookRelationTopic.id'>
+                `id`,
+            </if>
+            <if test ='null != bookRelationTopic.bookId'>
+                `book_id`,
+            </if>
+            <if test ='null != bookRelationTopic.topicId'>
+                `topic_id`,
+            </if>
+            <if test ='null != bookRelationTopic.createTime'>
+                `create_time`,
+            </if>
+            <if test ='null != bookRelationTopic.updateTime'>
+                `update_time`,
+            </if>
+            <if test ='null != bookRelationTopic.delFlag'>
+                `del_flag`
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test ='null != bookRelationTopic.id'>
+                #{bookRelationTopic.id},
+            </if>
+            <if test ='null != bookRelationTopic.bookId'>
+                #{bookRelationTopic.bookId},
+            </if>
+            <if test ='null != bookRelationTopic.topicId'>
+                #{bookRelationTopic.topicId},
+            </if>
+            <if test ='null != bookRelationTopic.createTime'>
+                #{bookRelationTopic.createTime},
+            </if>
+            <if test ='null != bookRelationTopic.updateTime'>
+                #{bookRelationTopic.updateTime},
+            </if>
+            <if test ='null != bookRelationTopic.delFlag'>
+                #{bookRelationTopic.delFlag}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量插入数据 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO tr_book_relation_topic ( <include refid="Base_Column_List" /> ) VALUES
+        <foreach collection="list" item="curr" index="index" separator=",">
+            (
+                #{curr.bookId},
+                #{curr.topicId},
+                #{curr.createTime},
+                #{curr.updateTime}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="com.beau.graduation.model.BookRelationTopic">
+        UPDATE tr_book_relation_topic
+        <set>
+            <if test ='null != bookRelationTopic.bookId'>book_id = #{bookRelationTopic.bookId},</if>
+            <if test ='null != bookRelationTopic.topicId'>topic_id = #{bookRelationTopic.topicId},</if>
+            <if test ='null != bookRelationTopic.createTime'>create_time = #{bookRelationTopic.createTime},</if>
+            <if test ='null != bookRelationTopic.updateTime'>update_time = #{bookRelationTopic.updateTime},</if>
+            <if test ='null != bookRelationTopic.delFlag'>del_flag = #{bookRelationTopic.delFlag}</if>
+        </set>
+        WHERE id = bookRelationTopic.id
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delete">
+        DELETE FROM tr_book_relation_topic
+        WHERE id = #{bookRelationTopic.bookRelationTopic}
+    </delete>
+
+    <!-- 批量删除 -->
+    <delete id="batchDelete" parameterType = "java.util.List">
+        DELETE FROM tr_book_relation_topic WHERE id IN
+        <foreach collection="list"  item="item" open="(" separator="," close=")"  >
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 主键查询 -->
+    <select id="selectByObj" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tr_book_relation_topic
+        WHERE id = #{bookRelationTopic.id}
+    </select>
+
+    <!-- 条件查询 -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tr_book_relation_topic
+        <where>
+            <if test ='null != bookRelationTopic.id'>
+                and id = #{bookRelationTopic.id}
+            </if>
+            <if test ='null != bookRelationTopic.bookId'>
+                and bookId = #{bookRelationTopic.bookId}
+            </if>
+            <if test ='null != bookRelationTopic.topicId'>
+                and topicId = #{bookRelationTopic.topicId}
+            </if>
+            <if test ='null != bookRelationTopic.createTime'>
+                and createTime = #{bookRelationTopic.createTime}
+            </if>
+            <if test ='null != bookRelationTopic.updateTime'>
+                and updateTime = #{bookRelationTopic.updateTime}
+            </if>
+            <if test ='null != bookRelationTopic.delFlag'>
+                and delFlag = #{bookRelationTopic.delFlag}
+            </if>
+        </where>
+    </select>
+
+    <!-- 分页条件查询 -->
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tr_book_relation_topic
+        <where>
+            <if test ='null != bookRelationTopic.id'>
+                and id = #{bookRelationTopic.id}
+            </if>
+            <if test ='null != bookRelationTopic.bookId'>
+                and bookId = #{bookRelationTopic.bookId}
+            </if>
+            <if test ='null != bookRelationTopic.topicId'>
+                and topicId = #{bookRelationTopic.topicId}
+            </if>
+            <if test ='null != bookRelationTopic.createTime'>
+                and createTime = #{bookRelationTopic.createTime}
+            </if>
+            <if test ='null != bookRelationTopic.updateTime'>
+                and updateTime = #{bookRelationTopic.updateTime}
+            </if>
+            <if test ='null != bookRelationTopic.delFlag'>
+                and delFlag = #{bookRelationTopic.delFlag}
+            </if>
+        </where>
+        limit #{page,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <!-- 总量查询 -->
+    <select id="total" resultType="java.lang.Integer">
+        SELECT count(id) FROM tr_book_relation_topic
+        <where>
+            <if test ='null != bookRelationTopic.id'>
+                and id = #{bookRelationTopic.id}
+            </if>
+            <if test ='null != bookRelationTopic.bookId'>
+                and bookId = #{bookRelationTopic.bookId}
+            </if>
+            <if test ='null != bookRelationTopic.topicId'>
+                and topicId = #{bookRelationTopic.topicId}
+            </if>
+            <if test ='null != bookRelationTopic.createTime'>
+                and createTime = #{bookRelationTopic.createTime}
+            </if>
+            <if test ='null != bookRelationTopic.updateTime'>
+                and updateTime = #{bookRelationTopic.updateTime}
+            </if>
+            <if test ='null != bookRelationTopic.delFlag'>
+                and delFlag = #{bookRelationTopic.delFlag}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -29,6 +29,7 @@ public class BookImageServiceImpl implements BookImageService {
     }
 
     @Override
+	@Transactional(rollbackFor = Exception.class)
     public int batchInsert(List<BookImage> list) {
     	return dao.batchInsert(list);
     }

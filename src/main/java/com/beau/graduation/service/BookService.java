@@ -55,21 +55,6 @@ public interface BookService {
     BookDto selectById(Long bookId);
 
     /**
-     * [条件查询]
-     **/
-    List<Book> selectList (Book book);
-
-    /**
-     * [分页条件查询]
-     **/
-    Page<Book> selectPage (Book book, Integer page, Integer pageSize);
-
-    /**
-     * [总量查询]
-     **/
-    int total(Book book);
-
-    /**
      * 添加商品进购物车
      * @param addCartReqDto
      * @return
@@ -83,4 +68,8 @@ public interface BookService {
     GetCommodityResDto getCommodityPage(GetCommodityReqDto reqDto);
 
     AddCommodityResDto addCommodity(AddCommodityReqDto reqDto) throws Exception;
+
+    EditCommodityResDto editCommodity(EditCommodityReqDto reqDto);
+
+    CommodityDetailedResDto commodityDetailed(CommodityDetailedReqDto reqDto) throws Exception;
 }

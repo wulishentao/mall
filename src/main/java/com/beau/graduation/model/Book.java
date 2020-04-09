@@ -52,7 +52,8 @@ public class Book implements Serializable {
     /**
      * publish_date  出版日期
      */
-    private String publishDate;
+    @JSONField
+    private Date publishDate;
 
 
     /**
@@ -174,11 +175,11 @@ public class Book implements Serializable {
         this.reviewStatus = reviewStatus;
     }
 
-    public String getPublishDate() {
+    public Date getPublishDate() {
         return publishDate;
     }
 
-    public void setPublishDate(String publishDate) {
+    public void setPublishDate(Date publishDate) {
         this.publishDate = publishDate;
     }
 

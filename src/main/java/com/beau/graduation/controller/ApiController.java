@@ -7,6 +7,7 @@ import com.beau.graduation.common.ApiResult;
 import com.beau.graduation.service.BookService;
 import com.beau.graduation.service.BookTypeService;
 import com.beau.graduation.service.PartnerInfoService;
+import com.beau.graduation.service.TopicService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -38,6 +39,9 @@ public class ApiController {
 
     @Autowired
     private BookTypeService bookTypeService;
+
+    @Autowired
+    private TopicService topicService;
 
     /**
      * 管理员登录
@@ -108,6 +112,28 @@ public class ApiController {
         return res;
     }
 
+    @PostMapping(value = "/private/user/editPartnerStatus", produces = "application/json")
+    @ApiOperation("启用/禁用用户")
+    public ApiResult editPartnerStatus(@RequestBody EditPartnerStatusReqDto reqDto) {
+        ApiResult<EditPartnerStatusResDto> res = new ApiResult<>();
+        try {
+            EditPartnerStatusResDto resDto = partnerInfoService.editPartnerStatus(reqDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("editPartnerStatus error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("启用/禁用用户异常");
+        }
+        return res;
+    }
+
+    /**
+     * 获取书籍列表
+     * @method: getCommodityPage
+     * @param: [reqDto]
+     * @return: com.beau.graduation.common.ApiResult
+     */
     @PostMapping(value = "/private/commodity/getCommodityPage", produces = "application/json")
     @ApiOperation("获取商品书籍列表")
     public ApiResult getCommodityPage(@RequestBody GetCommodityReqDto reqDto) {
@@ -125,6 +151,12 @@ public class ApiController {
         return res;
     }
 
+    /**
+     * 添加书籍
+     * @method: addCommodity
+     * @param: [reqDto]
+     * @return: com.beau.graduation.common.ApiResult
+     */
     @PostMapping(value = "/private/commodity/addCommodity", produces = "application/json")
     @ApiOperation("添加书籍")
     public ApiResult addCommodity(AddCommodityReqDto reqDto) {
@@ -137,6 +169,44 @@ public class ApiController {
             logger.error("addCommodity error: ", e);
             res.setCode(ResultCode.failed.getCode());
             res.setMsg("添加书籍异常");
+        }
+        return res;
+    }
+
+    /**
+     * 书籍详情
+     * @method: commodityDetailed
+     * @param: [reqDto]
+     * @return: com.beau.graduation.common.ApiResult
+     */
+    @PostMapping(value = "/private/commodity/commodityDetailed", produces = "application/json")
+    @ApiOperation("书籍详情")
+    public ApiResult commodityDetailed(CommodityDetailedReqDto reqDto) {
+        ApiResult<CommodityDetailedResDto> res = new ApiResult<>();
+        try {
+            CommodityDetailedResDto resDto = bookService.commodityDetailed(reqDto);
+            res.setCode(resDto.getCode());
+            res.setMsg("获取书籍详情成功");
+        } catch (Exception e) {
+            logger.error("commodityDetailed error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("获取书籍详情异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/private/commodity/editCommodity", produces = "application/json")
+    @ApiOperation("编辑书籍信息")
+    public ApiResult editCommodity(EditCommodityReqDto reqDto) {
+        ApiResult<EditCommodityResDto> res = new ApiResult<>();
+        try {
+            EditCommodityResDto resDto = bookService.editCommodity(reqDto);
+            res.setCode(resDto.getCode());
+            res.setMsg("编辑书籍信息成功");
+        } catch (Exception e) {
+            logger.error("editCommodity error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("编辑书籍信息异常");
         }
         return res;
     }
@@ -174,4 +244,21 @@ public class ApiController {
         }
         return res;
     }
+
+    @PostMapping(value = "/private/marketing/addTopic", produces = "application/json")
+    @ApiOperation("添加活动专题")
+    public ApiResult addTopic(AddTopicReqDto reqDto) {
+        ApiResult<AddTopicResDto> res = new ApiResult<>();
+        try {
+            AddTopicResDto resDto = topicService.addTopic(reqDto);
+            res.setCode(resDto.getCode());
+            res.setMsg("添加活动专题");
+        } catch (Exception e) {
+            logger.error("addTopic error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("添加活动专题异常");
+        }
+        return res;
+    }
+
 }

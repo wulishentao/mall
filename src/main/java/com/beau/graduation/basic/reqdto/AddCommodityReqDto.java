@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -68,6 +69,19 @@ public class AddCommodityReqDto extends CommonReqDTO implements Serializable {
      * 商品图片
      */
     private List<MultipartFile> files;
+
+    /**
+     * 关联的专题id集合
+     */
+    private String topicIds;
+
+    public String getTopicIds() {
+        return topicIds;
+    }
+
+    public void setTopicIds(String topicIds) {
+        this.topicIds = topicIds;
+    }
 
     public String getTitle() {
         return title;

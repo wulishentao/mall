@@ -45,93 +45,6 @@
         tbi.img_url as img_url
     </sql>
 
-    <!-- 插入数据 -->
-    <insert id="insert" parameterType="com.beau.graduation.model.Book" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO tm_book
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.title)'>
-                `title`,
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.author)'>
-                `author`,
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.saleStatus)'>
-                `sale_status`,
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.publishDate)'>
-                `publish_date`,
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.publisher)'>
-                `publisher`,
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.introduction)'>
-                `introduction`,
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.recommendFlag)'>
-                `recommend_flag`,
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.reserve)'>
-                `reserve`,
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.price)'>
-                `price`,
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.createTime)'>
-                `create_time`,
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.updateTime)'>
-                `update_time`,
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.sort)'>
-                `sort`,
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.typeId)'>
-                type_id
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.title)'>
-                #{book.title},
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.author)'>
-                #{book.author},
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.saleStatus)'>
-                #{book.saleStatus},
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.publishDate)'>
-                #{book.publishDate},
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.publisher)'>
-                #{book.publisher},
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.introduction)'>
-                #{book.introduction},
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.recommendFlag)'>
-                #{book.recommendFlag},
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.reserve)'>
-                #{book.reserve},
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.price)'>
-                #{book.price},
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.createTime)'>
-                #{book.createTime},
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.updateTime)'>
-                #{book.updateTime},
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.sort)'>
-                #{book.sort},
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.typeId)'>
-                #{book.typeId},
-            </if>
-        </trim>
-    </insert>
-
     <!-- 批量插入数据 -->
     <insert id="batchInsert" parameterType="java.util.List">
         INSERT INTO tm_book ( <include refid="Base_Column_List" /> ) VALUES
@@ -190,150 +103,37 @@
 
     <!-- 主键查询 -->
     <select id="selectByObj" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List" />
-        FROM tm_book
-        WHERE id = #{book.id}
-    </select>
-
-    <!-- 条件查询 -->
-    <select id="selectList" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List" />
-        FROM tm_book
-        <where>
-            <if test ='null != book.id'>
-                and id = #{book.id}
-            </if>
-            <if test ='null != book.title'>
-                and title = #{book.title}
-            </if>
-            <if test ='null != book.author'>
-                and author = #{book.author}
-            </if>
-            <if test ='null != book.saleStatus'>
-                and saleStatus = #{book.saleStatus}
-            </if>
-            <if test ='null != book.reviewStatus'>
-                and reviewStatus = #{book.reviewStatus}
-            </if>
-            <if test ='null != book.publishDate'>
-                and publishDate = #{book.publishDate}
-            </if>
-            <if test ='null != book.publisher'>
-                and publisher = #{book.publisher}
-            </if>
-            <if test ='null != book.introduction'>
-                and introduction = #{book.introduction}
-            </if>
-            <if test ='null != book.delFlag'>
-                and delFlag = #{book.delFlag}
-            </if>
-            <if test ='null != book.recommendFlag'>
-                and recommendFlag = #{book.recommendFlag}
-            </if>
-            <if test ='null != book.reserve'>
-                and reserve = #{book.reserve}
-            </if>
-            <if test ='null != book.sales'>
-                and sales = #{book.sales}
-            </if>
-            <if test ='null != book.price'>
-                and price = #{book.price}
-            </if>
-        </where>
-    </select>
-
-    <!-- 分页条件查询 -->
-    <select id="selectPage" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List" />
-        FROM tm_book
-        <where>
-            <if test ='null != book.id'>
-                and id = #{book.id}
-            </if>
-            <if test ='null != book.title'>
-                and title = #{book.title}
-            </if>
-            <if test ='null != book.author'>
-                and author = #{book.author}
-            </if>
-            <if test ='null != book.saleStatus'>
-                and saleStatus = #{book.saleStatus}
-            </if>
-            <if test ='null != book.reviewStatus'>
-                and reviewStatus = #{book.reviewStatus}
-            </if>
-            <if test ='null != book.publishDate'>
-                and publishDate = #{book.publishDate}
-            </if>
-            <if test ='null != book.publisher'>
-                and publisher = #{book.publisher}
-            </if>
-            <if test ='null != book.introduction'>
-                and introduction = #{book.introduction}
-            </if>
-            <if test ='null != book.delFlag'>
-                and delFlag = #{book.delFlag}
-            </if>
-            <if test ='null != book.recommendFlag'>
-                and recommendFlag = #{book.recommendFlag}
-            </if>
-            <if test ='null != book.reserve'>
-                and reserve = #{book.reserve}
-            </if>
-            <if test ='null != book.sales'>
-                and sales = #{book.sales}
-            </if>
-            <if test ='null != book.price'>
-                and price = #{book.price}
-            </if>
-        </where>
-        limit #{page,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
-    </select>
-
-    <!-- 总量查询 -->
-    <select id="total" resultType="java.lang.Integer">
-        SELECT count(id) FROM tm_book
-        <where>
-            <if test ='null != book.id'>
-                and id = #{book.id}
-            </if>
-            <if test ='null != book.title'>
-                and title = #{book.title}
-            </if>
-            <if test ='null != book.author'>
-                and author = #{book.author}
-            </if>
-            <if test ='null != book.saleStatus'>
-                and saleStatus = #{book.saleStatus}
-            </if>
-            <if test ='null != book.reviewStatus'>
-                and reviewStatus = #{book.reviewStatus}
-            </if>
-            <if test ='null != book.publishDate'>
-                and publishDate = #{book.publishDate}
-            </if>
-            <if test ='null != book.publisher'>
-                and publisher = #{book.publisher}
-            </if>
-            <if test ='null != book.introduction'>
-                and introduction = #{book.introduction}
-            </if>
-            <if test ='null != book.delFlag'>
-                and delFlag = #{book.delFlag}
-            </if>
-            <if test ='null != book.recommendFlag'>
-                and recommendFlag = #{book.recommendFlag}
-            </if>
-            <if test ='null != book.reserve'>
-                and reserve = #{book.reserve}
-            </if>
-            <if test ='null != book.sales'>
-                and sales = #{book.sales}
-            </if>
-            <if test ='null != book.price'>
-                and price = #{book.price}
-            </if>
-        </where>
+        SELECT
+            tb.id AS id,
+            group_concat(tbi.img_url SEPARATOR ';') AS img_url,
+            tb.title AS title,
+            tb.introduction as introduction,
+            tb.price AS price,
+            tb.type_id as type_id,
+            tbt.name AS type_name,
+            tb.recommend_flag AS recommend_flag,
+            tb.reserve AS reserve,
+            (
+            SELECT
+                sum( CASE WHEN tbo.amount != 0 THEN tbo.amount ELSE 0 END )
+            FROM
+                tm_book_order tbo
+            WHERE
+                tb.id = tbo.book_id
+            ) AS sales,
+            tb.review_status AS review_status,
+            tb.publisher as publisher,
+            tb.publish_date as publish_date,
+            tb.sort as sort,
+            tb.sale_status AS sale_status,
+            tb.author as author
+        FROM tm_book tb
+        left join tm_book_type tbt on tb.type_id=tbt.id
+        left join tm_book_image tbi on tb.id=tbi.book_id
+        WHERE
+            tb.del_flag = '0'
+            and tbi.del_flag = '0'
+            and tb.id = #{book.id}
     </select>
 
     <select id="totalByDto" resultType="java.lang.Integer">
@@ -361,7 +161,7 @@
     <select id="getCommodityPage" resultMap="BaseResultMap">
         SELECT
         tb.id AS id,
-        tbi.img_url AS img_url,
+        group_concat(tbi.img_url) AS img_url,
         tb.title AS title,
         tb.introduction as introduction,
         tb.price AS price,
@@ -371,11 +171,11 @@
         tb.reserve AS reserve,
         (
         SELECT
-            sum( CASE WHEN tbo.amount != 0 THEN tbo.amount ELSE 0 END )
+        sum( CASE WHEN tbo.amount != 0 THEN tbo.amount ELSE 0 END )
         FROM
-            tm_book_order tbo
+        tm_book_order tbo
         WHERE
-            tb.id = tbo.book_id
+        tb.id = tbo.book_id
         ) AS sales,
         tb.review_status AS review_status,
         tb.publisher as publisher,
@@ -389,22 +189,23 @@
         <where>
             tb.del_flag = '0'
             and tbi.del_flag = '0'
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.title)'>
+            <if test='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.title)'>
                 and (tb.title like concat('%',#{bookDto.title},'%')
-                or tb.author like concat('%',#{bookDto.title},'%') or tb.publisher like concat('%',#{bookDto.title},'%'))
+                or tb.author like concat('%',#{bookDto.title},'%') or tb.publisher like
+                concat('%',#{bookDto.title},'%'))
             </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.saleStatus)'>
+            <if test='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.saleStatus)'>
                 and tb.sale_status = #{bookDto.saleStatus}
             </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.reviewStatus)'>
+            <if test='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.reviewStatus)'>
                 and tb.review_status = #{bookDto.reviewStatus}
             </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.bookType)'>
+            <if test='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.bookType)'>
                 and tb.type_id = #{bookDto.bookType}
             </if>
         </where>
         group by tb.id
-        order by tb.recommend_flag desc,tb.create_time desc
+        order by tb.recommend_flag desc,tb.sort desc,tb.create_time desc
         limit #{page.index},#{page.size}
     </select>
 

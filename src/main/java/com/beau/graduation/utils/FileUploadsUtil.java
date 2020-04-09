@@ -101,7 +101,7 @@ public class FileUploadsUtil {
     }
 
     public static final String extractFilename(String extension) {
-        String filename = DateUtil.datePath() + "/" + "mall_" + UuidUtil.getUuid() + extension;
+        String filename = DateUtil.datePath() + "/" + "mall_" + DateUtil.dateTime() + UuidUtil.getUuid() + extension;
         return filename;
     }
 

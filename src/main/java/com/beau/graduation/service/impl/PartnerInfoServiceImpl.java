@@ -4,14 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.beau.graduation.Enum.LoginTypeEnum;
 import com.beau.graduation.Enum.ResultCode;
 import com.beau.graduation.Enum.StatusEnum;
-import com.beau.graduation.basic.reqdto.GetPartnerReqDto;
-import com.beau.graduation.basic.reqdto.LoginReqDto;
-import com.beau.graduation.basic.reqdto.LogoutReqDto;
-import com.beau.graduation.basic.reqdto.RegisterReqDto;
-import com.beau.graduation.basic.resdto.GetPartnerResDto;
-import com.beau.graduation.basic.resdto.LoginResDto;
-import com.beau.graduation.basic.resdto.LogoutResDto;
-import com.beau.graduation.basic.resdto.RegisterResDto;
+import com.beau.graduation.basic.reqdto.*;
+import com.beau.graduation.basic.resdto.*;
 import com.beau.graduation.common.Page;
 import com.beau.graduation.dao.PartnerInfoDao;
 import com.beau.graduation.model.PartnerInfo;
@@ -284,6 +278,41 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 
 		resDto.setCode(ResultCode.success.getCode());
 		resDto.setInfoPage(page);
+		return resDto;
+	}
+
+	/**
+	 * 启用/禁用用户
+	 * @method: editPartnerStatus
+	 * @param: [reqDto]
+	 * @return: com.beau.graduation.basic.resdto.EditPartnerStatusResDto
+	 */
+	@Override
+	public EditPartnerStatusResDto editPartnerStatus(EditPartnerStatusReqDto reqDto) throws Exception {
+		EditPartnerStatusResDto resDto = new EditPartnerStatusResDto();
+		PartnerInfo pi = new PartnerInfo();
+
+		if (reqDto.getUserId() == 0 || reqDto.getUserId() == null) {
+			throw new Exception("用户id不能为空");
+		}
+		pi.setId(reqDto.getUserId());
+		PartnerInfo obj = dao.selectByObj(pi);
+		if (obj == null) {
+			resDto.setCode(ResultCode.failed.getCode());
+			resDto.setMsg("该用户不存在");
+			return resDto;
+		}
+		if (obj.getStatus().equals(reqDto.getStatus())) {
+			resDto.setCode(ResultCode.failed.getCode());
+			resDto.setMsg("请勿重复操作,刷新页面更新数据");
+			return resDto;
+		}
+		pi.setStatus(reqDto.getStatus());
+		pi.setUpdateTime(new Date());
+		dao.update(pi);
+
+		resDto.setCode(ResultCode.success.getCode());
+		resDto.setMsg("更改状态成功");
 		return resDto;
 	}
 }
