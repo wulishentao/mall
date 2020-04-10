@@ -20,6 +20,8 @@
         <result column="review_status" property="reviewStatus"/>
         <result column="sale_status" property="saleStatus"/>
         <result column="sort" property="sort"/>
+        <result column="topic_id" property="topicIds"/>
+        <result column="topic_title" property="topicTitles"/>
     </resultMap>
 
 
@@ -44,6 +46,87 @@
         tb.price as price,
         tbi.img_url as img_url
     </sql>
+
+    <insert id="insert" parameterType="com.beau.graduation.model.Book" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO tm_book
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.title)'>
+                `title`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.author)'>
+                `author`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.publishDate)'>
+                `publish_date`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.publisher)'>
+                `publisher`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.introduction)'>
+                `introduction`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.recommendFlag)'>
+                `recommend_flag`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.reserve)'>
+                `reserve`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.price)'>
+                `price`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.createTime)'>
+                `create_time`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.updateTime)'>
+                `update_time`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.sort)'>
+                `sort`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.typeId)'>
+                `type_id`
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.title)'>
+                #{book.title},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.author)'>
+                #{book.author},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.publishDate)'>
+                #{book.publishDate},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.publisher)'>
+                #{book.publisher},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.introduction)'>
+                #{book.introduction},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.recommendFlag)'>
+                #{book.recommendFlag},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.reserve)'>
+                #{book.reserve},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.price)'>
+                #{book.price},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.createTime)'>
+                #{book.createTime},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.updateTime)'>
+                #{book.updateTime},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.sort)'>
+                #{book.sort},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.typeId)'>
+                #{book.typeId}
+            </if>
+        </trim>
+    </insert>
+
 
     <!-- 批量插入数据 -->
     <insert id="batchInsert" parameterType="java.util.List">
@@ -71,26 +154,24 @@
     <update id="update" parameterType="com.beau.graduation.model.Book">
         UPDATE tm_book
         <set>
-            <if test ='null != book.title'>title = #{book.title},</if>
-            <if test ='null != book.author'>author = #{book.author},</if>
-            <if test ='null != book.saleStatus'>sale_status = #{book.saleStatus},</if>
-            <if test ='null != book.reviewStatus'>review_status = #{book.reviewStatus},</if>
-            <if test ='null != book.publishDate'>publish_date = #{book.publishDate},</if>
-            <if test ='null != book.publisher'>publisher = #{book.publisher},</if>
-            <if test ='null != book.introduction'>introduction = #{book.introduction},</if>
-            <if test ='null != book.delFlag'>del_flag = #{book.delFlag},</if>
-            <if test ='null != book.recommendFlag'>recommend_flag = #{book.recommendFlag},</if>
-            <if test ='null != book.reserve'>reserve = #{book.reserve},</if>
-            <if test ='null != book.sales'>sales = #{book.sales},</if>
-            <if test ='null != book.price'>price = #{book.price}</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.title)'>title = #{book.title},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.author)'>author = #{book.author},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.saleStatus)'>sale_status = #{book.saleStatus},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.reviewStatus)'>review_status = #{book.reviewStatus},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.publishDate)'>publish_date = #{book.publishDate},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.publisher)'>publisher = #{book.publisher},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.introduction)'>introduction = #{book.introduction},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.recommendFlag)'>recommend_flag = #{book.recommendFlag},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.reserve)'>reserve = #{book.reserve},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(book.price)'>price = #{book.price}</if>
         </set>
-        WHERE id = book.id
+        WHERE id = #{book.id}
     </update>
 
     <!-- 删除 -->
     <delete id="delete">
         DELETE FROM tm_book
-        WHERE id = #{book.book}
+        WHERE id = #{book.id}
     </delete>
 
     <!-- 批量删除 -->
@@ -101,11 +182,11 @@
         </foreach>
     </delete>
 
-    <!-- 主键查询 -->
-    <select id="selectByObj" resultMap="BaseResultMap">
+    <!-- 书籍详情获取 -->
+    <select id="commodityDetailed" resultMap="BaseResultMap">
         SELECT
             tb.id AS id,
-            group_concat(tbi.img_url SEPARATOR ';') AS img_url,
+            group_concat(distinct (tbi.img_url)) AS img_url,
             tb.title AS title,
             tb.introduction as introduction,
             tb.price AS price,
@@ -126,13 +207,19 @@
             tb.publish_date as publish_date,
             tb.sort as sort,
             tb.sale_status AS sale_status,
-            tb.author as author
+            tb.author as author,
+            group_concat(distinct (tt.id)) as topic_id,
+            group_concat(distinct (tt.topic_title)) as topic_title
         FROM tm_book tb
         left join tm_book_type tbt on tb.type_id=tbt.id
         left join tm_book_image tbi on tb.id=tbi.book_id
+        left join tr_book_relation_topic tbrt on tbrt.book_id=tb.id
+        left join tm_topic tt on tt.id=tbrt.topic_id
         WHERE
             tb.del_flag = '0'
             and tbi.del_flag = '0'
+            and tt.del_flag = '0'
+            and tbrt.del_flag = '0'
             and tb.id = #{book.id}
     </select>
 
@@ -215,7 +302,7 @@
         FROM tm_book tb
         left join tm_book_image tbi on tb.id=tbi.book_id
         <where>
-            <if test="null != bookId">
+            <if test="@com.beau.graduation.utils.MapperUtil@isNotEmpty()bookId">
                 tb.id = #{bookId}
             </if>
             and tb.review_status = '1'

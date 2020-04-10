@@ -58,12 +58,6 @@ public class Topic implements Serializable {
      */
     private String topicImg;
 
-
-    /**
-     * remark  备注
-     */
-    private String remark;
-
     public Long getId() {
         return id;
     }
@@ -126,13 +120,5 @@ public class Topic implements Serializable {
 
     public void setTopicImg(String topicImg) {
         this.topicImg = topicImg;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
     }
 }

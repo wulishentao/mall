@@ -49,11 +49,6 @@ public interface BookImageService {
     List<BookImage> selectList (BookImage bookImage);
 
     /**
-     * [分页条件查询]
-     **/
-    Page<BookImage> selectPage (BookImage bookImage, Integer page, Integer pageSize);
-
-    /**
      * [总量查询]
      **/
     int total(BookImage bookImage);

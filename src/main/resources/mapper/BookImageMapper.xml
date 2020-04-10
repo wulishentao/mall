@@ -14,8 +14,7 @@
     <sql id="Base_Column_List">
         `book_id`,
         `img_url`,
-        `create_time`,
-        `update_time`
+        `create_time`
     </sql>
 
     <!-- 插入数据 -->
@@ -64,8 +63,7 @@
             (
                 #{curr.bookId},
                 #{curr.imgUrl},
-                #{curr.createTime},
-                #{curr.updateTime}
+                #{curr.createTime}
             )
         </foreach>
     </insert>
@@ -81,13 +79,16 @@
             <if test ='null != bookImage.remark'>remark = #{bookImage.remark},</if>
             <if test ='null != bookImage.delFlag'>del_flag = #{bookImage.delFlag}</if>
         </set>
-        WHERE id = bookImage.id
+        WHERE id = #{bookImage.bookId}
     </update>
 
     <!-- 删除 -->
     <delete id="delete">
-        DELETE FROM tm_book_image
-        WHERE id = #{bookImage.bookImage}
+        update tm_book_image
+        <set>
+            del_flag = '1'
+        </set>
+        WHERE book_id = #{bookImage.bookId}
     </delete>
 
     <!-- 批量删除 -->
@@ -110,26 +111,11 @@
         SELECT <include refid="Base_Column_List" />
         FROM tm_book_image
         <where>
-            <if test ='null != bookImage.id'>
-                and id = #{bookImage.id}
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookImage.bookId)'>
+                and book_id = #{bookImage.bookId}
             </if>
-            <if test ='null != bookImage.bookId'>
-                and bookId = #{bookImage.bookId}
-            </if>
-            <if test ='null != bookImage.imgUrl'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookImage.imgUrl)'>
                 and imgUrl = #{bookImage.imgUrl}
-            </if>
-            <if test ='null != bookImage.createTime'>
-                and createTime = #{bookImage.createTime}
-            </if>
-            <if test ='null != bookImage.updateTime'>
-                and updateTime = #{bookImage.updateTime}
-            </if>
-            <if test ='null != bookImage.remark'>
-                and remark = #{bookImage.remark}
-            </if>
-            <if test ='null != bookImage.delFlag'>
-                and delFlag = #{bookImage.delFlag}
             </if>
         </where>
     </select>

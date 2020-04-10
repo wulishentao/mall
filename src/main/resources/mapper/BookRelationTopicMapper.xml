@@ -91,8 +91,11 @@
 
     <!-- 删除 -->
     <delete id="delete">
-        DELETE FROM tr_book_relation_topic
-        WHERE id = #{bookRelationTopic.bookRelationTopic}
+        update tr_book_relation_topic
+        <set>
+            del_flag = '0'
+        </set>
+        WHERE id = #{bookRelationTopic.bookId}
     </delete>
 
     <!-- 批量删除 -->

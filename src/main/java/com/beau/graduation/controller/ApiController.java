@@ -80,7 +80,7 @@ public class ApiController {
         try {
             LogoutResDto resDto = partnerInfoService.logout(reqDto, request, response);
             res.setCode(resDto.getCode());
-            resDto.setMsg("注销登录成功");
+            res.setMsg("注销登录成功");
         } catch (Exception e) {
             logger.error("logout error: ", e);
             res.setCode(ResultCode.failed.getCode());
@@ -181,10 +181,11 @@ public class ApiController {
      */
     @PostMapping(value = "/private/commodity/commodityDetailed", produces = "application/json")
     @ApiOperation("书籍详情")
-    public ApiResult commodityDetailed(CommodityDetailedReqDto reqDto) {
+    public ApiResult commodityDetailed(@RequestBody CommodityDetailedReqDto reqDto) {
         ApiResult<CommodityDetailedResDto> res = new ApiResult<>();
         try {
             CommodityDetailedResDto resDto = bookService.commodityDetailed(reqDto);
+            res.setData(resDto);
             res.setCode(resDto.getCode());
             res.setMsg("获取书籍详情成功");
         } catch (Exception e) {
@@ -252,7 +253,7 @@ public class ApiController {
         try {
             AddTopicResDto resDto = topicService.addTopic(reqDto);
             res.setCode(resDto.getCode());
-            res.setMsg("添加活动专题");
+            res.setMsg("添加活动专题成功");
         } catch (Exception e) {
             logger.error("addTopic error: ", e);
             res.setCode(ResultCode.failed.getCode());

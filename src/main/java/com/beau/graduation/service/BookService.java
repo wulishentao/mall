@@ -69,7 +69,7 @@ public interface BookService {
 
     AddCommodityResDto addCommodity(AddCommodityReqDto reqDto) throws Exception;
 
-    EditCommodityResDto editCommodity(EditCommodityReqDto reqDto);
+    EditCommodityResDto editCommodity(EditCommodityReqDto reqDto) throws Exception;
 
     CommodityDetailedResDto commodityDetailed(CommodityDetailedReqDto reqDto) throws Exception;
 }

@@ -38,6 +38,7 @@ public class BookRelationTopicServiceImpl implements BookRelationTopicService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int delete(BookRelationTopic bookRelationTopic) {
     	return dao.delete(bookRelationTopic);
     }

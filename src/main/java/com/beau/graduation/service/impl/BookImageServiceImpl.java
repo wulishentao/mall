@@ -40,6 +40,7 @@ public class BookImageServiceImpl implements BookImageService {
     }
 
     @Override
+	@Transactional(rollbackFor = Exception.class)
     public int delete(BookImage bookImage) {
     	return dao.delete(bookImage);
     }
@@ -57,31 +58,6 @@ public class BookImageServiceImpl implements BookImageService {
 	@Override
 	public List<BookImage> selectList(BookImage bookImage) {
 		return dao.selectList(bookImage);
-	}
-
-	@Override
-	public Page<BookImage> selectPage(BookImage bookImage, Integer offset, Integer pageSize) {
-		Page<BookImage> pageList = new Page<>();
-
-		int total = this.total(bookImage);
-
-		Integer totalPage;
-		if (total % pageSize != 0) {
-			totalPage = (total /pageSize) + 1;
-		} else {
-			totalPage = total /pageSize;
-		}
-
-		int page = (offset - 1) * pageSize;
-
-		List<BookImage> list = dao.selectPage(bookImage, page, pageSize);
-
-		pageList.setList(list);
-		pageList.setStartPageNo(offset);
-		pageList.setPageSize(pageSize);
-		pageList.setTotalCount(total);
-		pageList.setTotalPageCount(totalPage);
-		return pageList;
 	}
 
 	@Override

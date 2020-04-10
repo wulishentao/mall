@@ -156,7 +156,7 @@
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(partnerInfo.updateTime)'>update_time = #{partnerInfo.updateTime},</if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(partnerInfo.gender)'>gender = #{partnerInfo.gender}</if>
         </set>
-        WHERE id = partnerInfo.id
+        WHERE id = #{partnerInfo.id}
     </update>
 
     <!-- 删除 -->
@@ -180,13 +180,16 @@
         FROM
             tm_partner_info
         <where>
-            <if test="null != partnerInfo.phone">
-                phone = #{partnerInfo.phone}
+            <if test="@com.beau.graduation.utils.MapperUtil@isNotEmpty(partnerInfo.id)">
+                id = #{partnerInfo.id}
             </if>
-            <if test="null != partnerInfo.password">
+            <if test="@com.beau.graduation.utils.MapperUtil@isNotEmpty(partnerInfo.phone)">
+                and phone = #{partnerInfo.phone}
+            </if>
+            <if test="@com.beau.graduation.utils.MapperUtil@isNotEmpty(partnerInfo.password)">
                 and password = #{partnerInfo.password}
             </if>
-            <if test="null != partnerInfo.accountType">
+            <if test="@com.beau.graduation.utils.MapperUtil@isNotEmpty(partnerInfo.accountType)">
                 and account_type = #{partnerInfo.accountType}
             </if>
             and del_flag = '0'

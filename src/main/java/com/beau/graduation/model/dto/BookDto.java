@@ -46,6 +46,25 @@ public class BookDto extends Book implements Serializable {
      */
     private String bookType;
 
+    private String topicIds;
+
+    private String topicTitles;
+
+    public String getTopicIds() {
+        return topicIds;
+    }
+
+    public void setTopicIds(String topicIds) {
+        this.topicIds = topicIds;
+    }
+
+    public String getTopicTitles() {
+        return topicTitles;
+    }
+
+    public void setTopicTitles(String topicTitles) {
+        this.topicTitles = topicTitles;
+    }
 
     public String getBookType() {
         return bookType;

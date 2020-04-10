@@ -43,7 +43,7 @@ public interface BookDao {
     /**
      * [主键查询]
      **/
-    BookDto selectByObj(@Param("book") Book book);
+    BookDto commodityDetailed(@Param("book") Book book);
 
     /**
      * 查询满足条件书籍总量

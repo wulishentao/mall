@@ -85,7 +85,6 @@ public class TopicServiceImpl implements TopicService {
         entity.setTopicTitle(reqDto.getTopicTitle());
         entity.setTopicIntroduce(reqDto.getTopicIntroduce());
         entity.setSort(reqDto.getSort());
-        entity.setRemark(reqDto.getRemark());
         // 保存图片
         String filePath = FileUploadsUtil.uploadPicture(UploadConfig.getTopicPicUploadPath(), reqDto.getTopicImag());
         entity.setTopicImg(filePath);

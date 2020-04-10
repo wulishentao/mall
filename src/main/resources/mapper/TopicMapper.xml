@@ -12,7 +12,6 @@
         <result column="status" property="status" />
         <result column="sort" property="sort" />
         <result column="topic_img" property="topicImg" />
-        <result column="remark" property="remark" />
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -23,8 +22,7 @@
         `end_time`,
         `status`,
         `sort`,
-        `topic_img`,
-        `remark`
+        `topic_img`
     </sql>
 
     <!-- 插入数据 -->
@@ -50,10 +48,7 @@
                 `sort`,
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.topicImg)'>
-                `topic_img`,
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.remark)'>
-                `remark`
+                `topic_img`
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -76,10 +71,7 @@
                 #{topic.sort},
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.topicImg)'>
-                #{topic.topicImg},
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.remark)'>
-                #{topic.remark}
+                #{topic.topicImg}
             </if>
         </trim>
     </insert>
