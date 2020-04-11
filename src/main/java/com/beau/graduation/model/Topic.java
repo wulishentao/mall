@@ -1,5 +1,7 @@
 package com.beau.graduation.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -57,6 +59,33 @@ public class Topic implements Serializable {
      * topic_img  专题宣传图片地址
      */
     private String topicImg;
+
+    /**
+     * 专题是否正在进行
+     */
+    private String proceedStatus;
+
+    /**
+     * 当前时间
+     */
+    private Date dateNow;
+
+    public Date getDateNow() {
+        return dateNow;
+    }
+
+    @JSONField
+    public void setDateNow(Date dateNow) {
+        this.dateNow = dateNow;
+    }
+
+    public String getProceedStatus() {
+        return proceedStatus;
+    }
+
+    public void setProceedStatus(String proceedStatus) {
+        this.proceedStatus = proceedStatus;
+    }
 
     public Long getId() {
         return id;

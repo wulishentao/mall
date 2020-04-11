@@ -273,6 +273,8 @@
         FROM tm_book tb
         left join tm_book_type tbt on tb.type_id=tbt.id
         left join tm_book_image tbi on tb.id=tbi.book_id
+        left join tr_book_relation_topic tbrt on tbrt.book_id=tb.id
+        left join tm_topic tt on tt.id=tbrt.topic_id
         <where>
             tb.del_flag = '0'
             and tbi.del_flag = '0'

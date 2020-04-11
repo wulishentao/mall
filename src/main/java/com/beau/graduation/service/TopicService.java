@@ -1,7 +1,13 @@
 package com.beau.graduation.service;
 
 import com.beau.graduation.basic.reqdto.AddTopicReqDto;
+import com.beau.graduation.basic.reqdto.DeleteTopicReqDto;
+import com.beau.graduation.basic.reqdto.EditTopicReqDto;
+import com.beau.graduation.basic.reqdto.GetTopicPageReqDto;
 import com.beau.graduation.basic.resdto.AddTopicResDto;
+import com.beau.graduation.basic.resdto.DeleteTopicResDto;
+import com.beau.graduation.basic.resdto.EditTopicResDto;
+import com.beau.graduation.basic.resdto.GetTopicPageResDto;
 import com.beau.graduation.model.Topic;
 
 import java.io.IOException;
@@ -56,4 +62,15 @@ public interface TopicService {
     int total(Topic topic);
 
     AddTopicResDto addTopic(AddTopicReqDto reqDto) throws IOException;
+
+    GetTopicPageResDto getTopicPage(GetTopicPageReqDto reqDto);
+
+    /**
+     * 编辑专题活动
+     * @param reqDto
+     * @return
+     */
+    EditTopicResDto editTopic(EditTopicReqDto reqDto) throws Exception;
+
+    DeleteTopicResDto deleteTopic(DeleteTopicReqDto reqDto);
 }

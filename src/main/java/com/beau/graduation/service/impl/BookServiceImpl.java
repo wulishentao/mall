@@ -370,7 +370,6 @@ public class BookServiceImpl implements BookService {
 				relationTopic.setBookId(bookId);
 				relationTopic.setTopicId(Long.valueOf(s));
 				relationTopic.setCreateTime(new Date());
-				relationTopic.setUpdateTime(new Date());
 				relationTopics.add(relationTopic);
 			}
 			relationTopicService.batchInsert(relationTopics);

@@ -302,11 +302,6 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 			resDto.setMsg("该用户不存在");
 			return resDto;
 		}
-		if (obj.getStatus().equals(reqDto.getStatus())) {
-			resDto.setCode(ResultCode.failed.getCode());
-			resDto.setMsg("请勿重复操作,刷新页面更新数据");
-			return resDto;
-		}
 		pi.setStatus(reqDto.getStatus());
 		pi.setUpdateTime(new Date());
 		dao.update(pi);

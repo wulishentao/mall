@@ -3,6 +3,7 @@ package com.beau.graduation.dao;
 import com.beau.graduation.model.Topic;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -49,12 +50,15 @@ public interface TopicDao {
     List<Topic> selectList (@Param("topic") Topic topic);
 
     /**
-     * [分页条件查询]
-     **/
-    List<Topic> selectPage (@Param("topic") Topic topic, @Param("page") Integer page, @Param("pageSize") Integer pageSize);
-
-    /**
      * [总量查询]
      **/
     int total(@Param("topic") Topic topic);
+
+    /**
+     * 分页查询专题
+     * @param entity
+     * @param beginAndSize
+     * @return
+     */
+    List<Topic> getTopicPage(@Param("topic") Topic entity,@Param("page") HashMap<String, Integer> beginAndSize);
 }

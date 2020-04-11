@@ -4,10 +4,8 @@ import com.beau.graduation.Enum.ResultCode;
 import com.beau.graduation.basic.reqdto.*;
 import com.beau.graduation.basic.resdto.*;
 import com.beau.graduation.common.ApiResult;
-import com.beau.graduation.service.BookService;
-import com.beau.graduation.service.BookTypeService;
-import com.beau.graduation.service.PartnerInfoService;
-import com.beau.graduation.service.TopicService;
+import com.beau.graduation.model.BookRelationTopic;
+import com.beau.graduation.service.*;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -42,6 +40,9 @@ public class ApiController {
 
     @Autowired
     private TopicService topicService;
+
+    @Autowired
+    private BookRelationTopicService relationTopicService;
 
     /**
      * 管理员登录
@@ -258,6 +259,71 @@ public class ApiController {
             logger.error("addTopic error: ", e);
             res.setCode(ResultCode.failed.getCode());
             res.setMsg("添加活动专题异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/private/marketing/getTopicPage", produces = "application/json")
+    @ApiOperation("后台获取活动专题")
+    public ApiResult getTopicPage(@RequestBody GetTopicPageReqDto reqDto) {
+        ApiResult<GetTopicPageResDto> res = new ApiResult<>();
+        try {
+            GetTopicPageResDto resDto = topicService.getTopicPage(reqDto);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("getTopicPage error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("后台获取活动专题异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/private/marketing/editTopic", produces = "application/json")
+    @ApiOperation("编辑专题")
+    public ApiResult editTopic(@RequestBody EditTopicReqDto reqDto) {
+        ApiResult<EditTopicResDto> res = new ApiResult<>();
+        try {
+            EditTopicResDto resDto = topicService.editTopic(reqDto);
+            res.setCode(resDto.getCode());
+            res.setMsg("修改专题成功");
+        } catch (Exception e) {
+            logger.error("editTopic error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("修改专题异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/private/marketing/deleteTopic", produces = "application/json")
+    @ApiOperation("删除专题")
+    public ApiResult deleteTopic(@RequestBody DeleteTopicReqDto reqDto) {
+        ApiResult<DeleteTopicResDto> res = new ApiResult<>();
+        try {
+            DeleteTopicResDto resDto = topicService.deleteTopic(reqDto);
+            res.setCode(resDto.getCode());
+            res.setMsg("删除专题成功");
+        } catch (Exception e) {
+            logger.error("deleteTopic error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("删除专题异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/private/marketing/batchRelatedBook", produces = "application/json")
+    @ApiOperation("专题批量关联图书")
+    public ApiResult batchRelatedBook(@RequestBody RelatedBookReqDto reqDto) {
+        ApiResult<RelatedBookResDto> res = new ApiResult<>();
+        try {
+            RelatedBookResDto resDto = relationTopicService.batchRelatedBook(reqDto);
+            res.setCode(resDto.getCode());
+            res.setMsg("专题批量关联图书成功");
+        } catch (Exception e) {
+            logger.error("batchRelatedBook error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("专题批量关联图书异常");
         }
         return res;
     }

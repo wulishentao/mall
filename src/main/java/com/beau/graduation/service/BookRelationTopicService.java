@@ -1,5 +1,7 @@
 package com.beau.graduation.service;
 
+import com.beau.graduation.basic.reqdto.RelatedBookReqDto;
+import com.beau.graduation.basic.resdto.RelatedBookResDto;
 import com.beau.graduation.model.BookRelationTopic;
 
 import java.util.List;
@@ -51,4 +53,6 @@ public interface BookRelationTopicService {
      * [总量查询]
      **/
     int total(BookRelationTopic bookRelationTopic);
+
+    RelatedBookResDto batchRelatedBook(RelatedBookReqDto reqDto);
 }

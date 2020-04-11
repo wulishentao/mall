@@ -99,23 +99,19 @@
     <update id="update" parameterType="com.beau.graduation.model.Topic">
         UPDATE tm_topic
         <set>
-            <if test ='null != topic.topicTitle'>topic_title = #{topic.topicTitle},</if>
-            <if test ='null != topic.topicIntroduce'>topic_introduce = #{topic.topicIntroduce},</if>
-            <if test ='null != topic.beginTime'>begin_time = #{topic.beginTime},</if>
-            <if test ='null != topic.endTime'>end_time = #{topic.endTime},</if>
-            <if test ='null != topic.status'>status = #{topic.status},</if>
-            <if test ='null != topic.sort'>sort = #{topic.sort},</if>
-            <if test ='null != topic.topicImg'>topic_img = #{topic.topicImg},</if>
-            <if test ='null != topic.remark'>remark = #{topic.remark},</if>
-            <if test ='null != topic.delFlag'>del_flag = #{topic.delFlag}</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.status)'>status = #{topic.status},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.sort)'>sort = #{topic.sort},</if>
         </set>
-        WHERE id = topic.id
+        WHERE id = #{topic.id}
     </update>
 
     <!-- 删除 -->
     <delete id="delete">
-        DELETE FROM tm_topic
-        WHERE id = #{topic.topic}
+        update tm_topic
+        <set>
+            del_flag = '1'
+        </set>
+        WHERE id = #{topic.id}
     </delete>
 
     <!-- 批量删除 -->
@@ -171,78 +167,61 @@
         </where>
     </select>
 
-    <!-- 分页条件查询 -->
-    <select id="selectPage" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List" />
-        FROM tm_topic
-        <where>
-            <if test ='null != topic.id'>
-                and id = #{topic.id}
-            </if>
-            <if test ='null != topic.topicTitle'>
-                and topicTitle = #{topic.topicTitle}
-            </if>
-            <if test ='null != topic.topicIntroduce'>
-                and topicIntroduce = #{topic.topicIntroduce}
-            </if>
-            <if test ='null != topic.beginTime'>
-                and beginTime = #{topic.beginTime}
-            </if>
-            <if test ='null != topic.endTime'>
-                and endTime = #{topic.endTime}
-            </if>
-            <if test ='null != topic.status'>
-                and status = #{topic.status}
-            </if>
-            <if test ='null != topic.sort'>
-                and sort = #{topic.sort}
-            </if>
-            <if test ='null != topic.topicImg'>
-                and topicImg = #{topic.topicImg}
-            </if>
-            <if test ='null != topic.remark'>
-                and remark = #{topic.remark}
-            </if>
-            <if test ='null != topic.delFlag'>
-                and delFlag = #{topic.delFlag}
-            </if>
-        </where>
-        limit #{page,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
-    </select>
-
     <!-- 总量查询 -->
     <select id="total" resultType="java.lang.Integer">
         SELECT count(id) FROM tm_topic
         <where>
-            <if test ='null != topic.id'>
-                and id = #{topic.id}
+            del_flag = '0'
+            <if test='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.topicTitle)'>
+                and topic_title like ('%',#{topic.topicTitle},'%')
             </if>
-            <if test ='null != topic.topicTitle'>
-                and topicTitle = #{topic.topicTitle}
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.beginTime)'>
+                and begin_time &gt;= #{topic.beginTime}
             </if>
-            <if test ='null != topic.topicIntroduce'>
-                and topicIntroduce = #{topic.topicIntroduce}
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.endTime)'>
+                and end_time &lt;= #{topic.endTime}
             </if>
-            <if test ='null != topic.beginTime'>
-                and beginTime = #{topic.beginTime}
-            </if>
-            <if test ='null != topic.endTime'>
-                and endTime = #{topic.endTime}
-            </if>
-            <if test ='null != topic.status'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.status)'>
                 and status = #{topic.status}
             </if>
-            <if test ='null != topic.sort'>
-                and sort = #{topic.sort}
+            <if test="topic.proceedStatus == '-1'.toString()">
+                and end_time &lt; #{topic.dateNow}
             </if>
-            <if test ='null != topic.topicImg'>
-                and topicImg = #{topic.topicImg}
+            <if test="topic.proceedStatus == '0'.toString()">
+                and begin_time &gt; #{topic.dateNow}
             </if>
-            <if test ='null != topic.remark'>
-                and remark = #{topic.remark}
+            <if test="topic.proceedStatus == '1'.toString()">
+                and (#{topic.dateNow} between begin_time and end_time)
             </if>
-            <if test ='null != topic.delFlag'>
-                and delFlag = #{topic.delFlag}
+        </where>
+    </select>
+
+    <select id="getTopicPage" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM tm_topic
+        <where>
+            del_flag = '0'
+            <if test='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.topicTitle)'>
+                and topicTitle like ('%',#{topic.topicTitle},'%')
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.beginTime)'>
+                and beginTime &gt;= #{topic.beginTime}
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.endTime)'>
+                and endTime &lt;= #{topic.endTime}
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.status)'>
+                and status = #{topic.status}
+            </if>
+            <if test="topic.proceedStatus == '-1'.toString()">
+                and end_time &lt; #{topic.dateNow}
+            </if>
+            <if test="topic.proceedStatus == '0'.toString()">
+                and begin_time &gt; #{topic.dateNow}
+            </if>
+            <if test="topic.proceedStatus == '1'.toString()">
+                and (#{topic.dateNow} between begin_time and end_time)
             </if>
         </where>
     </select>
