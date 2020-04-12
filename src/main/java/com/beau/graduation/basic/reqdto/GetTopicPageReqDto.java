@@ -25,19 +25,6 @@ public class GetTopicPageReqDto extends CommonReqDTO implements Serializable {
 
     private Integer pageSize;
 
-    /**
-     * 专题是否正在进行
-     */
-    private String proceedStatus;
-
-    public String getProceedStatus() {
-        return proceedStatus;
-    }
-
-    public void setProceedStatus(String proceedStatus) {
-        this.proceedStatus = proceedStatus;
-    }
-
     public Integer getPageNo() {
         return pageNo;
     }

@@ -32,18 +32,6 @@ public class Topic implements Serializable {
 
 
     /**
-     * begin_time  专题开始时间
-     */
-    private Date beginTime;
-
-
-    /**
-     * end_time  专题结束时间
-     */
-    private Date endTime;
-
-
-    /**
      * status  是否启用，0-否，1-是
      */
     private String status;
@@ -59,33 +47,6 @@ public class Topic implements Serializable {
      * topic_img  专题宣传图片地址
      */
     private String topicImg;
-
-    /**
-     * 专题是否正在进行
-     */
-    private String proceedStatus;
-
-    /**
-     * 当前时间
-     */
-    private Date dateNow;
-
-    public Date getDateNow() {
-        return dateNow;
-    }
-
-    @JSONField
-    public void setDateNow(Date dateNow) {
-        this.dateNow = dateNow;
-    }
-
-    public String getProceedStatus() {
-        return proceedStatus;
-    }
-
-    public void setProceedStatus(String proceedStatus) {
-        this.proceedStatus = proceedStatus;
-    }
 
     public Long getId() {
         return id;
@@ -109,22 +70,6 @@ public class Topic implements Serializable {
 
     public void setTopicIntroduce(String topicIntroduce) {
         this.topicIntroduce = topicIntroduce;
-    }
-
-    public Date getBeginTime() {
-        return beginTime;
-    }
-
-    public void setBeginTime(Date beginTime) {
-        this.beginTime = beginTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
     }
 
     public String getStatus() {

@@ -13,7 +13,6 @@ import java.io.Serializable;
 public class SyncCartReqDto extends CommonReqDTO implements Serializable {
     private Long bookId;
     private Long amount;
-    private String delFlag;
 
     public Long getBookId() {
         return bookId;
@@ -29,13 +28,5 @@ public class SyncCartReqDto extends CommonReqDTO implements Serializable {
 
     public void setAmount(Long amount) {
         this.amount = amount;
-    }
-
-    public String getDelFlag() {
-        return delFlag;
-    }
-
-    public void setDelFlag(String delFlag) {
-        this.delFlag = delFlag;
     }
 }

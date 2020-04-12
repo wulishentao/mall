@@ -2,17 +2,24 @@ package com.beau.graduation.service.impl;
 
 import com.beau.graduation.Enum.ResultCode;
 import com.beau.graduation.basic.reqdto.AddCommodityTypeReqDto;
+import com.beau.graduation.basic.reqdto.DelCommodityTypeReqDto;
 import com.beau.graduation.basic.reqdto.GetCommodityTypeReqDto;
 import com.beau.graduation.basic.resdto.AddCommodityTypeResDto;
+import com.beau.graduation.basic.resdto.DelCommodityTypeResDto;
 import com.beau.graduation.basic.resdto.GetCommodityTypeResDto;
 import com.beau.graduation.common.Page;
+import com.beau.graduation.dao.BookDao;
 import com.beau.graduation.dao.BookTypeDao;
+import com.beau.graduation.model.Book;
 import com.beau.graduation.model.BookType;
+import com.beau.graduation.model.dto.BookDto;
+import com.beau.graduation.service.BookService;
 import com.beau.graduation.service.BookTypeService;
 import com.beau.graduation.utils.PageUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -29,6 +36,9 @@ public class BookTypeServiceImpl implements BookTypeService {
 
     @Autowired
 	BookTypeDao dao;
+
+	@Autowired
+	private BookService bookService;
 
     @Override
     public int insert(BookType bookType) {
@@ -126,6 +136,25 @@ public class BookTypeServiceImpl implements BookTypeService {
 			resDto.setCode(ResultCode.failed.getCode());
 			resDto.setMsg("添加标签失败");
 		}
+		return resDto;
+	}
+
+	/**
+	 * 删除标签
+	 * @param reqDto
+	 * @return
+	 */
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public DelCommodityTypeResDto delCommodityType(DelCommodityTypeReqDto reqDto) {
+		DelCommodityTypeResDto resDto = new DelCommodityTypeResDto();
+
+		BookType entity = new BookType();
+		entity.setId(reqDto.getTypeId());
+		// 删除书籍类型记录
+		dao.delete(entity);
+
+		resDto.setCode(ResultCode.success.getCode());
 		return resDto;
 	}
 }

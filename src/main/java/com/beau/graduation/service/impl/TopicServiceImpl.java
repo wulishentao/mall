@@ -89,8 +89,6 @@ public class TopicServiceImpl implements TopicService {
         AddTopicResDto resDto = new AddTopicResDto();
 
         Topic entity = new Topic();
-        entity.setBeginTime(DateUtil.parseDate(reqDto.getBeginTime()));
-        entity.setEndTime(DateUtil.parseDate(reqDto.getEndTime()));
         entity.setTopicTitle(reqDto.getTopicTitle());
         entity.setTopicIntroduce(reqDto.getTopicIntroduce());
         entity.setSort(reqDto.getSort());
@@ -115,8 +113,6 @@ public class TopicServiceImpl implements TopicService {
         Topic entity = new Topic();
         entity.setTopicTitle(reqDto.getTopicTitle());
         entity.setStatus(reqDto.getStatus());
-        entity.setProceedStatus(reqDto.getProceedStatus());
-        entity.setDateNow(new Date());
 
         int total = dao.total(entity);
         List<Topic> topicPage = dao.getTopicPage(entity, PageUtil.getBeginAndSize(reqDto.getPageNo(), reqDto.getPageSize()));

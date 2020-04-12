@@ -247,6 +247,22 @@ public class ApiController {
         return res;
     }
 
+    @PostMapping(value = "/private/commodity/delCommodityType", produces = "application/json")
+    @ApiOperation("删除书籍标签")
+    public ApiResult delCommodityType(@RequestBody DelCommodityTypeReqDto reqDto) {
+        ApiResult<DelCommodityTypeResDto> res = new ApiResult<>();
+        try {
+            DelCommodityTypeResDto resDto = bookTypeService.delCommodityType(reqDto);
+            res.setCode(resDto.getCode());
+            res.setMsg("删除书籍标签成功");
+        } catch (Exception e) {
+            logger.error("delCommodityType error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("删除书籍标签异常");
+        }
+        return res;
+    }
+
     @PostMapping(value = "/private/marketing/addTopic", produces = "application/json")
     @ApiOperation("添加活动专题")
     public ApiResult addTopic(AddTopicReqDto reqDto) {

@@ -201,6 +201,7 @@
                 tm_book_order tbo
             WHERE
                 tb.id = tbo.book_id
+                AND tbo.del_flag = '0'
             ) AS sales,
             tb.review_status AS review_status,
             tb.publisher as publisher,
@@ -211,15 +212,12 @@
             group_concat(distinct (tt.id)) as topic_id,
             group_concat(distinct (tt.topic_title)) as topic_title
         FROM tm_book tb
-        left join tm_book_type tbt on tb.type_id=tbt.id
-        left join tm_book_image tbi on tb.id=tbi.book_id
+        left join tm_book_type tbt on tb.type_id=tbt.id and tbt.del_flag = '0'
+        left join tm_book_image tbi on tb.id=tbi.book_id and tbi.del_flag = '0'
         left join tr_book_relation_topic tbrt on tbrt.book_id=tb.id
-        left join tm_topic tt on tt.id=tbrt.topic_id
+        left join tm_topic tt on tt.id=tbrt.topic_id and tt.del_flag = '0'
         WHERE
             tb.del_flag = '0'
-            and tbi.del_flag = '0'
-            and tt.del_flag = '0'
-            and tbrt.del_flag = '0'
             and tb.id = #{book.id}
     </select>
 
@@ -248,7 +246,7 @@
     <select id="getCommodityPage" resultMap="BaseResultMap">
         SELECT
         tb.id AS id,
-        group_concat(tbi.img_url) AS img_url,
+        group_concat(distinct (tbi.img_url)) AS img_url,
         tb.title AS title,
         tb.introduction as introduction,
         tb.price AS price,
@@ -258,26 +256,28 @@
         tb.reserve AS reserve,
         (
         SELECT
-        sum( CASE WHEN tbo.amount != 0 THEN tbo.amount ELSE 0 END )
+            sum( CASE WHEN tbo.amount != 0 THEN tbo.amount ELSE 0 END )
         FROM
-        tm_book_order tbo
+            tm_book_order tbo
         WHERE
-        tb.id = tbo.book_id
+            tb.id = tbo.book_id
+            AND tbo.del_flag = '0'
         ) AS sales,
         tb.review_status AS review_status,
         tb.publisher as publisher,
         tb.publish_date as publish_date,
         tb.sort as sort,
         tb.sale_status AS sale_status,
-        tb.author as author
+        tb.author as author,
+        group_concat(distinct (tt.id)) as topic_id,
+        group_concat(distinct (tt.topic_title)) as topic_title
         FROM tm_book tb
-        left join tm_book_type tbt on tb.type_id=tbt.id
-        left join tm_book_image tbi on tb.id=tbi.book_id
+        left join tm_book_type tbt on tb.type_id=tbt.id and tbt.del_flag = '0'
+        left join tm_book_image tbi on tb.id=tbi.book_id and tbi.del_flag = '0'
         left join tr_book_relation_topic tbrt on tbrt.book_id=tb.id
-        left join tm_topic tt on tt.id=tbrt.topic_id
+        left join tm_topic tt on tt.id=tbrt.topic_id and tt.del_flag = '0' and tt.status = '1'
         <where>
             tb.del_flag = '0'
-            and tbi.del_flag = '0'
             <if test='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.title)'>
                 and (tb.title like concat('%',#{bookDto.title},'%')
                 or tb.author like concat('%',#{bookDto.title},'%') or tb.publisher like
@@ -302,15 +302,36 @@
         SELECT
         <include refid="shopping_cart_column"/>
         FROM tm_book tb
-        left join tm_book_image tbi on tb.id=tbi.book_id
+        left join tm_book_image tbi on tb.id=tbi.book_id and tbi.del_flag = '0'
         <where>
-            <if test="@com.beau.graduation.utils.MapperUtil@isNotEmpty()bookId">
+            <if test="@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookId)">
                 tb.id = #{bookId}
             </if>
             and tb.review_status = '1'
-            and tb.sale_status = '1'
+            and tb.sale_status = '0'
             and tb.del_flag = '0'
         </where>
+        group by tb.id
+    </select>
+
+    <select id="getSuchBookList" resultType="java.lang.Long">
+        SELECT
+            id
+        FROM
+            tm_book
+        WHERE
+            tb.del_flag = '0'
+            AND type_id IN (
+            SELECT
+                id
+            FROM
+                tm_book_type
+            WHERE
+            AND del_flag = '0'
+            <if test="@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookId)">
+                ( id = #{bookDto.typeId} OR parent_id = #{bookDto.typeId} )
+            </if>
+            )
     </select>
 
 </mapper>

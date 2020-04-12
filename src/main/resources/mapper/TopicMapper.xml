@@ -18,8 +18,6 @@
         `id`,
         `topic_title`,
         `topic_introduce`,
-        `begin_time`,
-        `end_time`,
         `status`,
         `sort`,
         `topic_img`
@@ -175,23 +173,8 @@
             <if test='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.topicTitle)'>
                 and topic_title like ('%',#{topic.topicTitle},'%')
             </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.beginTime)'>
-                and begin_time &gt;= #{topic.beginTime}
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.endTime)'>
-                and end_time &lt;= #{topic.endTime}
-            </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.status)'>
                 and status = #{topic.status}
-            </if>
-            <if test="topic.proceedStatus == '-1'.toString()">
-                and end_time &lt; #{topic.dateNow}
-            </if>
-            <if test="topic.proceedStatus == '0'.toString()">
-                and begin_time &gt; #{topic.dateNow}
-            </if>
-            <if test="topic.proceedStatus == '1'.toString()">
-                and (#{topic.dateNow} between begin_time and end_time)
             </if>
         </where>
     </select>
@@ -205,23 +188,8 @@
             <if test='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.topicTitle)'>
                 and topicTitle like ('%',#{topic.topicTitle},'%')
             </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.beginTime)'>
-                and beginTime &gt;= #{topic.beginTime}
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.endTime)'>
-                and endTime &lt;= #{topic.endTime}
-            </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(topic.status)'>
                 and status = #{topic.status}
-            </if>
-            <if test="topic.proceedStatus == '-1'.toString()">
-                and end_time &lt; #{topic.dateNow}
-            </if>
-            <if test="topic.proceedStatus == '0'.toString()">
-                and begin_time &gt; #{topic.dateNow}
-            </if>
-            <if test="topic.proceedStatus == '1'.toString()">
-                and (#{topic.dateNow} between begin_time and end_time)
             </if>
         </where>
     </select>

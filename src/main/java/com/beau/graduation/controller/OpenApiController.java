@@ -109,7 +109,6 @@ public class OpenApiController {
         ApiResult<AddCartResDto> res = new ApiResult<>();
         try {
             AddCartResDto resDto = bookService.addCart(addCartReqDto, request, response);
-            res.setData(resDto);
             res.setCode(resDto.getCode());
             res.setMsg("添加购物车成功");
         } catch (Exception e) {
@@ -155,7 +154,6 @@ public class OpenApiController {
         ApiResult<SyncCartResDto> res = new ApiResult<>();
         try {
             SyncCartResDto resDto = bookService.syncShoppingCart(syncCartReqDto, request);
-            res.setData(resDto);
             res.setCode(resDto.getCode());
             res.setMsg(resDto.getMsg());
         } catch (Exception e) {
@@ -165,6 +163,23 @@ public class OpenApiController {
         }
         return res;
     }
+
+    @PostMapping(value = "/shoppingCart/delete", produces = "application/json")
+    @ApiOperation("删除购物车商品")
+    public ApiResult delShoppingCart(@RequestBody DelCartReqDto reqDto, HttpServletRequest request, HttpServletResponse response) {
+        ApiResult<DelCartResDto> res = new ApiResult<>();
+        try {
+            DelCartResDto resDto = bookService.delShoppingCart(reqDto, request);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("delShoppingCart error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("删除购物车商品异常");
+        }
+        return res;
+    }
+
 
 
 }

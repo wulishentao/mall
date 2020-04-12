@@ -14,6 +14,7 @@ import com.beau.graduation.service.BookImageService;
 import com.beau.graduation.service.BookRelationTopicService;
 import com.beau.graduation.service.BookService;
 import com.beau.graduation.utils.*;
+import com.sun.org.apache.xpath.internal.objects.XNull;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -110,7 +112,7 @@ public class BookServiceImpl implements BookService {
 				cart = redisUtil.get(key, ShoppingCart.class);
 				addToFormer(bookDto, cart);
 				// 将合并的购物车信息重新存入redis中
-				redisUtil.set(key, JSON.toJSONString(cart));
+				redisUtil.getAndSet(key, JSON.toJSONString(cart));
 				resDto.setCode(ResultCode.success.getCode());
 				return resDto;
 			}
@@ -127,7 +129,7 @@ public class BookServiceImpl implements BookService {
 				addToFormer(bookDto, cart);
 			}
 			// 将合并的购物车信息重新存入redis中
-			redisUtil.set(cart_uuid, JSON.toJSONString(cart));
+			redisUtil.set(cart_uuid, JSON.toJSONString(cart), 20L, TimeUnit.DAYS);
 			resDto.setCode(ResultCode.success.getCode());
 			return resDto;
 		}
@@ -135,7 +137,7 @@ public class BookServiceImpl implements BookService {
 		// 重新生成cart_uuid
 		// 将购物车实体存入redis
 		String cartUuid = UuidUtil.getUuid();
-		redisUtil.set(cartUuid,JSON.toJSONString(cart));
+		redisUtil.set(cartUuid, JSON.toJSONString(cart), 20L, TimeUnit.DAYS);
 		// 将cart_uuid存入cookie中
 		CookieUtil.addCookie(response, "cart_uuid", cartUuid, null);
 		resDto.setCode(ResultCode.success.getCode());
@@ -203,7 +205,8 @@ public class BookServiceImpl implements BookService {
 			PartnerInfo pi = loginUtil.getUser(userToken);
 			if (pi != null) {
 				String key = "cart_" + pi.getId();
-				syncCartWithKey(key, syncCartReqDto);
+				ShoppingCart shoppingCart = syncCartWithKey(key, syncCartReqDto);
+				redisUtil.getAndSet(key, JSON.toJSONString(shoppingCart));
 				resDto.setCode(ResultCode.success.getCode());
 				resDto.setMsg("同步成功");
 				return resDto;
@@ -215,7 +218,8 @@ public class BookServiceImpl implements BookService {
 		if (StringUtils.isNotEmpty(cartUuid)) {
 			ShoppingCart cart = redisUtil.get(cartUuid, ShoppingCart.class);
 			if (cart != null) {
-				syncCartWithKey(cartUuid, syncCartReqDto);
+				ShoppingCart shoppingCart = syncCartWithKey(cartUuid, syncCartReqDto);
+				redisUtil.set(cartUuid, JSON.toJSONString(shoppingCart), 20L, TimeUnit.DAYS);
 				resDto.setCode(ResultCode.success.getCode());
 				resDto.setMsg("同步成功");
 				return resDto;
@@ -227,31 +231,84 @@ public class BookServiceImpl implements BookService {
 	}
 
 	/**
-	 * 根据是否登录同步更新购物车
-	 * @method: syncCartWithKey
-	 * @param: [key, syncCartReqDto]
-	 * @return: void
+	 * 删除指定购物车商品
+	 * @param reqDto
+	 * @param request
+	 * @return
 	 */
-	private void syncCartWithKey(String key, SyncCartReqDto syncCartReqDto) {
+	@Override
+	public DelCartResDto delShoppingCart(DelCartReqDto reqDto, HttpServletRequest request) {
+		DelCartResDto resDto = new DelCartResDto();
+
+		// 校验是否登录
+		String userToken = CookieUtil.getCookieValue(request, "user_token");
+		if (StringUtils.isNotEmpty(userToken)) {
+			// 已登录
+			PartnerInfo pi = loginUtil.getUser(userToken);
+			if (pi != null) {
+				String key = "cart_" + pi.getId();
+				ShoppingCart shoppingCart = delCartWithKey(key, reqDto);
+				redisUtil.getAndSet(key, JSON.toJSONString(shoppingCart));
+				resDto.setCode(ResultCode.success.getCode());
+				resDto.setMsg("删除成功");
+				return resDto;
+			}
+		}
+
+		// 未登录
+		String cartUuid = CookieUtil.getCookieValue(request, "cart_uuid");
+		if (StringUtils.isNotEmpty(cartUuid)) {
+			ShoppingCart cart = redisUtil.get(cartUuid, ShoppingCart.class);
+			if (cart != null) {
+				ShoppingCart shoppingCart = delCartWithKey(cartUuid, reqDto);
+				redisUtil.set(cartUuid, JSON.toJSONString(shoppingCart), 20L, TimeUnit.DAYS);
+				resDto.setCode(ResultCode.success.getCode());
+				resDto.setMsg("删除成功");
+				return resDto;
+			}
+		}
+		resDto.setCode(ResultCode.failed.getCode());
+		resDto.setMsg("删除失败");
+		return resDto;
+	}
+
+	/**
+	 * 根据key删除redis中的购物车商品
+	 * @param key
+	 * @param reqDto
+	 */
+	private ShoppingCart delCartWithKey(String key, DelCartReqDto reqDto) {
 		ShoppingCart shoppingCart = redisUtil.get(key, ShoppingCart.class);
-		if ("1".equals(syncCartReqDto.getDelFlag())) {
-			List<BookDto> collect = shoppingCart.getBookDtoList().stream().filter(bookDto -> {
-				if (bookDto.getId().equals(syncCartReqDto.getBookId())) {
+		List<Long> bookIds = reqDto.getBookIds();
+		List<BookDto> collect = null;
+		for (Long bookId : bookIds) {
+			collect = shoppingCart.getBookDtoList().stream().filter(bookDto -> {
+				if (bookDto.getId().equals(bookId)) {
 					return false;
 				}
 				return true;
 			}).collect(Collectors.toList());
-			shoppingCart.setBookDtoList(collect);
-		} else {
-			List<BookDto> collect = shoppingCart.getBookDtoList().stream().filter(bookDto -> {
-				if (bookDto.getId().equals(syncCartReqDto.getBookId())) {
-					bookDto.setAmount(syncCartReqDto.getAmount());
-				}
-				return true;
-			}).collect(Collectors.toList());
-			shoppingCart.setBookDtoList(collect);
 		}
-		redisUtil.set(key, JSON.toJSONString(shoppingCart));
+		shoppingCart.setBookDtoList(collect);
+		return shoppingCart;
+	}
+
+	/**
+	 * 根据key同步更新购物车
+	 * @method: syncCartWithKey
+	 * @param: [key, syncCartReqDto]
+	 * @return: void
+	 */
+	private ShoppingCart syncCartWithKey(String key, SyncCartReqDto syncCartReqDto) {
+		ShoppingCart shoppingCart = redisUtil.get(key, ShoppingCart.class);
+		List<BookDto> collect = shoppingCart.getBookDtoList().stream().filter(bookDto -> {
+			if (bookDto.getId().equals(syncCartReqDto.getBookId())) {
+				bookDto.setAmount(syncCartReqDto.getAmount());
+			}
+			return true;
+		}).collect(Collectors.toList());
+		shoppingCart.setBookDtoList(collect);
+		return shoppingCart;
 	}
 
 	/**
@@ -492,5 +549,16 @@ public class BookServiceImpl implements BookService {
 		resDto.setCode(ResultCode.success.getCode());
 		resDto.setMsg("书籍详情获取成功");
 		return resDto;
+	}
+
+	/**
+	 * 查找出所有类型或父级类型为删除类型的书籍id集合
+	 * @param bookDto
+	 * @return
+	 */
+	@Override
+	public List<Long> getSuchBookList(BookDto bookDto) {
+		List<Long> bookIds = dao.getSuchBookList(bookDto);
+		return null;
 	}
 }

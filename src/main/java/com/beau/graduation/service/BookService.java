@@ -72,4 +72,8 @@ public interface BookService {
     EditCommodityResDto editCommodity(EditCommodityReqDto reqDto) throws Exception;
 
     CommodityDetailedResDto commodityDetailed(CommodityDetailedReqDto reqDto) throws Exception;
+
+    DelCartResDto delShoppingCart(DelCartReqDto reqDto, HttpServletRequest request);
+
+    List<Long> getSuchBookList(BookDto bookDto);
 }

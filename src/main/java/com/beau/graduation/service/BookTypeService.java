@@ -1,8 +1,10 @@
 package com.beau.graduation.service;
 
 import com.beau.graduation.basic.reqdto.AddCommodityTypeReqDto;
+import com.beau.graduation.basic.reqdto.DelCommodityTypeReqDto;
 import com.beau.graduation.basic.reqdto.GetCommodityTypeReqDto;
 import com.beau.graduation.basic.resdto.AddCommodityTypeResDto;
+import com.beau.graduation.basic.resdto.DelCommodityTypeResDto;
 import com.beau.graduation.basic.resdto.GetCommodityTypeResDto;
 import com.beau.graduation.common.Page;
 import com.beau.graduation.model.BookType;
@@ -60,4 +62,6 @@ public interface BookTypeService {
     GetCommodityTypeResDto getCommodityTypePage(GetCommodityTypeReqDto reqDto);
 
     AddCommodityTypeResDto addCommodityType(AddCommodityTypeReqDto reqDto);
+
+    DelCommodityTypeResDto delCommodityType(DelCommodityTypeReqDto reqDto);
 }

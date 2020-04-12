@@ -158,9 +158,14 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 		ShoppingCart shoppingCart = redisUtil.get(cart_uuid, ShoppingCart.class);
 		ShoppingCart cart = redisUtil.get(key, ShoppingCart.class);
 
-		if (cart == null) {
+		if (cart.getBookDtoList() == null) {
 			// 若登录用户购物车为空,则将未登录的购物车直接添加进登录购物车
-			cart = shoppingCart;
+			if (shoppingCart != null) {
+				cart = shoppingCart;
+			} else {
+				// 若未登录的购物车也为空,则重新new一个购物车
+				cart = new ShoppingCart();
+			}
 		} else {
 			if (StringUtils.isNotEmpty(cart_uuid)) {
 				if (shoppingCart != null) {
@@ -172,6 +177,7 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 							if (dto.getId().equals(bookDto.getId())) {
 								bookDto.setAmount(dto.getAmount() + bookDto.getAmount());
 								dtoList.add(dto);
+								break;
 							}
 						}
 					}

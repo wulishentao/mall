@@ -86,8 +86,14 @@
 
     <!-- 删除 -->
     <delete id="delete">
-        DELETE FROM tm_book_type
-        WHERE id = #{bookType.bookType}
+        update tm_book_type
+        <set>
+            del_flag = '1'
+        </set>
+        WHERE
+        <if test="@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookType.id)">
+            id = #{bookType.id} or parent_id = #{bookType.id}
+        </if>
     </delete>
 
     <!-- 批量删除 -->

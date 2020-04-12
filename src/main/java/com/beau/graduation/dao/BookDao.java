@@ -62,4 +62,6 @@ public interface BookDao {
      * @return
      */
     List<BookDto> getCommodityPage(@Param("bookDto") BookDto entity,@Param("page") HashMap<String, Integer> beginAndSize);
+
+    List<Long> getSuchBookList(@Param("bookDto") BookDto bookDto);
 }
