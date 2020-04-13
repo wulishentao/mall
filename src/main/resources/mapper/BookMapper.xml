@@ -24,6 +24,10 @@
         <result column="topic_title" property="topicTitles"/>
     </resultMap>
 
+    <resultMap id="such_book_map" type="com.beau.graduation.model.dto.BookDto">
+        <result column="id" property="id"/>
+    </resultMap>
+
 
     <sql id="Base_Column_List">
         tb.id as id,
@@ -176,8 +180,12 @@
 
     <!-- 批量删除 -->
     <delete id="batchDelete" parameterType = "java.util.List">
-        DELETE FROM tm_book WHERE id IN
-        <foreach collection="list"  item="item" open="(" separator="," close=")"  >
+        update tm_book
+        <set>
+            del_flag = '1'
+        </set>
+        WHERE id IN
+        <foreach collection="bookIds"  item="item" open="(" separator="," close=")"  >
             #{item}
         </foreach>
     </delete>
@@ -198,7 +206,7 @@
             SELECT
                 sum( CASE WHEN tbo.amount != 0 THEN tbo.amount ELSE 0 END )
             FROM
-                tm_book_order tbo
+                tr_book_order tbo
             WHERE
                 tb.id = tbo.book_id
                 AND tbo.del_flag = '0'
@@ -258,7 +266,7 @@
         SELECT
             sum( CASE WHEN tbo.amount != 0 THEN tbo.amount ELSE 0 END )
         FROM
-            tm_book_order tbo
+            tr_book_order tbo
         WHERE
             tb.id = tbo.book_id
             AND tbo.del_flag = '0'
@@ -316,22 +324,37 @@
 
     <select id="getSuchBookList" resultType="java.lang.Long">
         SELECT
-            id
+            id AS id
         FROM
             tm_book
         WHERE
-            tb.del_flag = '0'
+            del_flag = '0'
             AND type_id IN (
             SELECT
                 id
             FROM
                 tm_book_type
-            WHERE
-            AND del_flag = '0'
-            <if test="@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookId)">
-                ( id = #{bookDto.typeId} OR parent_id = #{bookDto.typeId} )
-            </if>
+            <where>
+                del_flag = '0'
+                <if test="@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.typeId)">
+                    and ( id = #{bookDto.typeId} OR parent_id = #{bookDto.typeId} )
+                </if>
+            </where>
             )
     </select>
+
+    <update id="updateTypeId" parameterType="java.util.List">
+        update tm_book
+        <set>
+            type_id = null
+        </set>
+        <where>
+            del_flag = '0'
+            and id in
+            <foreach collection="bookIds" item="bookId" open="(" close=")" separator=",">
+                #{bookId}
+            </foreach>
+        </where>
+    </update>
 
 </mapper>

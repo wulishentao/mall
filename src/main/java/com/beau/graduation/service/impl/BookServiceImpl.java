@@ -14,7 +14,6 @@ import com.beau.graduation.service.BookImageService;
 import com.beau.graduation.service.BookRelationTopicService;
 import com.beau.graduation.service.BookService;
 import com.beau.graduation.utils.*;
-import com.sun.org.apache.xpath.internal.objects.XNull;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,11 +73,6 @@ public class BookServiceImpl implements BookService {
     @Override
     public int delete(Book book) {
     	return dao.delete(book);
-    }
-
-    @Override
-    public int batchDelete(List<Book> list) {
-        return dao.batchDelete(list);
     }
 
 	@Override
@@ -552,6 +546,20 @@ public class BookServiceImpl implements BookService {
 	}
 
 	/**
+	 * 删除书籍
+	 * @param reqDto
+	 * @return
+	 */
+	@Override
+	public DelCommodityResDto delCommodity(DelCommodityReqDto reqDto) {
+		DelCommodityResDto resDto = new DelCommodityResDto();
+
+		dao.batchDelete(reqDto.getBookIds());
+		resDto.setCode(ResultCode.success.getCode());
+		return resDto;
+	}
+
+	/**
 	 * 查找出所有类型或父级类型为删除类型的书籍id集合
 	 * @param bookDto
 	 * @return
@@ -559,6 +567,16 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public List<Long> getSuchBookList(BookDto bookDto) {
 		List<Long> bookIds = dao.getSuchBookList(bookDto);
-		return null;
+		return bookIds;
+	}
+
+	/**
+	 * 将书籍type_id设为空
+	 * @param bookIds
+	 */
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateTypeId(List<Long> bookIds) {
+		dao.updateTypeId(bookIds);
 	}
 }

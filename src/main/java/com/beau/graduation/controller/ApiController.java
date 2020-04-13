@@ -44,6 +44,9 @@ public class ApiController {
     @Autowired
     private BookRelationTopicService relationTopicService;
 
+    @Autowired
+    private OrderService orderService;
+
     /**
      * 管理员登录
      *
@@ -213,6 +216,21 @@ public class ApiController {
         return res;
     }
 
+    @PostMapping(value = "/private/commodity/delCommodity", produces = "application/json")
+    @ApiOperation("删除书籍")
+    public ApiResult delCommodity(@RequestBody DelCommodityReqDto reqDto) {
+        ApiResult<DelCommodityResDto> res = new ApiResult<>();
+        try {
+            DelCommodityResDto resDto = bookService.delCommodity(reqDto);
+            res.setCode(resDto.getCode());
+            res.setMsg("删除书籍成功");
+        } catch (Exception e) {
+            logger.error("delCommodity error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("删除书籍异常");
+        }
+        return res;
+    }
 
     @PostMapping(value = "/private/commodity/getCommodityTypePage", produces = "application/json")
     @ApiOperation("获取书籍标签列表")
@@ -247,6 +265,22 @@ public class ApiController {
         return res;
     }
 
+    @PostMapping(value = "/private/commodity/editCommodityType", produces = "application/json")
+    @ApiOperation("编辑书籍标签")
+    public ApiResult editCommodityType(@RequestBody EditCommodityTypeReqDto reqDto) {
+        ApiResult<EditCommodityTypeResDto> res = new ApiResult<>();
+        try {
+            EditCommodityTypeResDto resDto = bookTypeService.editCommodityType(reqDto);
+            res.setCode(resDto.getCode());
+            res.setMsg("添加书籍标签成功");
+        } catch (Exception e) {
+            logger.error("editCommodityType error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("编辑书籍标签异常");
+        }
+        return res;
+    }
+
     @PostMapping(value = "/private/commodity/delCommodityType", produces = "application/json")
     @ApiOperation("删除书籍标签")
     public ApiResult delCommodityType(@RequestBody DelCommodityTypeReqDto reqDto) {
@@ -259,6 +293,23 @@ public class ApiController {
             logger.error("delCommodityType error: ", e);
             res.setCode(ResultCode.failed.getCode());
             res.setMsg("删除书籍标签异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/private/order/getOrderPage", produces = "application/json")
+    @ApiOperation("获取订单列表")
+    public ApiResult getOrderPage(@RequestBody GetOrderPageReqDto reqDto) {
+        ApiResult<GetOrderPageResDto> res = new ApiResult<>();
+        try {
+            GetOrderPageResDto resDto = orderService.getOrderPage(reqDto);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("delCommodity error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("删除书籍异常");
         }
         return res;
     }

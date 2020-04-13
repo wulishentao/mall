@@ -3,14 +3,14 @@ package com.beau.graduation.service.impl;
 import com.beau.graduation.Enum.ResultCode;
 import com.beau.graduation.basic.reqdto.AddCommodityTypeReqDto;
 import com.beau.graduation.basic.reqdto.DelCommodityTypeReqDto;
+import com.beau.graduation.basic.reqdto.EditCommodityTypeReqDto;
 import com.beau.graduation.basic.reqdto.GetCommodityTypeReqDto;
 import com.beau.graduation.basic.resdto.AddCommodityTypeResDto;
 import com.beau.graduation.basic.resdto.DelCommodityTypeResDto;
+import com.beau.graduation.basic.resdto.EditCommodityTypeResDto;
 import com.beau.graduation.basic.resdto.GetCommodityTypeResDto;
 import com.beau.graduation.common.Page;
-import com.beau.graduation.dao.BookDao;
 import com.beau.graduation.dao.BookTypeDao;
-import com.beau.graduation.model.Book;
 import com.beau.graduation.model.BookType;
 import com.beau.graduation.model.dto.BookDto;
 import com.beau.graduation.service.BookService;
@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -151,8 +150,36 @@ public class BookTypeServiceImpl implements BookTypeService {
 
 		BookType entity = new BookType();
 		entity.setId(reqDto.getTypeId());
-		// 删除书籍类型记录
+
+		// 1.查出所有标签为此类型的书籍id集合
+		BookDto bookDto = new BookDto();
+		bookDto.setTypeId(reqDto.getTypeId());
+		List<Long> bookIds = bookService.getSuchBookList(bookDto);
+		// 2.将这些书籍的type_id设为空
+		bookService.updateTypeId(bookIds);
+		// 3.删除书籍类型记录
 		dao.delete(entity);
+
+		resDto.setCode(ResultCode.success.getCode());
+		return resDto;
+	}
+
+	/**
+	 * 编辑书籍标签
+	 * @param reqDto
+	 * @return
+	 */
+	@Override
+	public EditCommodityTypeResDto editCommodityType(EditCommodityTypeReqDto reqDto) {
+		EditCommodityTypeResDto resDto = new EditCommodityTypeResDto();
+
+		BookType entity = new BookType();
+		entity.setName(reqDto.getTypeTitle());
+		entity.setParentId(reqDto.getParentId());
+		entity.setUpdateTime(new Date());
+		entity.setId(reqDto.getTypeId());
+		entity.setRemark(reqDto.getRemark());
+		dao.update(entity);
 
 		resDto.setCode(ResultCode.success.getCode());
 		return resDto;

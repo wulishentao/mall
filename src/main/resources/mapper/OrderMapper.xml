@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beau.graduation.dao.OrderDao">
+
+    <resultMap id="BaseResultMap" type="com.beau.graduation.model.Order" >
+        <result column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="order_id" property="orderId" />
+        <result column="confirm_status" property="confirmStatus" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `id`,
+        `user_id`,
+        `order_id`,
+        `confirm_status`,
+        `create_time`,
+        `update_time`,
+        `del_flag`
+    </sql>
+
+    <!-- 插入数据 -->
+    <insert id="insert" parameterType="com.beau.graduation.model.Order">
+        INSERT INTO tm_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test ='null != Order.id'>
+                `id`,
+            </if>
+            <if test ='null != Order.userId'>
+                `user_id`,
+            </if>
+            <if test ='null != Order.orderId'>
+                `order_id`,
+            </if>
+            <if test ='null != Order.confirmStatus'>
+                `confirm_status`,
+            </if>
+            <if test ='null != Order.createTime'>
+                `create_time`,
+            </if>
+            <if test ='null != Order.updateTime'>
+                `update_time`,
+            </if>
+            <if test ='null != Order.delFlag'>
+                `del_flag`
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test ='null != Order.id'>
+                #{Order.id},
+            </if>
+            <if test ='null != Order.userId'>
+                #{Order.userId},
+            </if>
+            <if test ='null != Order.orderId'>
+                #{Order.orderId},
+            </if>
+            <if test ='null != Order.confirmStatus'>
+                #{Order.confirmStatus},
+            </if>
+            <if test ='null != Order.createTime'>
+                #{Order.createTime},
+            </if>
+            <if test ='null != Order.updateTime'>
+                #{Order.updateTime},
+            </if>
+            <if test ='null != Order.delFlag'>
+                #{Order.delFlag}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量插入数据 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO tm_order ( <include refid="Base_Column_List" /> ) VALUES
+        <foreach collection="list" item="curr" index="index" separator=",">
+            (
+                #{curr.id},
+                #{curr.userId},
+                #{curr.orderId},
+                #{curr.confirmStatus},
+                #{curr.createTime},
+                #{curr.updateTime},
+                #{curr.delFlag}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="com.beau.graduation.model.Order">
+        UPDATE tm_order
+        <set>
+            <if test ='null != Order.userId'>user_id = #{Order.userId},</if>
+            <if test ='null != Order.orderId'>order_id = #{Order.orderId},</if>
+            <if test ='null != Order.confirmStatus'>confirm_status = #{Order.confirmStatus},</if>
+            <if test ='null != Order.createTime'>create_time = #{Order.createTime},</if>
+            <if test ='null != Order.updateTime'>update_time = #{Order.updateTime},</if>
+            <if test ='null != Order.delFlag'>del_flag = #{Order.delFlag}</if>
+        </set>
+        WHERE id = Order.id
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delete">
+        DELETE FROM tm_order
+        WHERE id = #{Order.Order}
+    </delete>
+
+    <!-- 批量删除 -->
+    <delete id="batchDelete" parameterType = "java.util.List">
+        DELETE FROM tm_order WHERE id IN
+        <foreach collection="list"  item="item" open="(" separator="," close=")"  >
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 主键查询 -->
+    <select id="selectByObj" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tm_order
+        WHERE id = #{Order.id}
+    </select>
+
+    <!-- 条件查询 -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tm_order
+        <where>
+            <if test ='null != Order.id'>
+                and id = #{Order.id}
+            </if>
+            <if test ='null != Order.userId'>
+                and userId = #{Order.userId}
+            </if>
+            <if test ='null != Order.orderId'>
+                and orderId = #{Order.orderId}
+            </if>
+            <if test ='null != Order.confirmStatus'>
+                and confirmStatus = #{Order.confirmStatus}
+            </if>
+            <if test ='null != Order.createTime'>
+                and createTime = #{Order.createTime}
+            </if>
+            <if test ='null != Order.updateTime'>
+                and updateTime = #{Order.updateTime}
+            </if>
+            <if test ='null != Order.delFlag'>
+                and delFlag = #{Order.delFlag}
+            </if>
+        </where>
+    </select>
+
+    <!-- 分页条件查询 -->
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tm_order
+        <where>
+            <if test ='null != Order.id'>
+                and id = #{Order.id}
+            </if>
+            <if test ='null != Order.userId'>
+                and userId = #{Order.userId}
+            </if>
+            <if test ='null != Order.orderId'>
+                and orderId = #{Order.orderId}
+            </if>
+            <if test ='null != Order.confirmStatus'>
+                and confirmStatus = #{Order.confirmStatus}
+            </if>
+            <if test ='null != Order.createTime'>
+                and createTime = #{Order.createTime}
+            </if>
+            <if test ='null != Order.updateTime'>
+                and updateTime = #{Order.updateTime}
+            </if>
+            <if test ='null != Order.delFlag'>
+                and delFlag = #{Order.delFlag}
+            </if>
+        </where>
+        limit #{page,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <!-- 总量查询 -->
+    <select id="total" resultType="java.lang.Integer">
+        SELECT count(id) FROM tm_order
+        <where>
+            <if test ='null != Order.id'>
+                and id = #{Order.id}
+            </if>
+            <if test ='null != Order.userId'>
+                and userId = #{Order.userId}
+            </if>
+            <if test ='null != Order.orderId'>
+                and orderId = #{Order.orderId}
+            </if>
+            <if test ='null != Order.confirmStatus'>
+                and confirmStatus = #{Order.confirmStatus}
+            </if>
+            <if test ='null != Order.createTime'>
+                and createTime = #{Order.createTime}
+            </if>
+            <if test ='null != Order.updateTime'>
+                and updateTime = #{Order.updateTime}
+            </if>
+            <if test ='null != Order.delFlag'>
+                and delFlag = #{Order.delFlag}
+            </if>
+        </where>
+    </select>
+</mapper>

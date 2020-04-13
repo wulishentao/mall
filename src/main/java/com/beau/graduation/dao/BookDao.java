@@ -38,7 +38,7 @@ public interface BookDao {
     /**
      * [批量删除]
      **/
-    int batchDelete(@Param("list") List<Book> list);
+    int batchDelete(@Param("bookIds") List<Long> bookIds);
 
     /**
      * [主键查询]
@@ -64,4 +64,10 @@ public interface BookDao {
     List<BookDto> getCommodityPage(@Param("bookDto") BookDto entity,@Param("page") HashMap<String, Integer> beginAndSize);
 
     List<Long> getSuchBookList(@Param("bookDto") BookDto bookDto);
+
+    /**
+     * 将书籍type_id设为空
+     * @param bookIds
+     */
+    void updateTypeId(@Param("bookIds") List<Long> bookIds);
 }

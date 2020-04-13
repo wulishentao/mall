@@ -2,10 +2,8 @@ package com.beau.graduation.service;
 
 import com.beau.graduation.basic.reqdto.*;
 import com.beau.graduation.basic.resdto.*;
-import com.beau.graduation.common.Page;
 import com.beau.graduation.model.Book;
 import com.beau.graduation.model.dto.BookDto;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,11 +38,6 @@ public interface BookService {
     int delete(Book book);
 
     /**
-     * [批量删除]
-     **/
-    int batchDelete(List<Book> list);
-
-    /**
      * [条件查询]
      **/
     BookDto selectByObj(Book book);
@@ -76,4 +69,8 @@ public interface BookService {
     DelCartResDto delShoppingCart(DelCartReqDto reqDto, HttpServletRequest request);
 
     List<Long> getSuchBookList(BookDto bookDto);
+
+    void updateTypeId(List<Long> bookId);
+
+    DelCommodityResDto delCommodity(DelCommodityReqDto reqDto);
 }

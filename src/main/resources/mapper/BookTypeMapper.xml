@@ -76,12 +76,12 @@
     <update id="update" parameterType="com.beau.graduation.model.BookType">
         UPDATE tm_book_type
         <set>
-            <if test ='null != bookType.name'>name = #{bookType.name},</if>
-            <if test ='null != bookType.delFlag'>del_flag = #{bookType.delFlag},</if>
-            <if test ='null != bookType.createTime'>create_time = #{bookType.createTime},</if>
-            <if test ='null != bookType.remark'>remark = #{bookType.remark}</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookType.name)'>name = #{bookType.name},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookType.parentId)'>parent_id = #{bookType.parentId},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookType.updateTime)'>create_time = #{bookType.updateTime},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookType.remark)'>remark = #{bookType.remark}</if>
         </set>
-        WHERE id = bookType.id
+        WHERE id = #{bookType.id}
     </update>
 
     <!-- 删除 -->
