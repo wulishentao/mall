@@ -1,8 +1,10 @@
 package com.beau.graduation.dao;
 
 import com.beau.graduation.model.Order;
+import com.beau.graduation.model.dto.OrderDto;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -57,4 +59,12 @@ public interface OrderDao {
      * [总量查询]
      **/
     int total(@Param("order") Order order);
+
+    /**
+     * 获取订单列表
+     * @param entity
+     * @param beginAndSize
+     * @return
+     */
+    List<OrderDto> getOrderPage(@Param("orderDto") OrderDto entity,@Param("page") HashMap<String, Integer> beginAndSize);
 }

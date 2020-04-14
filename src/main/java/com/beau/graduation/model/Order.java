@@ -26,13 +26,13 @@ public class Order implements Serializable {
     /**
      * order_id  订单编号
      */
-    private Long orderId;
+    private String orderId;
 
 
     /**
      * confirm_status  交易状态:[{key:confirm_status,values:[{no:0,alias:confirm,remark:未发货},{no:1,alias:payDeposit,remark:已发货},{no:2,alias:subscribe,remark:已签收}]}]
      */
-    private Long confirmStatus;
+    private String confirmStatus;
 
 
     /**
@@ -46,10 +46,51 @@ public class Order implements Serializable {
      */
     private Date updateTime;
 
+    public Long getId() {
+        return id;
+    }
 
-    /**
-     * del_flag  是否删除，0-否，1-是
-     */
-    private String delFlag;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getConfirmStatus() {
+        return confirmStatus;
+    }
+
+    public void setConfirmStatus(String confirmStatus) {
+        this.confirmStatus = confirmStatus;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 }

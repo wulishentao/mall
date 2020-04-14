@@ -4,7 +4,9 @@ import com.beau.graduation.basic.reqdto.GetOrderPageReqDto;
 import com.beau.graduation.basic.resdto.GetOrderPageResDto;
 import com.beau.graduation.dao.OrderDao;
 import com.beau.graduation.model.Order;
+import com.beau.graduation.model.dto.OrderDto;
 import com.beau.graduation.service.OrderService;
+import com.beau.graduation.utils.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,6 +73,14 @@ public class OrderServiceImpl implements OrderService {
     public GetOrderPageResDto getOrderPage(GetOrderPageReqDto reqDto) {
         GetOrderPageResDto resDto = new GetOrderPageResDto();
 
+        OrderDto entity = new OrderDto();
+        entity.setOrderId(reqDto.getOrderId());
+        entity.setBeginTime(reqDto.getBeginTime());
+        entity.setEndTime(reqDto.getEndTime());
+        entity.setReceive(reqDto.getReceiver());
+        entity.setConfirmStatus(reqDto.getOrderStatus());
+
+        List<OrderDto> orderList = dao.getOrderPage(entity, PageUtil.getBeginAndSize(reqDto.getPageNo(), reqDto.getPageSize()));
 
         return null;
     }

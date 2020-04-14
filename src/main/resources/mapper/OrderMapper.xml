@@ -211,4 +211,8 @@
             </if>
         </where>
     </select>
+
+    <select id="getOrderPage" resultType="com.beau.graduation.model.dto.OrderDto">
+
+    </select>
 </mapper>

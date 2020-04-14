@@ -24,17 +24,37 @@ public class GetOrderPageReqDto extends CommonReqDTO implements Serializable {
     /**
      * 统计订单创建开始时间
      */
-    private String begin_time;
+    private String beginTime;
 
     /**
      * 统计订单创建结束时间
      */
-    private String end_time;
+    private String endTime;
 
     /**
      * 订单状态
      */
     private String orderStatus;
+
+    private Integer pageNo;
+
+    private Integer pageSize;
+
+    public Integer getPageNo() {
+        return pageNo;
+    }
+
+    public void setPageNo(Integer pageNo) {
+        this.pageNo = pageNo;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
 
     public String getOrderId() {
         return orderId;
@@ -52,20 +72,20 @@ public class GetOrderPageReqDto extends CommonReqDTO implements Serializable {
         this.receiver = receiver;
     }
 
-    public String getBegin_time() {
-        return begin_time;
+    public String getBeginTime() {
+        return beginTime;
     }
 
-    public void setBegin_time(String begin_time) {
-        this.begin_time = begin_time;
+    public void setBeginTime(String beginTime) {
+        this.beginTime = beginTime;
     }
 
-    public String getEnd_time() {
-        return end_time;
+    public String getEndTime() {
+        return endTime;
     }
 
-    public void setEnd_time(String end_time) {
-        this.end_time = end_time;
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public String getOrderStatus() {
