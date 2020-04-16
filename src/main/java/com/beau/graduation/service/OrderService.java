@@ -3,6 +3,7 @@ package com.beau.graduation.service;
 import com.beau.graduation.basic.reqdto.GetOrderPageReqDto;
 import com.beau.graduation.basic.resdto.GetOrderPageResDto;
 import com.beau.graduation.model.Order;
+import com.beau.graduation.model.dto.OrderDto;
 
 import java.util.List;
 
@@ -45,14 +46,9 @@ public interface OrderService {
     Order selectByObj(Order order);
 
     /**
-     * [条件查询]
-     **/
-    List<Order> selectList (Order order);
-
-    /**
      * [总量查询]
      **/
-    int total(Order order);
+    int total(OrderDto orderDto);
 
     GetOrderPageResDto getOrderPage(GetOrderPageReqDto reqDto);
 

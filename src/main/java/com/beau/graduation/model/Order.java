@@ -30,7 +30,7 @@ public class Order implements Serializable {
 
 
     /**
-     * confirm_status  交易状态:[{key:confirm_status,values:[{no:0,alias:confirm,remark:未发货},{no:1,alias:payDeposit,remark:已发货},{no:2,alias:subscribe,remark:已签收}]}]
+     * confirm_status  交易状态:[{key:confirm_status,values:[no:-1,alias:confirm,remark:订单已关闭,{no:0,alias:confirm,remark:未发货},{no:1,alias:payDeposit,remark:已发货},{no:2,alias:subscribe,remark:已签收}]}]
      */
     private String confirmStatus;
 

@@ -51,14 +51,9 @@ public interface OrderDao {
     List<Order> selectList (@Param("order") Order order);
 
     /**
-     * [分页条件查询]
-     **/
-    List<Order> selectPage (@Param("order") Order order, @Param("page") Integer page, @Param("pageSize") Integer pageSize);
-
-    /**
      * [总量查询]
      **/
-    int total(@Param("order") Order order);
+    int total(@Param("dto") OrderDto dto);
 
     /**
      * 获取订单列表

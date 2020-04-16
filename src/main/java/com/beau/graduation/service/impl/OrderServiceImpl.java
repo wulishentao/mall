@@ -1,7 +1,9 @@
 package com.beau.graduation.service.impl;
 
+import com.beau.graduation.Enum.ResultCode;
 import com.beau.graduation.basic.reqdto.GetOrderPageReqDto;
 import com.beau.graduation.basic.resdto.GetOrderPageResDto;
+import com.beau.graduation.common.Page;
 import com.beau.graduation.dao.OrderDao;
 import com.beau.graduation.model.Order;
 import com.beau.graduation.model.dto.OrderDto;
@@ -55,12 +57,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public List<Order> selectList(Order order) {
-		return dao.selectList(order);
-	}
-
-	@Override
-	public int total(Order order) {
+	public int total(OrderDto order) {
 		return dao.total(order);
 	}
 
@@ -80,8 +77,12 @@ public class OrderServiceImpl implements OrderService {
         entity.setReceive(reqDto.getReceiver());
         entity.setConfirmStatus(reqDto.getOrderStatus());
 
+        int total = dao.total(entity);
         List<OrderDto> orderList = dao.getOrderPage(entity, PageUtil.getBeginAndSize(reqDto.getPageNo(), reqDto.getPageSize()));
-
-        return null;
+        Page<OrderDto> orderDtoPage = new Page<>(total, orderList);
+        resDto.setPage(orderDtoPage);
+        resDto.setCode(ResultCode.success.getCode());
+        resDto.setMsg("订单列表获取成功");
+        return resDto;
     }
 }

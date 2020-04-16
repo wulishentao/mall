@@ -3,14 +3,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.beau.graduation.dao.OrderDao">
 
-    <resultMap id="BaseResultMap" type="com.beau.graduation.model.Order" >
+    <resultMap id="BaseResultMap" type="com.beau.graduation.model.dto.OrderDto" >
         <result column="id" property="id" />
         <result column="user_id" property="userId" />
         <result column="order_id" property="orderId" />
         <result column="confirm_status" property="confirmStatus" />
+        <result column="account_name" property="accountName"/>
+        <result column="order_total" property="orderTotal"/>
         <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
-        <result column="del_flag" property="delFlag" />
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -18,58 +18,53 @@
         `user_id`,
         `order_id`,
         `confirm_status`,
-        `create_time`,
-        `update_time`,
-        `del_flag`
+        `create_time`
     </sql>
 
     <!-- 插入数据 -->
     <insert id="insert" parameterType="com.beau.graduation.model.Order">
         INSERT INTO tm_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test ='null != Order.id'>
-                `id`,
-            </if>
-            <if test ='null != Order.userId'>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.userId)'>
                 `user_id`,
             </if>
-            <if test ='null != Order.orderId'>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.orderId)'>
                 `order_id`,
             </if>
-            <if test ='null != Order.confirmStatus'>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.confirmStatus)'>
                 `confirm_status`,
             </if>
-            <if test ='null != Order.createTime'>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.createTime)'>
                 `create_time`,
             </if>
-            <if test ='null != Order.updateTime'>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.updateTime)'>
                 `update_time`,
             </if>
-            <if test ='null != Order.delFlag'>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.delFlag)'>
                 `del_flag`
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test ='null != Order.id'>
-                #{Order.id},
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.id)'>
+                #{order.id},
             </if>
-            <if test ='null != Order.userId'>
-                #{Order.userId},
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.userId)'>
+                #{order.userId},
             </if>
-            <if test ='null != Order.orderId'>
-                #{Order.orderId},
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.orderId)'>
+                #{order.orderId},
             </if>
-            <if test ='null != Order.confirmStatus'>
-                #{Order.confirmStatus},
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.confirmStatus)'>
+                #{order.confirmStatus},
             </if>
-            <if test ='null != Order.createTime'>
-                #{Order.createTime},
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.createTime)'>
+                #{order.createTime},
             </if>
-            <if test ='null != Order.updateTime'>
-                #{Order.updateTime},
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.updateTime)'>
+                #{order.updateTime},
             </if>
-            <if test ='null != Order.delFlag'>
-                #{Order.delFlag}
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.delFlag)'>
+                #{order.delFlag}
             </if>
         </trim>
     </insert>
@@ -79,13 +74,13 @@
         INSERT INTO tm_order ( <include refid="Base_Column_List" /> ) VALUES
         <foreach collection="list" item="curr" index="index" separator=",">
             (
-                #{curr.id},
-                #{curr.userId},
-                #{curr.orderId},
-                #{curr.confirmStatus},
-                #{curr.createTime},
-                #{curr.updateTime},
-                #{curr.delFlag}
+            #{curr.id},
+            #{curr.userId},
+            #{curr.orderId},
+            #{curr.confirmStatus},
+            #{curr.createTime},
+            #{curr.updateTime},
+            #{curr.delFlag}
             )
         </foreach>
     </insert>
@@ -94,20 +89,20 @@
     <update id="update" parameterType="com.beau.graduation.model.Order">
         UPDATE tm_order
         <set>
-            <if test ='null != Order.userId'>user_id = #{Order.userId},</if>
-            <if test ='null != Order.orderId'>order_id = #{Order.orderId},</if>
-            <if test ='null != Order.confirmStatus'>confirm_status = #{Order.confirmStatus},</if>
-            <if test ='null != Order.createTime'>create_time = #{Order.createTime},</if>
-            <if test ='null != Order.updateTime'>update_time = #{Order.updateTime},</if>
-            <if test ='null != Order.delFlag'>del_flag = #{Order.delFlag}</if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.userId)'>user_id = #{order.userId},</if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.orderId)'>order_id = #{order.orderId},</if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.confirmStatus)'>confirm_status = #{order.confirmStatus},</if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.createTime)'>create_time = #{order.createTime},</if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.updateTime)'>update_time = #{order.updateTime},</if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.delFlag)'>del_flag = #{order.delFlag}</if>
         </set>
-        WHERE id = Order.id
+        WHERE id = #{order.id}
     </update>
 
     <!-- 删除 -->
     <delete id="delete">
         DELETE FROM tm_order
-        WHERE id = #{Order.Order}
+        WHERE id = #{order.order}
     </delete>
 
     <!-- 批量删除 -->
@@ -122,7 +117,7 @@
     <select id="selectByObj" resultMap="BaseResultMap">
         SELECT <include refid="Base_Column_List" />
         FROM tm_order
-        WHERE id = #{Order.id}
+        WHERE id = #{order.id}
     </select>
 
     <!-- 条件查询 -->
@@ -130,89 +125,85 @@
         SELECT <include refid="Base_Column_List" />
         FROM tm_order
         <where>
-            <if test ='null != Order.id'>
-                and id = #{Order.id}
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.id)'>
+                and id = #{order.id}
             </if>
-            <if test ='null != Order.userId'>
-                and userId = #{Order.userId}
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.userId)'>
+                and user_id = #{order.userId}
             </if>
-            <if test ='null != Order.orderId'>
-                and orderId = #{Order.orderId}
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.orderId)'>
+                and order_id = #{order.orderId}
             </if>
-            <if test ='null != Order.confirmStatus'>
-                and confirmStatus = #{Order.confirmStatus}
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.confirmStatus)'>
+                and confirm_status = #{order.confirmStatus}
             </if>
-            <if test ='null != Order.createTime'>
-                and createTime = #{Order.createTime}
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.createTime)'>
+                and create_time = #{order.createTime}
             </if>
-            <if test ='null != Order.updateTime'>
-                and updateTime = #{Order.updateTime}
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.updateTime)'>
+                and update_time = #{order.updateTime}
             </if>
-            <if test ='null != Order.delFlag'>
-                and delFlag = #{Order.delFlag}
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.delFlag)'>
+                and del_flag = #{order.delFlag}
             </if>
         </where>
     </select>
 
-    <!-- 分页条件查询 -->
-    <select id="selectPage" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List" />
-        FROM tm_order
-        <where>
-            <if test ='null != Order.id'>
-                and id = #{Order.id}
-            </if>
-            <if test ='null != Order.userId'>
-                and userId = #{Order.userId}
-            </if>
-            <if test ='null != Order.orderId'>
-                and orderId = #{Order.orderId}
-            </if>
-            <if test ='null != Order.confirmStatus'>
-                and confirmStatus = #{Order.confirmStatus}
-            </if>
-            <if test ='null != Order.createTime'>
-                and createTime = #{Order.createTime}
-            </if>
-            <if test ='null != Order.updateTime'>
-                and updateTime = #{Order.updateTime}
-            </if>
-            <if test ='null != Order.delFlag'>
-                and delFlag = #{Order.delFlag}
-            </if>
-        </where>
-        limit #{page,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
-    </select>
 
     <!-- 总量查询 -->
     <select id="total" resultType="java.lang.Integer">
-        SELECT count(id) FROM tm_order
+        SELECT count(id) FROM tm_order to
+        left join tm_partner_info tpi on to.user_id=tpi.id and tpi.del_flag = '0'
         <where>
-            <if test ='null != Order.id'>
-                and id = #{Order.id}
+            to.del_flag = '0'
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(dto.receive)'>
+                and (tpi.account_name like concat('%',#{dto.receive},'%') or tpi.phone like concat(#{dto.receive},'%'))
             </if>
-            <if test ='null != Order.userId'>
-                and userId = #{Order.userId}
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(dto.orderId)'>
+                and order_id = #{dto.orderId}
             </if>
-            <if test ='null != Order.orderId'>
-                and orderId = #{Order.orderId}
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(dto.confirmStatus)'>
+                and confirm_status = #{dto.confirmStatus}
             </if>
-            <if test ='null != Order.confirmStatus'>
-                and confirmStatus = #{Order.confirmStatus}
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(dto.beginTime)'>
+                and create_time &gt;= #{dto.beginTime}
             </if>
-            <if test ='null != Order.createTime'>
-                and createTime = #{Order.createTime}
-            </if>
-            <if test ='null != Order.updateTime'>
-                and updateTime = #{Order.updateTime}
-            </if>
-            <if test ='null != Order.delFlag'>
-                and delFlag = #{Order.delFlag}
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(dto.endTime)'>
+                and create_time &lt;= #{dto.endTime}
             </if>
         </where>
     </select>
 
     <select id="getOrderPage" resultType="com.beau.graduation.model.dto.OrderDto">
-
+        SELECT
+            to.`id` as id,
+            tpi.`account_name` as account_name,
+            to.`order_id` as order_id,
+            to.`confirm_status` as confirm_status,
+            to.`create_time` as create_time,
+            sum(tbo.total_price) as order_total
+        FROM tm_order to
+        left join tm_partner_info tpi on to.user_id=tpi.id and tpi.del_flag = '0'
+        left join tr_book_order tbo on tbo.order_id=to.order_id and tbo.del_flag = '0'
+        <where>
+            to.del_flag = '0'
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(dto.receive)'>
+                and (tpi.account_name like concat('%',#{dto.receive},'%') or tpi.phone like concat(#{dto.receive},'%'))
+            </if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(dto.orderId)'>
+                and order_id = #{dto.orderId}
+            </if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(dto.confirmStatus)'>
+                and confirm_status = #{dto.confirmStatus}
+            </if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(dto.beginTime)'>
+                and create_time &gt;= #{dto.beginTime}
+            </if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(dto.endTime)'>
+                and create_time &lt;= #{dto.endTime}
+            </if>
+        </where>
+        group by to.id
+        limit #{page.index},#{page.size}
     </select>
 </mapper>

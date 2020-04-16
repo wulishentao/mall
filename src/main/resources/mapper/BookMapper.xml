@@ -204,7 +204,7 @@
             tb.reserve AS reserve,
             (
             SELECT
-                sum( CASE WHEN tbo.amount != 0 THEN tbo.amount ELSE 0 END )
+                sum(tbo.amount)
             FROM
                 tr_book_order tbo
             WHERE
@@ -264,7 +264,7 @@
         tb.reserve AS reserve,
         (
         SELECT
-            sum( CASE WHEN tbo.amount != 0 THEN tbo.amount ELSE 0 END )
+            sum(tbo.amount)
         FROM
             tr_book_order tbo
         WHERE

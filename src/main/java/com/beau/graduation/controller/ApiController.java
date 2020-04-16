@@ -307,9 +307,9 @@ public class ApiController {
             res.setCode(resDto.getCode());
             res.setMsg(resDto.getMsg());
         } catch (Exception e) {
-            logger.error("delCommodity error: ", e);
+            logger.error("getOrderPage error: ", e);
             res.setCode(ResultCode.failed.getCode());
-            res.setMsg("删除书籍异常");
+            res.setMsg("获取订单列表异常");
         }
         return res;
     }
