@@ -314,6 +314,22 @@ public class ApiController {
         return res;
     }
 
+    @PostMapping(value = "/private/order/delivery", produces = "application/json")
+    @ApiOperation("订单发货")
+    public ApiResult orderDelivery(@RequestBody OrderDeliveryReqDto reqDto, HttpServletRequest request) {
+        ApiResult<OrderDeliveryResDto> res = new ApiResult<>();
+        try {
+            OrderDeliveryResDto resDto = orderService.orderDelivery(reqDto, request);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("orderDelivery error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("订单发货异常");
+        }
+        return res;
+    }
+
     @PostMapping(value = "/private/marketing/addTopic", produces = "application/json")
     @ApiOperation("添加活动专题")
     public ApiResult addTopic(AddTopicReqDto reqDto) {

@@ -1,10 +1,13 @@
 package com.beau.graduation.service;
 
 import com.beau.graduation.basic.reqdto.GetOrderPageReqDto;
+import com.beau.graduation.basic.reqdto.OrderDeliveryReqDto;
 import com.beau.graduation.basic.resdto.GetOrderPageResDto;
+import com.beau.graduation.basic.resdto.OrderDeliveryResDto;
 import com.beau.graduation.model.Order;
 import com.beau.graduation.model.dto.OrderDto;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -28,7 +31,7 @@ public interface OrderService {
     /**
      * [更新]
      **/
-    int update(Order order);
+    int update(OrderDto orderDto);
 
     /**
      * [删除]
@@ -41,9 +44,11 @@ public interface OrderService {
     int batchDelete(List<Order> list);
 
     /**
-     * [主键查询]
-     **/
-    Order selectByObj(Order order);
+     * [根据订单号查找]
+     *
+     * @param orderId
+     * @return*/
+    OrderDto selectByOrderId(String orderId);
 
     /**
      * [总量查询]
@@ -52,4 +57,5 @@ public interface OrderService {
 
     GetOrderPageResDto getOrderPage(GetOrderPageReqDto reqDto);
 
+    OrderDeliveryResDto orderDelivery(OrderDeliveryReqDto reqDto, HttpServletRequest request);
 }

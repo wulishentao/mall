@@ -30,9 +30,26 @@ public class Order implements Serializable {
 
 
     /**
-     * confirm_status  交易状态:[{key:confirm_status,values:[no:-1,alias:confirm,remark:订单已关闭,{no:0,alias:confirm,remark:未发货},{no:1,alias:payDeposit,remark:已发货},{no:2,alias:subscribe,remark:已签收}]}]
+     * 交易状态:[{key:confirm_status,values:
+     * [{no:-1,remark:订单已关闭},
+     * {no:0,remark:待付款},
+     * {no:1,remark:未发货},
+     * {no:2,remark:已发货},
+     * {no:3,remark:已签收}]}]
      */
     private String confirmStatus;
+
+
+    /**
+     * logistics_company  物流公司名称
+     */
+    private String logisticsCompany;
+
+
+    /**
+     * shipment_number  物流单号
+     */
+    private String shipmentNumber;
 
 
     /**
@@ -76,6 +93,22 @@ public class Order implements Serializable {
 
     public void setConfirmStatus(String confirmStatus) {
         this.confirmStatus = confirmStatus;
+    }
+
+    public String getLogisticsCompany() {
+        return logisticsCompany;
+    }
+
+    public void setLogisticsCompany(String logisticsCompany) {
+        this.logisticsCompany = logisticsCompany;
+    }
+
+    public String getShipmentNumber() {
+        return shipmentNumber;
+    }
+
+    public void setShipmentNumber(String shipmentNumber) {
+        this.shipmentNumber = shipmentNumber;
     }
 
     public Date getCreateTime() {

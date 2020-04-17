@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beau.graduation.dao.OperateOrderDao">
+
+    <resultMap id="BaseResultMap" type="com.beau.graduation.model.OperateOrder" >
+        <result column="id" property="id" />
+        <result column="operate_name" property="operateName" />
+        <result column="order_id" property="orderId" />
+        <result column="operate_time" property="operateTime" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        operate_name,
+        order_id,
+        operate_time,
+        remark
+    </sql>
+
+    <!-- 插入数据 -->
+    <insert id="insert" parameterType="com.beau.graduation.model.OperateOrder">
+        INSERT INTO tr_operate_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateName)'>
+                `operate_name`,
+            </if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.orderId)'>
+                `order_id`,
+            </if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateTime)'>
+                `operate_time`,
+            </if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.remark)'>
+                `remark`
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateName)'>
+                #{operateOrder.operateName},
+            </if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.orderId)'>
+                #{operateOrder.orderId},
+            </if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateTime)'>
+                #{operateOrder.operateTime},
+            </if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.remark)'>
+                #{operateOrder.remark}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量插入数据 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO tr_operate_order ( <include refid="Base_Column_List" /> ) VALUES
+        <foreach collection="list" item="curr" index="index" separator=",">
+            (
+                #{curr.id},
+                #{curr.operateName},
+                #{curr.orderId},
+                #{curr.operateTime},
+                #{curr.remark}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="com.beau.graduation.model.OperateOrder">
+        UPDATE tr_operate_order
+        <set>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateName)'>operate_name = #{operateOrder.operateName},</if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.orderId)'>order_id = #{operateOrder.orderId},</if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateTime)'>operate_time = #{operateOrder.operateTime},</if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.remark)'>remark = #{operateOrder.remark}</if>
+        </set>
+        WHERE id = #{operateOrder.id}
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delete">
+        DELETE FROM tr_operate_order
+        WHERE id = #{operateOrder.operateOrder}
+    </delete>
+
+    <!-- 批量删除 -->
+    <delete id="batchDelete" parameterType = "java.util.List">
+        DELETE FROM tr_operate_order WHERE id IN
+        <foreach collection="list"  item="item" open="(" separator="," close=")"  >
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 主键查询 -->
+    <select id="selectByObj" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tr_operate_order
+        WHERE id = #{operateOrder.id}
+    </select>
+
+    <!-- 条件查询 -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tr_operate_order
+        <where>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.id)'>
+                and id = #{operateOrder.id}
+            </if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateName)'>
+                and operate_name = #{operateOrder.operateName}
+            </if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.orderId)'>
+                and order_id = #{operateOrder.orderId}
+            </if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateTime)'>
+                and operate_time = #{operateOrder.operateTime}
+            </if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.remark)'>
+                and remark = #{operateOrder.remark}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 总量查询 -->
+    <select id="total" resultType="java.lang.Integer">
+        SELECT count(id) FROM tr_operate_order
+        <where>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.id)'>
+                and id = #{operateOrder.id}
+            </if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateName)'>
+                and operate_name = #{operateOrder.operateName}
+            </if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.orderId)'>
+                and order_id = #{operateOrder.orderId}
+            </if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateTime)'>
+                and operate_time = #{operateOrder.operateTime}
+            </if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.remark)'>
+                and remark = #{operateOrder.remark}
+            </if>
+        </where>
+    </select>
+</mapper>

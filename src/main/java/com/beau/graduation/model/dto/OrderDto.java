@@ -3,6 +3,7 @@ package com.beau.graduation.model.dto;
 import com.beau.graduation.model.Order;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * @classname: OrderDto.java
@@ -27,7 +28,7 @@ public class OrderDto extends Order implements Serializable {
     /**
      * 订单总额
      */
-    private String orderTotal;
+    private BigDecimal orderTotal;
 
     public String getAccountName() {
         return accountName;
@@ -37,11 +38,11 @@ public class OrderDto extends Order implements Serializable {
         this.accountName = accountName;
     }
 
-    public String getOrderTotal() {
+    public BigDecimal getOrderTotal() {
         return orderTotal;
     }
 
-    public void setOrderTotal(String orderTotal) {
+    public void setOrderTotal(BigDecimal orderTotal) {
         this.orderTotal = orderTotal;
     }
 

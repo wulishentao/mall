@@ -16,6 +16,11 @@ public enum ResultCode {
     failed ("0", "请求响应失败"),
 
     /**
+     * 无可操作项
+     */
+    no_actionable_item("444", "无可操作项"),
+
+    /**
      * 需登录后才能进行操作
      */
     login_required ("999","操作需登录"),

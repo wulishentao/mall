@@ -28,7 +28,7 @@ public interface OrderDao {
     /**
      * [更新]
      **/
-    int update(@Param("order") Order order);
+    int update(@Param("dto") OrderDto dto);
 
     /**
      * [删除]
@@ -42,8 +42,9 @@ public interface OrderDao {
 
     /**
      * [主键查询]
-     **/
-    Order selectByObj(@Param("order") Order order);
+     *
+     * @return*/
+    OrderDto selectByOrderId(@Param("orderId") String orderId);
 
     /**
      * [条件查询]
@@ -57,9 +58,9 @@ public interface OrderDao {
 
     /**
      * 获取订单列表
-     * @param entity
+     * @param dto
      * @param beginAndSize
      * @return
      */
-    List<OrderDto> getOrderPage(@Param("orderDto") OrderDto entity,@Param("page") HashMap<String, Integer> beginAndSize);
+    List<OrderDto> getOrderPage(@Param("dto") OrderDto dto,@Param("page") HashMap<String, Integer> beginAndSize);
 }
