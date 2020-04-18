@@ -1,9 +1,7 @@
 package com.beau.graduation.service;
 
-import com.beau.graduation.basic.reqdto.GetOrderPageReqDto;
-import com.beau.graduation.basic.reqdto.OrderDeliveryReqDto;
-import com.beau.graduation.basic.resdto.GetOrderPageResDto;
-import com.beau.graduation.basic.resdto.OrderDeliveryResDto;
+import com.beau.graduation.basic.reqdto.*;
+import com.beau.graduation.basic.resdto.*;
 import com.beau.graduation.model.Order;
 import com.beau.graduation.model.dto.OrderDto;
 
@@ -58,4 +56,12 @@ public interface OrderService {
     GetOrderPageResDto getOrderPage(GetOrderPageReqDto reqDto);
 
     OrderDeliveryResDto orderDelivery(OrderDeliveryReqDto reqDto, HttpServletRequest request);
+
+    OrderClosedResDto orderClosed(OrderClosedReqDto reqDto, HttpServletRequest request);
+
+    OrderCancelResDto orderCancel(OrderCancelReqDto reqDto, HttpServletRequest request);
+
+    OrderDeleteResDto orderDelete(OrderDeleteReqDto reqDto);
+
+    ViewOrderInfoResDto viewOrderInfo(ViewOrderInfoReqDto reqDto);
 }

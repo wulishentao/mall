@@ -5,7 +5,7 @@
 
     <resultMap id="BaseResultMap" type="com.beau.graduation.model.BookComment" >
         <result column="id" property="id" />
-        <result column="order_id" property="orderId" />
+        <result column="order_id" property="orderIds" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="remark" property="remark" />
@@ -28,7 +28,7 @@
             <if test ='null != bookComment.id'>
                 `id`,
             </if>
-            <if test ='null != bookComment.orderId'>
+            <if test ='null != bookComment.orderIds'>
                 `order_id`,
             </if>
             <if test ='null != bookComment.createTime'>
@@ -48,8 +48,8 @@
             <if test ='null != bookComment.id'>
                 #{bookComment.id},
             </if>
-            <if test ='null != bookComment.orderId'>
-                #{bookComment.orderId},
+            <if test ='null != bookComment.orderIds'>
+                #{bookComment.orderIds},
             </if>
             <if test ='null != bookComment.createTime'>
                 #{bookComment.createTime},
@@ -72,7 +72,7 @@
         <foreach collection="list" item="curr" index="index" separator=",">
             (
                 #{curr.id},
-                #{curr.orderId},
+                #{curr.orderIds},
                 #{curr.createTime},
                 #{curr.updateTime},
                 #{curr.remark},
@@ -85,7 +85,7 @@
     <update id="update" parameterType="com.beau.graduation.model.BookComment">
         UPDATE tm_book_comment
         <set>
-            <if test ='null != bookComment.orderId'>order_id = #{bookComment.orderId},</if>
+            <if test ='null != bookComment.orderIds'>order_id = #{bookComment.orderIds},</if>
             <if test ='null != bookComment.createTime'>create_time = #{bookComment.createTime},</if>
             <if test ='null != bookComment.updateTime'>update_time = #{bookComment.updateTime},</if>
             <if test ='null != bookComment.remark'>remark = #{bookComment.remark},</if>
@@ -123,8 +123,8 @@
             <if test ='null != bookComment.id'>
                 and id = #{bookComment.id}
             </if>
-            <if test ='null != bookComment.orderId'>
-                and orderId = #{bookComment.orderId}
+            <if test ='null != bookComment.orderIds'>
+                and orderIds = #{bookComment.orderIds}
             </if>
             <if test ='null != bookComment.createTime'>
                 and createTime = #{bookComment.createTime}
@@ -149,8 +149,8 @@
             <if test ='null != bookComment.id'>
                 and id = #{bookComment.id}
             </if>
-            <if test ='null != bookComment.orderId'>
-                and orderId = #{bookComment.orderId}
+            <if test ='null != bookComment.orderIds'>
+                and orderIds = #{bookComment.orderIds}
             </if>
             <if test ='null != bookComment.createTime'>
                 and createTime = #{bookComment.createTime}
@@ -175,8 +175,8 @@
             <if test ='null != bookComment.id'>
                 and id = #{bookComment.id}
             </if>
-            <if test ='null != bookComment.orderId'>
-                and orderId = #{bookComment.orderId}
+            <if test ='null != bookComment.orderIds'>
+                and orderIds = #{bookComment.orderIds}
             </if>
             <if test ='null != bookComment.createTime'>
                 and createTime = #{bookComment.createTime}

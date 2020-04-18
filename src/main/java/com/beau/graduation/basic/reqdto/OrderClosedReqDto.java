@@ -7,12 +7,12 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @classname: OrderDeliveryReqDto.java
+ * @classname: OrderClosedReqDto.java
  * @author: Beau
- * @create: 2020/04/17 15:42
+ * @create: 2020/04/18 14:43
  * @version: 1.0.0
  **/
-public class OrderDeliveryReqDto extends CommonReqDTO implements Serializable {
+public class OrderClosedReqDto extends CommonReqDTO implements Serializable {
     private List<OperateOrder> operateOrders;
 
     public List<OperateOrder> getOperateOrders() {

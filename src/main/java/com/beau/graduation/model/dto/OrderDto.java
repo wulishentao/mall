@@ -1,9 +1,11 @@
 package com.beau.graduation.model.dto;
 
+import com.beau.graduation.model.OperateOrder;
 import com.beau.graduation.model.Order;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @classname: OrderDto.java
@@ -14,6 +16,8 @@ import java.math.BigDecimal;
 public class OrderDto extends Order implements Serializable {
     private String beginTime;
     private String endTime;
+    private BookOrderDto bookOrderDto;
+    private List<OperateOrder> operateOrders;
 
     /**
      * 用户名称/手机号
@@ -29,6 +33,22 @@ public class OrderDto extends Order implements Serializable {
      * 订单总额
      */
     private BigDecimal orderTotal;
+
+    public BookOrderDto getBookOrderDto() {
+        return bookOrderDto;
+    }
+
+    public List<OperateOrder> getOperateOrders() {
+        return operateOrders;
+    }
+
+    public void setOperateOrders(List<OperateOrder> operateOrders) {
+        this.operateOrders = operateOrders;
+    }
+
+    public void setBookOrderDto(BookOrderDto bookOrderDto) {
+        this.bookOrderDto = bookOrderDto;
+    }
 
     public String getAccountName() {
         return accountName;

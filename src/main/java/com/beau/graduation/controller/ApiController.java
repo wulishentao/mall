@@ -4,16 +4,12 @@ import com.beau.graduation.Enum.ResultCode;
 import com.beau.graduation.basic.reqdto.*;
 import com.beau.graduation.basic.resdto.*;
 import com.beau.graduation.common.ApiResult;
-import com.beau.graduation.model.BookRelationTopic;
 import com.beau.graduation.service.*;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -326,6 +322,71 @@ public class ApiController {
             logger.error("orderDelivery error: ", e);
             res.setCode(ResultCode.failed.getCode());
             res.setMsg("订单发货异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/private/order/closed", produces = "application/json")
+    @ApiOperation("订单关闭")
+    public ApiResult orderClosed(@RequestBody OrderClosedReqDto reqDto, HttpServletRequest request) {
+        ApiResult<OrderClosedResDto> res = new ApiResult<>();
+        try {
+            OrderClosedResDto resDto = orderService.orderClosed(reqDto, request);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("orderClosed error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("订单关闭异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/private/order/cancel", produces = "application/json")
+    @ApiOperation("取消订单")
+    public ApiResult orderCancel(@RequestBody OrderCancelReqDto reqDto, HttpServletRequest request) {
+        ApiResult<OrderCancelResDto> res = new ApiResult<>();
+        try {
+            OrderCancelResDto resDto = orderService.orderCancel(reqDto, request);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("orderCancel error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("取消订单异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/private/order/delete", produces = "application/json")
+    @ApiOperation("删除订单记录")
+    public ApiResult orderDelete(@RequestBody OrderDeleteReqDto reqDto) {
+        ApiResult<OrderDeleteResDto> res = new ApiResult<>();
+        try {
+            OrderDeleteResDto resDto = orderService.orderDelete(reqDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("orderDelete error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("删除订单记录异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/private/order/view", produces = "application/json")
+    @ApiOperation("查看订单详情")
+    public ApiResult viewOrderInfo(@RequestBody ViewOrderInfoReqDto reqDto) {
+        ApiResult<ViewOrderInfoResDto> res = new ApiResult<>();
+        try {
+            ViewOrderInfoResDto resDto = orderService.viewOrderInfo(reqDto);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("viewOrderInfo error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("查看订单详情异常");
         }
         return res;
     }

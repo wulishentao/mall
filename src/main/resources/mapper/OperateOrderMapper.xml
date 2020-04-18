@@ -4,16 +4,15 @@
 <mapper namespace="com.beau.graduation.dao.OperateOrderDao">
 
     <resultMap id="BaseResultMap" type="com.beau.graduation.model.OperateOrder" >
-        <result column="id" property="id" />
-        <result column="operate_name" property="operateName" />
+        <result column="operator" property="operator" />
         <result column="order_id" property="orderId" />
         <result column="operate_time" property="operateTime" />
+        <result column="confirm_status" property="confirmStatus"/>
         <result column="remark" property="remark" />
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,
-        operate_name,
+        operator,
         order_id,
         operate_time,
         remark
@@ -23,10 +22,10 @@
     <insert id="insert" parameterType="com.beau.graduation.model.OperateOrder">
         INSERT INTO tr_operate_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateName)'>
-                `operate_name`,
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operator)'>
+                `operator`,
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.orderId)'>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.orderIds)'>
                 `order_id`,
             </if>
             <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateTime)'>
@@ -37,11 +36,11 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateName)'>
-                #{operateOrder.operateName},
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operator)'>
+                #{operateOrder.operator},
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.orderId)'>
-                #{operateOrder.orderId},
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.orderIds)'>
+                #{operateOrder.orderIds},
             </if>
             <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateTime)'>
                 #{operateOrder.operateTime},
@@ -58,8 +57,8 @@
         <foreach collection="list" item="curr" index="index" separator=",">
             (
                 #{curr.id},
-                #{curr.operateName},
-                #{curr.orderId},
+                #{curr.operator},
+                #{curr.orderIds},
                 #{curr.operateTime},
                 #{curr.remark}
             )
@@ -70,8 +69,8 @@
     <update id="update" parameterType="com.beau.graduation.model.OperateOrder">
         UPDATE tr_operate_order
         <set>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateName)'>operate_name = #{operateOrder.operateName},</if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.orderId)'>order_id = #{operateOrder.orderId},</if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operator)'>operator = #{operateOrder.operator},</if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.orderIds)'>order_id = #{operateOrder.orderIds},</if>
             <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateTime)'>operate_time = #{operateOrder.operateTime},</if>
             <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.remark)'>remark = #{operateOrder.remark}</if>
         </set>
@@ -101,25 +100,17 @@
 
     <!-- 条件查询 -->
     <select id="selectList" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List" />
-        FROM tr_operate_order
-        <where>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.id)'>
-                and id = #{operateOrder.id}
-            </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateName)'>
-                and operate_name = #{operateOrder.operateName}
-            </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.orderId)'>
-                and order_id = #{operateOrder.orderId}
-            </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateTime)'>
-                and operate_time = #{operateOrder.operateTime}
-            </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.remark)'>
-                and remark = #{operateOrder.remark}
-            </if>
-        </where>
+        SELECT
+            too.operator,
+            too.order_id,
+            too.operate_time,
+            too.remark,
+            too.confirm_status
+        FROM
+            tr_operate_order too
+        LEFT JOIN tm_order t ON t.order_id = too.order_id AND t.del_flag = '0'
+        where
+            too.order_id = #{operateOrder.orderId}
     </select>
 
 
@@ -130,11 +121,11 @@
             <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.id)'>
                 and id = #{operateOrder.id}
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateName)'>
-                and operate_name = #{operateOrder.operateName}
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operator)'>
+                and operator = #{operateOrder.operator}
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.orderId)'>
-                and order_id = #{operateOrder.orderId}
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.orderIds)'>
+                and order_id = #{operateOrder.orderIds}
             </if>
             <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateTime)'>
                 and operate_time = #{operateOrder.operateTime}

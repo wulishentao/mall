@@ -18,9 +18,9 @@ public class OperateOrder implements Serializable {
 
 
     /**
-     * operate_name  操作人员名称
+     * operator  操作人员名称
      */
-    private String operateName;
+    private String operator;
 
 
     /**
@@ -28,6 +28,10 @@ public class OperateOrder implements Serializable {
      */
     private String orderId;
 
+    /**
+     * confirm_status 操作后的订单状态
+     */
+    private String confirmStatus;
 
     /**
      * operate_time  操作时间
@@ -40,6 +44,14 @@ public class OperateOrder implements Serializable {
      */
     private String remark;
 
+    public String getConfirmStatus() {
+        return confirmStatus;
+    }
+
+    public void setConfirmStatus(String confirmStatus) {
+        this.confirmStatus = confirmStatus;
+    }
+
     public Long getId() {
         return id;
     }
@@ -48,12 +60,12 @@ public class OperateOrder implements Serializable {
         this.id = id;
     }
 
-    public String getOperateName() {
-        return operateName;
+    public String getOperator() {
+        return operator;
     }
 
-    public void setOperateName(String operateName) {
-        this.operateName = operateName;
+    public void setOperator(String operator) {
+        this.operator = operator;
     }
 
     public String getOrderId() {

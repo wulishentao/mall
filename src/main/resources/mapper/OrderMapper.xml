@@ -6,7 +6,7 @@
     <resultMap id="BaseResultMap" type="com.beau.graduation.model.dto.OrderDto" >
         <result column="id" property="id" />
         <result column="user_id" property="userId" />
-        <result column="order_id" property="orderId" />
+        <result column="order_id" property="orderIds" />
         <result column="confirm_status" property="confirmStatus" />
         <result column="logistics_company" property="logisticsCompany" />
         <result column="shipment_number" property="shipmentNumber" />
@@ -34,7 +34,7 @@
             <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.userId)'>
                 `user_id`,
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.orderId)'>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.orderIds)'>
                 `order_id`,
             </if>
             <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.confirmStatus)'>
@@ -57,8 +57,8 @@
             <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.userId)'>
                 #{order.userId},
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.orderId)'>
-                #{order.orderId},
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.orderIds)'>
+                #{order.orderIds},
             </if>
             <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.confirmStatus)'>
                 #{order.confirmStatus},
@@ -85,7 +85,7 @@
             (
             #{curr.id},
             #{curr.userId},
-            #{curr.orderId},
+            #{curr.orderIds},
             #{curr.confirmStatus},
             #{curr.createTime},
             #{curr.updateTime},
@@ -99,7 +99,7 @@
         UPDATE tm_order
         <set>
             <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.userId)'>user_id = #{order.userId},</if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.orderId)'>order_id = #{order.orderId},</if>
+            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.orderIds)'>order_id = #{order.orderIds},</if>
             <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.confirmStatus)'>confirm_status = #{order.confirmStatus},</if>
             <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.logisticsCompany)'>logistics_company = #{order.logisticsCompany},</if>
             <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(order.shipmentNumber)'>shipment_number = #{order.shipmentNumber},</if>
@@ -125,19 +125,18 @@
     <!-- 主键查询 -->
     <select id="selectByOrderId" resultMap="BaseResultMap">
         SELECT
-            SELECT
-            t.`id` as id,
-            tpi.`account_name` as account_name,
-            t.`order_id` as order_id,
-            t.`confirm_status` as confirm_status,
-            t.`create_time` as create_time,
-            sum(tbo.total_price) as order_total,
-            t.logistics_company as logistics_company,
-            t.shipment_number as shipment_number
+            tpi.`account_name` AS account_name,
+            tpi.phone AS phone,
+            tpi.address AS address,
+            t.`order_id` AS order_id,
+            t.`confirm_status` AS confirm_status,
+            t.`create_time` AS create_time,
+            t.logistics_company AS logistics_company,
+            t.shipment_number AS shipment_number
         FROM tm_order t
         left join tm_partner_info tpi on t.user_id=tpi.id and tpi.del_flag = '0'
         left join tr_book_order tbo on tbo.order_id=t.order_id and tbo.del_flag = '0'
-        WHERE t.order_id = #{orderId} and t.del_flag = '0'
+        WHERE t.order_id = #{orderIds} and t.del_flag = '0'
     </select>
 
     <!-- 条件查询 -->
@@ -151,8 +150,8 @@
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(order.userId)'>
                 and user_id = #{order.userId}
             </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(order.orderId)'>
-                and order_id = #{order.orderId}
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(order.orderIds)'>
+                and order_id = #{order.orderIds}
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(order.confirmStatus)'>
                 and confirm_status = #{order.confirmStatus}
@@ -179,8 +178,8 @@
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(dto.receive)'>
                 and (tpi.account_name like concat('%',#{dto.receive},'%') or tpi.phone like concat(#{dto.receive},'%'))
             </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(dto.orderId)'>
-                and t.order_id = #{dto.orderId}
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(dto.orderIds)'>
+                and t.order_id = #{dto.orderIds}
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(dto.confirmStatus)'>
                 and t.confirm_status = #{dto.confirmStatus}
@@ -212,8 +211,8 @@
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(dto.receive)'>
                 and (tpi.account_name like concat('%',#{dto.receive},'%') or tpi.phone like concat(#{dto.receive},'%'))
             </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(dto.orderId)'>
-                and t.order_id = #{dto.orderId}
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(dto.orderIds)'>
+                and t.order_id = #{dto.orderIds}
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(dto.confirmStatus)'>
                 and t.confirm_status = #{dto.confirmStatus}
