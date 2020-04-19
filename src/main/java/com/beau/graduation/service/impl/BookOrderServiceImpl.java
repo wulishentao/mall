@@ -47,8 +47,8 @@ public class BookOrderServiceImpl implements BookOrderService {
     }
 
 	@Override
-	public BookOrderDto selectByObj(BookOrder bookOrder) {
-		return dao.selectByObj(bookOrder);
+	public List<BookOrderDto> selectByObj(BookOrder bookOrder) {
+		return dao.getBookByOrderId(bookOrder);
 	}
 
 	@Override

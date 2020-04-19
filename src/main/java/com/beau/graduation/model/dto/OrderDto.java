@@ -16,7 +16,7 @@ import java.util.List;
 public class OrderDto extends Order implements Serializable {
     private String beginTime;
     private String endTime;
-    private BookOrderDto bookOrderDto;
+    private List<BookOrderDto> bookOrderDtoList;
     private List<OperateOrder> operateOrders;
 
     /**
@@ -34,9 +34,6 @@ public class OrderDto extends Order implements Serializable {
      */
     private BigDecimal orderTotal;
 
-    public BookOrderDto getBookOrderDto() {
-        return bookOrderDto;
-    }
 
     public List<OperateOrder> getOperateOrders() {
         return operateOrders;
@@ -46,8 +43,12 @@ public class OrderDto extends Order implements Serializable {
         this.operateOrders = operateOrders;
     }
 
-    public void setBookOrderDto(BookOrderDto bookOrderDto) {
-        this.bookOrderDto = bookOrderDto;
+    public List<BookOrderDto> getBookOrderDtoList() {
+        return bookOrderDtoList;
+    }
+
+    public void setBookOrderDtoList(List<BookOrderDto> bookOrderDtoList) {
+        this.bookOrderDtoList = bookOrderDtoList;
     }
 
     public String getAccountName() {

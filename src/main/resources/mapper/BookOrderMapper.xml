@@ -114,7 +114,7 @@
     </delete>
 
     <!-- 主键查询 -->
-    <select id="selectByObj" resultMap="BaseResultMap">
+    <select id="getBookByOrderId" resultMap="BaseResultMap">
         SELECT
             tbi.img_url AS img_url,
             tb.title AS book_title,
@@ -132,7 +132,7 @@
         LEFT JOIN tm_book_type tbt ON tbt.id=tb.type_id AND tbt.del_flag = '0'
         WHERE
             tbo.del_flag = '0'
-            and tbo.id = #{bookOrder.orderId}
+            and tbo.order_id = #{bookOrder.orderId}
         group by tb.id
     </select>
 

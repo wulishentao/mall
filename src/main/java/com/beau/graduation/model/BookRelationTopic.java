@@ -1,5 +1,7 @@
 package com.beau.graduation.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -32,6 +34,7 @@ public class BookRelationTopic implements Serializable {
     /**
      * create_time  创建时间
      */
+    @JSONField
     private Date createTime;
 
 

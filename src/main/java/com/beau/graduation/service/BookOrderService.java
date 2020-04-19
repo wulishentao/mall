@@ -41,7 +41,7 @@ public interface BookOrderService {
     /**
      * [主键查询]
      **/
-    BookOrderDto selectByObj(BookOrder bookOrder);
+    List<BookOrderDto> selectByObj(BookOrder bookOrder);
 
     /**
      * [条件查询]

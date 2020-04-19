@@ -169,6 +169,7 @@ public class OrderServiceImpl implements OrderService {
         operateOrder.setOrderId(reqDto.getOrderId());
         operateOrder.setOperator(pi.getAccountName());
         operateOrder.setOperateTime(new Date());
+        operateOrder.setConfirmStatus(ConfirmStatusEnum.closed.getCode());
         operateOrderService.insert(operateOrder);
 
         resDto.setCode(ResultCode.success.getCode());
@@ -214,8 +215,8 @@ public class OrderServiceImpl implements OrderService {
         //查询订单包含的图书信息
         BookOrder entity = new BookOrder();
         entity.setOrderId(reqDto.getOrderId());
-        BookOrderDto bookOrderDto = bookOrderService.selectByObj(entity);
-        orderDto.setBookOrderDto(bookOrderDto);
+        List<BookOrderDto> bookOrderDtoList = bookOrderService.selectByObj(entity);
+        orderDto.setBookOrderDtoList(bookOrderDtoList);
 
         //查询订单包含的操作信息
         OperateOrder operateOrder = new OperateOrder();
@@ -245,11 +246,14 @@ public class OrderServiceImpl implements OrderService {
         for (OperateOrder operateOrder : operateOrders) {
             orderDto.setOrderId(operateOrder.getOrderId());
             orderDto.setConfirmStatus(changedStatus);
+            orderDto.setLogisticsCompany(operateOrder.getCompanyName());
+            orderDto.setShipmentNumber(operateOrder.getShipmentNo());
             orderDto.setUpdateTime(new Date());
             dao.update(orderDto);
             // 将操作信息存入订单操作记录表中
             operateOrder.setOperator(pi.getAccountName());
             operateOrder.setOperateTime(new Date());
+            operateOrder.setConfirmStatus(changedStatus);
             operateOrderService.insert(operateOrder);
         }
     }

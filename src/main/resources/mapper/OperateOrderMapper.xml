@@ -22,30 +22,36 @@
     <insert id="insert" parameterType="com.beau.graduation.model.OperateOrder">
         INSERT INTO tr_operate_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operator)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(operateOrder.operator)'>
                 `operator`,
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.orderIds)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(operateOrder.orderId)'>
                 `order_id`,
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateTime)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(operateOrder.operateTime)'>
                 `operate_time`,
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.remark)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(operateOrder.confirmStatus)'>
+                `confirm_status`,
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(operateOrder.remark)'>
                 `remark`
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operator)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(operateOrder.operator)'>
                 #{operateOrder.operator},
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.orderIds)'>
-                #{operateOrder.orderIds},
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(operateOrder.orderId)'>
+                #{operateOrder.orderId},
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateTime)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(operateOrder.operateTime)'>
                 #{operateOrder.operateTime},
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.remark)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(operateOrder.confirmStatus)'>
+                #{operateOrder.confirmStatus},
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(operateOrder.remark)'>
                 #{operateOrder.remark}
             </if>
         </trim>
@@ -58,7 +64,7 @@
             (
                 #{curr.id},
                 #{curr.operator},
-                #{curr.orderIds},
+                #{curr.orderId},
                 #{curr.operateTime},
                 #{curr.remark}
             )
@@ -69,10 +75,10 @@
     <update id="update" parameterType="com.beau.graduation.model.OperateOrder">
         UPDATE tr_operate_order
         <set>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operator)'>operator = #{operateOrder.operator},</if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.orderIds)'>order_id = #{operateOrder.orderIds},</if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateTime)'>operate_time = #{operateOrder.operateTime},</if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.remark)'>remark = #{operateOrder.remark}</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(operateOrder.operator)'>operator = #{operateOrder.operator},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(operateOrder.orderId)'>order_id = #{operateOrder.orderId},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(operateOrder.operateTime)'>operate_time = #{operateOrder.operateTime},</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(operateOrder.remark)'>remark = #{operateOrder.remark}</if>
         </set>
         WHERE id = #{operateOrder.id}
     </update>
@@ -118,19 +124,19 @@
     <select id="total" resultType="java.lang.Integer">
         SELECT count(id) FROM tr_operate_order
         <where>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.id)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(operateOrder.id)'>
                 and id = #{operateOrder.id}
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operator)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(operateOrder.operator)'>
                 and operator = #{operateOrder.operator}
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.orderIds)'>
-                and order_id = #{operateOrder.orderIds}
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(operateOrder.orderId)'>
+                and order_id = #{operateOrder.orderId}
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.operateTime)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(operateOrder.operateTime)'>
                 and operate_time = #{operateOrder.operateTime}
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(operateOrder.remark)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(operateOrder.remark)'>
                 and remark = #{operateOrder.remark}
             </if>
         </where>

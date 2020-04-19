@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,7 +37,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         ApiResult<Object> res = new ApiResult<>();
-        String requestURI = request.getRequestURI();
+        String requestUri = request.getRequestURI();
         String userToken = CookieUtil.getCookieValue(request, "user_token");
         String adminToken = CookieUtil.getCookieValue(request, "admin_token");
         if (StringUtils.isEmpty(userToken) && StringUtils.isEmpty(adminToken)) {
@@ -46,31 +47,16 @@ public class LoginInterceptor implements HandlerInterceptor {
             return false;
         }
         try {
-            String token = UuidUtil.getUuid();
             // 若请求路径为"/api",则判断是否有管理员登录
-            if (requestURI.contains(API_URI)) {
-                PartnerInfo pi = loginUtil.getUser(adminToken);
-                if (pi != null) {
-                    // 清空之前的登录信息
-                    loginUtil.removeUser(adminToken);
-                    CookieUtil.removeCookie(response, "admin_token", null);
-                    // 重新存储登录信息
-                    loginUtil.setUser(token, pi, 15L, TimeUnit.DAYS);
-                    CookieUtil.addCookie(response, "admin_token", token, null, 3600 * 24 * 15);
-                    return true;
-                }
+            PartnerInfo pi;
+            if (requestUri.contains(API_URI)) {
+                pi = loginUtil.getUser(adminToken);
             } else {
                 // 请求路径为"/openApi",则判断是否有用户登录
-                PartnerInfo pi = loginUtil.getUser(userToken);
-                if (pi != null) {
-                    // 清空之前的登录信息
-                    loginUtil.removeUser(userToken);
-                    CookieUtil.removeCookie(response, "user_token", null);
-                    // 重新存储登录信息
-                    loginUtil.setUser(token, pi, 15L, TimeUnit.DAYS);
-                    CookieUtil.addCookie(response, "user_token", token, null, 3600 * 24 * 15);
-                    return true;
-                }
+                pi = loginUtil.getUser(userToken);
+            }
+            if (pi != null) {
+                return true;
             }
         } catch (Exception e) {
             logger.error("preHandler error: ", e);

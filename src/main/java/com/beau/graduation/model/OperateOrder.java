@@ -1,5 +1,7 @@
 package com.beau.graduation.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -36,6 +38,7 @@ public class OperateOrder implements Serializable {
     /**
      * operate_time  操作时间
      */
+    @JSONField
     private Date operateTime;
 
 
@@ -43,6 +46,32 @@ public class OperateOrder implements Serializable {
      * remark  操作备注
      */
     private String remark;
+
+    /**
+     * 物流公司名称
+     */
+    private String CompanyName;
+
+    /**
+     * 物流单号
+     */
+    private String shipmentNo;
+
+    public String getCompanyName() {
+        return CompanyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        CompanyName = companyName;
+    }
+
+    public String getShipmentNo() {
+        return shipmentNo;
+    }
+
+    public void setShipmentNo(String shipmentNo) {
+        this.shipmentNo = shipmentNo;
+    }
 
     public String getConfirmStatus() {
         return confirmStatus;

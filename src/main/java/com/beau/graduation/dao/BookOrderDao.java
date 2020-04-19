@@ -42,7 +42,7 @@ public interface BookOrderDao {
     /**
      * [主键查询]
      **/
-    BookOrderDto selectByObj(@Param("bookOrder") BookOrder bookOrder);
+    List<BookOrderDto> getBookByOrderId(@Param("bookOrder") BookOrder bookOrder);
 
     /**
      * [条件查询]
