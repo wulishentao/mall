@@ -73,4 +73,6 @@ public interface BookService {
     void updateTypeId(List<Long> bookId);
 
     DelCommodityResDto delCommodity(DelCommodityReqDto reqDto);
+
+    List<BookDto> getBookInfoByIds(BookDto bookDto);
 }

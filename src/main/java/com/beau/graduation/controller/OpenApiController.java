@@ -5,6 +5,7 @@ import com.beau.graduation.basic.resdto.*;
 import com.beau.graduation.common.ApiResult;
 import com.beau.graduation.Enum.ResultCode;
 import com.beau.graduation.service.BookService;
+import com.beau.graduation.service.OrderService;
 import com.beau.graduation.service.PartnerInfoService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -34,6 +35,9 @@ public class OpenApiController {
 
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private OrderService orderService;
 
     /**
      * 用户登录
@@ -176,6 +180,23 @@ public class OpenApiController {
             logger.error("delShoppingCart error: ", e);
             res.setCode(ResultCode.failed.getCode());
             res.setMsg("删除购物车商品异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/order/confirmOrderInfo", produces = "application/json")
+    @ApiOperation("确认订单页面信息获取")
+    public ApiResult confirmOrderInfo(@RequestBody ConfirmOrderInfoReqDto reqDto, HttpServletRequest request) {
+        ApiResult<ConfirmOrderInfoResDto> res = new ApiResult<>();
+        try {
+            ConfirmOrderInfoResDto resDto = orderService.confirmOrderInfo(reqDto, request);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("confirmOrderInfo error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("确认订单页面信息获取异常");
         }
         return res;
     }

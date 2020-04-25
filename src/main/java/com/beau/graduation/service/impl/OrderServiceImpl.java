@@ -5,19 +5,18 @@ import com.beau.graduation.Enum.ResultCode;
 import com.beau.graduation.basic.reqdto.*;
 import com.beau.graduation.basic.resdto.*;
 import com.beau.graduation.common.Page;
+import com.beau.graduation.dao.BookDao;
 import com.beau.graduation.dao.OrderDao;
-import com.beau.graduation.model.BookOrder;
-import com.beau.graduation.model.OperateOrder;
-import com.beau.graduation.model.Order;
-import com.beau.graduation.model.PartnerInfo;
+import com.beau.graduation.dao.PartnerInfoDao;
+import com.beau.graduation.model.*;
+import com.beau.graduation.model.dto.BookDto;
 import com.beau.graduation.model.dto.BookOrderDto;
 import com.beau.graduation.model.dto.OrderDto;
-import com.beau.graduation.service.BookOrderService;
-import com.beau.graduation.service.OperateOrderService;
-import com.beau.graduation.service.OrderService;
+import com.beau.graduation.service.*;
 import com.beau.graduation.utils.CookieUtil;
 import com.beau.graduation.utils.LoginUtil;
 import com.beau.graduation.utils.PageUtil;
+import com.beau.graduation.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +48,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private BookOrderService bookOrderService;
+
+    @Autowired
+    private PartnerInfoDao partnerInfoDao;
+
+    @Autowired
+    private BookService bookService;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Override
     public int insert(Order order) {
@@ -183,17 +191,26 @@ public class OrderServiceImpl implements OrderService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public OrderDeleteResDto orderDelete(OrderDeleteReqDto reqDto) {
         OrderDeleteResDto resDto = new OrderDeleteResDto();
 
         List<Order> orders = new ArrayList<>();
+        ArrayList<BookOrder> bookOrders = new ArrayList<>();
         List<String> orderIds = reqDto.getOrderIds();
         for (String orderId : orderIds) {
             Order order = new Order();
+            BookOrder bookOrder = new BookOrder();
             order.setOrderId(orderId);
+            bookOrder.setOrderId(orderId);
             orders.add(order);
+            bookOrders.add(bookOrder);
         }
+        //删除订单记录
         dao.batchDelete(orders);
+
+        //删除订单记录的书籍记录
+        bookOrderService.batchDelete(bookOrders);
 
         resDto.setCode(ResultCode.success.getCode());
         resDto.setMsg("订单记录删除成功");
@@ -212,13 +229,13 @@ public class OrderServiceImpl implements OrderService {
         // 查询订单基本信息
         OrderDto orderDto = dao.selectByOrderId(reqDto.getOrderId());
 
-        //查询订单包含的图书信息
+        // 查询订单包含的图书信息
         BookOrder entity = new BookOrder();
         entity.setOrderId(reqDto.getOrderId());
         List<BookOrderDto> bookOrderDtoList = bookOrderService.selectByObj(entity);
         orderDto.setBookOrderDtoList(bookOrderDtoList);
 
-        //查询订单包含的操作信息
+        // 查询订单包含的操作信息
         OperateOrder operateOrder = new OperateOrder();
         operateOrder.setOrderId(reqDto.getOrderId());
         List<OperateOrder> operateOrders = operateOrderService.selectList(operateOrder);
@@ -257,5 +274,59 @@ public class OrderServiceImpl implements OrderService {
             operateOrderService.insert(operateOrder);
         }
     }
+
+    /**
+     * 确认订单详情页
+     * @param reqDto
+     * @param request
+     * @return
+     */
+    @Override
+    public ConfirmOrderInfoResDto confirmOrderInfo(ConfirmOrderInfoReqDto reqDto, HttpServletRequest request) {
+        ConfirmOrderInfoResDto resDto = new ConfirmOrderInfoResDto();
+        String userToken = CookieUtil.getCookieValue(request, "user_token");
+        PartnerInfo loginUser = loginUtil.getUser(userToken);
+        List<BookDto> bookDtoList = reqDto.getBookDtoList();
+
+        PartnerInfo partnerInfo = partnerInfoDao.selectByObj(loginUser);
+        PartnerInfo resultPersonal = new PartnerInfo();
+        resultPersonal.setId(partnerInfo.getId());
+        resultPersonal.setPhone(partnerInfo.getPhone());
+        resultPersonal.setAddress(partnerInfo.getAddress());
+        resultPersonal.setAccountName(partnerInfo.getAccountName());
+        resDto.setUser(resultPersonal);
+        if ("1".equals(reqDto.getOrigin())) {
+            // 确认订单中的书籍来自购物车
+            ShoppingCart shoppingCart = redisUtil.get("cart_".concat(String.valueOf(loginUser.getId())), ShoppingCart.class);
+            List<BookDto> list = shoppingCart.getBookDtoList();
+            for (BookDto bookDto : list) {
+                for (BookDto dto : bookDtoList) {
+                    if (dto.getId().equals(bookDto.getId())) {
+                        dto.setImgUrl(bookDto.getImgUrl());
+                        dto.setPrice(bookDto.getPrice());
+                    }
+                }
+            }
+            resDto.setBookDtoList(bookDtoList);
+            resDto.setCode(ResultCode.success.getCode());
+            resDto.setMsg("确认订单信息获取成功");
+            return resDto;
+        }
+
+        // 确认订单书籍来自直接购买
+        BookDto bookDto = bookDtoList.get(0);
+        BookDto dto = bookService.selectById(bookDto.getId());
+        dto.setAmount(bookDto.getAmount());
+        ArrayList<BookDto> bookDtos = new ArrayList<>();
+        bookDtos.add(dto);
+        resDto.setBookDtoList(bookDtos);
+        resDto.setCode(ResultCode.success.getCode());
+        resDto.setMsg("确认订单信息获取成功");
+        return resDto;
+    }
+
+
+
+
 
 }

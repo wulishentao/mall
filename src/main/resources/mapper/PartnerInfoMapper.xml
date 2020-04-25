@@ -29,14 +29,8 @@
         `account_name`,
         `account_type`,
         `status`,
-        `password`,
         `address`,
-        `remark`,
-        `phone`,
-        `create_time`,
-        `update_time`,
-        `gender`,
-        `del_flag`
+        `phone`
     </sql>
 
     <!-- 插入数据 -->

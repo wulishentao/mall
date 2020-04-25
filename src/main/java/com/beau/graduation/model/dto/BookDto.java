@@ -4,6 +4,7 @@ import com.beau.graduation.model.Book;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @classname: BookDto.java
@@ -13,7 +14,7 @@ import java.math.BigDecimal;
  **/
 public class BookDto extends Book implements Serializable {
     /**
-     * 加入购物车的商品数量
+     * 结算或加入购物车的改件商品数量
      */
     private Long amount;
 

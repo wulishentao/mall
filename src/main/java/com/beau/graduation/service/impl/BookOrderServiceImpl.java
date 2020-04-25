@@ -6,6 +6,7 @@ import com.beau.graduation.model.dto.BookOrderDto;
 import com.beau.graduation.service.BookOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class BookOrderServiceImpl implements BookOrderService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int batchDelete(List<BookOrder> list) {
         return dao.batchDelete(list);
     }

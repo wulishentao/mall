@@ -1,22 +1,21 @@
 package com.beau.graduation.service.impl;
 
 import com.beau.graduation.Enum.ResultCode;
-import com.beau.graduation.basic.reqdto.AddTopicReqDto;
-import com.beau.graduation.basic.reqdto.DeleteTopicReqDto;
-import com.beau.graduation.basic.reqdto.EditTopicReqDto;
-import com.beau.graduation.basic.reqdto.GetTopicPageReqDto;
-import com.beau.graduation.basic.resdto.AddTopicResDto;
-import com.beau.graduation.basic.resdto.DeleteTopicResDto;
-import com.beau.graduation.basic.resdto.EditTopicResDto;
-import com.beau.graduation.basic.resdto.GetTopicPageResDto;
+import com.beau.graduation.Enum.ReviewStatusEnum;
+import com.beau.graduation.Enum.SaleStatusEnum;
+import com.beau.graduation.basic.reqdto.*;
+import com.beau.graduation.basic.resdto.*;
 import com.beau.graduation.common.Page;
 import com.beau.graduation.config.UploadConfig;
+import com.beau.graduation.dao.BookDao;
 import com.beau.graduation.dao.TopicDao;
 import com.beau.graduation.model.Topic;
+import com.beau.graduation.model.dto.BookDto;
 import com.beau.graduation.service.TopicService;
 import com.beau.graduation.utils.DateUtil;
 import com.beau.graduation.utils.FileUploadsUtil;
 import com.beau.graduation.utils.PageUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +35,9 @@ public class TopicServiceImpl implements TopicService {
 
     @Autowired
 	TopicDao dao;
+
+    @Autowired
+    private BookDao bookDao;
 
     @Override
     public int insert(Topic topic) {
@@ -162,5 +164,29 @@ public class TopicServiceImpl implements TopicService {
 
         resDto.setCode(ResultCode.success.getCode());
         return resDto;
+    }
+
+    /**
+     * 获取专题可关联图书
+     * @param reqDto
+     * @return
+     */
+    @Override
+    public GetRelatableBooksResDto getRelatableBooks(GetRelatableBooksReqDto reqDto) {
+        GetRelatableBooksResDto resDto = new GetRelatableBooksResDto();
+
+        // 查找出已关联的书籍
+
+        // 查找出可关联的书籍列表
+        BookDto bookDto = new BookDto();
+        if (StringUtils.isNotEmpty(reqDto.getTypeId())) {
+            bookDto.setTypeId(Long.valueOf(reqDto.getTypeId()));
+        }
+        bookDto.setTitle(reqDto.getTitle());
+        bookDto.setSaleStatus(SaleStatusEnum.in_stock.getCode());
+        bookDto.setReviewStatus(ReviewStatusEnum.passed.getCode());
+        int total = bookDao.totalByDto(bookDto);
+        List<BookDto> commodityPage = bookDao.getCommodityPage(bookDto, PageUtil.getBeginAndSize(reqDto.getPageNo(), reqDto.getPageSize()));
+        return null;
     }
 }

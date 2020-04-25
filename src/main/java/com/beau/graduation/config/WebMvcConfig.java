@@ -3,6 +3,7 @@ package com.beau.graduation.config;
 import com.beau.graduation.interceptor.LoginInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -20,6 +21,19 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor).addPathPatterns("/openApi/personal/**","/api/private/**");
+        registry.addInterceptor(loginInterceptor)
+                .addPathPatterns("/openApi/personal/**",
+                        "/api/private/**",
+                        "/openApi/order/**");
     }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedHeaders("*")
+                .allowedOrigins("*")
+                .allowedMethods("GET", "POST", "OPTIONS")
+                .maxAge(3600);
+    }
+
 }

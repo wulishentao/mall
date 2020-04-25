@@ -114,9 +114,9 @@
 
     <!-- 批量删除 -->
     <delete id="batchDelete" parameterType = "java.util.List">
-        DELETE FROM tm_order WHERE id IN
+        DELETE FROM tm_order WHERE order_id IN
         <foreach collection="list"  item="item" open="(" separator="," close=")"  >
-            #{item}
+            #{item.orderId}
         </foreach>
     </delete>
 
@@ -133,9 +133,7 @@
             t.shipment_number AS shipment_number
         FROM tm_order t
         left join tm_partner_info tpi on t.user_id=tpi.id and tpi.del_flag = '0'
-        left join tr_book_order tbo on tbo.order_id=t.order_id and tbo.del_flag = '0'
         WHERE t.order_id = #{orderId} and t.del_flag = '0'
-        group by t.order_id
     </select>
 
     <!-- 条件查询 -->

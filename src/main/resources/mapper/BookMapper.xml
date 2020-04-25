@@ -357,4 +357,23 @@
         </where>
     </update>
 
+    <select id="getBookInfoByIds" resultMap="BaseResultMap">
+        select
+            tb.id,
+            tbi.img_url,
+            tb.title,
+            tb.author,
+            tb.price
+        from
+            tm_book tb
+        left join tm_book_image tbi on tb.id = tbi.book_id and tbi.del_flag = '0'
+        where
+            tb.del_flag = '0'
+            and tb.id in
+        <foreach collection="bookDto.bookIds" item="bookId" open="(" close=")" separator=",">
+            #{bookId}
+        </foreach>
+        group by tb.id
+    </select>
+
 </mapper>

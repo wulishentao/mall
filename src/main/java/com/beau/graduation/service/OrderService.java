@@ -64,4 +64,6 @@ public interface OrderService {
     OrderDeleteResDto orderDelete(OrderDeleteReqDto reqDto);
 
     ViewOrderInfoResDto viewOrderInfo(ViewOrderInfoReqDto reqDto);
+
+    ConfirmOrderInfoResDto confirmOrderInfo(ConfirmOrderInfoReqDto reqDto, HttpServletRequest request);
 }

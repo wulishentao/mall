@@ -579,4 +579,14 @@ public class BookServiceImpl implements BookService {
 	public void updateTypeId(List<Long> bookIds) {
 		dao.updateTypeId(bookIds);
 	}
+
+	/**
+	 * 通过id集合获取书籍
+	 * @param bookDto
+	 * @return
+	 */
+	@Override
+	public List<BookDto> getBookInfoByIds(BookDto bookDto) {
+		return dao.getBookInfoByIds(bookDto);
+	}
 }

@@ -107,9 +107,9 @@
 
     <!-- 批量删除 -->
     <delete id="batchDelete" parameterType = "java.util.List">
-        DELETE FROM tr_book_order WHERE id IN
+        DELETE FROM tr_book_order WHERE order_id IN
         <foreach collection="list"  item="item" open="(" separator="," close=")"  >
-            #{item}
+            #{item.orderId}
         </foreach>
     </delete>
 

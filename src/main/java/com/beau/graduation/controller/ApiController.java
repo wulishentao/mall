@@ -1,6 +1,7 @@
 package com.beau.graduation.controller;
 
 import com.beau.graduation.Enum.ResultCode;
+import com.beau.graduation.annotation.CheckOrder;
 import com.beau.graduation.basic.reqdto.*;
 import com.beau.graduation.basic.resdto.*;
 import com.beau.graduation.common.ApiResult;
@@ -376,6 +377,7 @@ public class ApiController {
 
     @PostMapping(value = "/private/order/view", produces = "application/json")
     @ApiOperation("查看订单详情")
+    @CheckOrder
     public ApiResult viewOrderInfo(@RequestBody ViewOrderInfoReqDto reqDto) {
         ApiResult<ViewOrderInfoResDto> res = new ApiResult<>();
         try {
@@ -407,7 +409,7 @@ public class ApiController {
         return res;
     }
 
-    @PostMapping(value = "/private/marketing/getTopicPage", produces = "application/json")
+    @PostMapping(value = "/private/topic/getTopicPage", produces = "application/json")
     @ApiOperation("后台获取活动专题")
     public ApiResult getTopicPage(@RequestBody GetTopicPageReqDto reqDto) {
         ApiResult<GetTopicPageResDto> res = new ApiResult<>();
@@ -424,7 +426,7 @@ public class ApiController {
         return res;
     }
 
-    @PostMapping(value = "/private/marketing/editTopic", produces = "application/json")
+    @PostMapping(value = "/private/topic/editTopic", produces = "application/json")
     @ApiOperation("编辑专题")
     public ApiResult editTopic(@RequestBody EditTopicReqDto reqDto) {
         ApiResult<EditTopicResDto> res = new ApiResult<>();
@@ -440,7 +442,7 @@ public class ApiController {
         return res;
     }
 
-    @PostMapping(value = "/private/marketing/deleteTopic", produces = "application/json")
+    @PostMapping(value = "/private/topic/deleteTopic", produces = "application/json")
     @ApiOperation("删除专题")
     public ApiResult deleteTopic(@RequestBody DeleteTopicReqDto reqDto) {
         ApiResult<DeleteTopicResDto> res = new ApiResult<>();
@@ -452,6 +454,22 @@ public class ApiController {
             logger.error("deleteTopic error: ", e);
             res.setCode(ResultCode.failed.getCode());
             res.setMsg("删除专题异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/private/topic/getRelatableBooks", produces = "application/json")
+    @ApiOperation("获取专题可关联图书")
+    public ApiResult getRelatableBooks(@RequestBody GetRelatableBooksReqDto reqDto) {
+        ApiResult<GetRelatableBooksResDto> res = new ApiResult<>();
+        try {
+            GetRelatableBooksResDto resDto = topicService.getRelatableBooks(reqDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("getRelatableBooks error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("获取专题可关联图书异常");
         }
         return res;
     }

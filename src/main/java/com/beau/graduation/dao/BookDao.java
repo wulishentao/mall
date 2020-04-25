@@ -70,4 +70,6 @@ public interface BookDao {
      * @param bookIds
      */
     void updateTypeId(@Param("bookIds") List<Long> bookIds);
+
+    List<BookDto> getBookInfoByIds(@Param("bookDto") BookDto bookDto);
 }
