@@ -4,6 +4,7 @@ import com.beau.graduation.model.Book;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,12 +34,12 @@ public class BookDto extends Book implements Serializable {
     /**
      * 开始日期
      */
-    private String beginDate;
+    private Date beginDate;
 
     /**
      * 结束日期
      */
-    private String endDate;
+    private Date endDate;
 
     /**
      * 书籍所属类型
@@ -48,6 +49,16 @@ public class BookDto extends Book implements Serializable {
     private String topicIds;
 
     private String topicTitles;
+
+    private String orderBy;
+
+    public String getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(String orderBy) {
+        this.orderBy = orderBy;
+    }
 
     public String getTopicIds() {
         return topicIds;
@@ -73,19 +84,19 @@ public class BookDto extends Book implements Serializable {
         this.bookType = bookType;
     }
 
-    public String getBeginDate() {
+    public Date getBeginDate() {
         return beginDate;
     }
 
-    public void setBeginDate(String beginDate) {
+    public void setBeginDate(Date beginDate) {
         this.beginDate = beginDate;
     }
 
-    public String getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 

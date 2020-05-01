@@ -78,4 +78,13 @@ public interface BookService {
 
     BookDto selectByBookId(Long id);
 
+    GlobalSearchResDto globalSearch(GlobalSearchReqDto reqDto);
+
+    GetNewBookResDto getNewBook(GetNewBookReqDto reqDto);
+
+    NewBookHotPageResDto newBookHotPage(NewBookHotPageReqDto reqDto);
+
+    BookSellingPageResDto bookSellingPage(BookSellingPageReqDto reqDto);
+
+    RecommendResDto recommend(RecommendReqDto reqDto);
 }

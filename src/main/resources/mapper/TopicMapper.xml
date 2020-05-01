@@ -7,8 +7,6 @@
         <result column="id" property="id" />
         <result column="topic_title" property="topicTitle" />
         <result column="topic_introduce" property="topicIntroduce" />
-        <result column="begin_time" property="beginTime" />
-        <result column="end_time" property="endTime" />
         <result column="status" property="status" />
         <result column="sort" property="sort" />
         <result column="topic_img" property="topicImg" />
@@ -192,5 +190,6 @@
                 and status = #{topic.status}
             </if>
         </where>
+        order by sort desc
     </select>
 </mapper>

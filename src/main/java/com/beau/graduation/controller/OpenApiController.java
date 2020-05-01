@@ -44,6 +44,9 @@ public class OpenApiController {
     @Autowired
     private BookOrderService bookOrderService;
 
+    @Autowired
+    private TopicService topicService;
+
     /**
      * 用户登录
      *
@@ -385,6 +388,108 @@ public class OpenApiController {
             logger.error("getOrderInfo error: ", e);
             res.setCode(ResultCode.failed.getCode());
             res.setMsg("获取已购买的图书列表异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/home/globalSearch", produces = "application/json")
+    @ApiOperation("首页搜索")
+    public ApiResult globalSearch(@RequestBody GlobalSearchReqDto reqDto) {
+        ApiResult<GlobalSearchResDto> res = new ApiResult<>();
+        try {
+            GlobalSearchResDto resDto = bookService.globalSearch(reqDto);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("globalSearch error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("首页搜索异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/home/getTopicPage", produces = "application/json")
+    @ApiOperation("专题滚动栏")
+    public ApiResult getTopicPage(@RequestBody GetTopicPageReqDto reqDto) {
+        ApiResult<GetTopicPageResDto> res = new ApiResult<>();
+        try {
+            GetTopicPageResDto resDto = topicService.getTopicPage(reqDto);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("getTopicPage error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("专题滚动栏获取异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/home/getNewBook", produces = "application/json")
+    @ApiOperation("新书上架")
+    public ApiResult getNewBook(@RequestBody GetNewBookReqDto reqDto) {
+        ApiResult<GetNewBookResDto> res = new ApiResult<>();
+        try {
+            GetNewBookResDto resDto = bookService.getNewBook(reqDto);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("getNewBook error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("新书上架异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/home/newBookHotPage", produces = "application/json")
+    @ApiOperation("新书热卖榜")
+    public ApiResult newBookHotPage(@RequestBody NewBookHotPageReqDto reqDto) {
+        ApiResult<NewBookHotPageResDto> res = new ApiResult<>();
+        try {
+            NewBookHotPageResDto resDto = bookService.newBookHotPage(reqDto);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("newBookHotPage error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("新书热卖榜异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/home/bookSellingPage", produces = "application/json")
+    @ApiOperation("图书畅销榜")
+    public ApiResult bookSellingPage(@RequestBody BookSellingPageReqDto reqDto) {
+        ApiResult<BookSellingPageResDto> res = new ApiResult<>();
+        try {
+            BookSellingPageResDto resDto = bookService.bookSellingPage(reqDto);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("bookSellingPage error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("图书畅销榜异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/home/recommend", produces = "application/json")
+    @ApiOperation("主编推荐")
+    public ApiResult recommend(@RequestBody RecommendReqDto reqDto) {
+        ApiResult<RecommendResDto> res = new ApiResult<>();
+        try {
+            RecommendResDto resDto = bookService.recommend(reqDto);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("recommend error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("主编推荐获取异常");
         }
         return res;
     }

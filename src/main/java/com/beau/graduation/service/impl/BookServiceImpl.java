@@ -2,6 +2,7 @@ package com.beau.graduation.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.beau.graduation.Enum.ResultCode;
+import com.beau.graduation.Enum.ReviewStatusEnum;
 import com.beau.graduation.Enum.SaleStatusEnum;
 import com.beau.graduation.basic.reqdto.*;
 import com.beau.graduation.basic.resdto.*;
@@ -13,6 +14,7 @@ import com.beau.graduation.model.dto.BookDto;
 import com.beau.graduation.service.BookImageService;
 import com.beau.graduation.service.BookRelationTopicService;
 import com.beau.graduation.service.BookService;
+import com.beau.graduation.service.BookTypeService;
 import com.beau.graduation.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -54,6 +56,9 @@ public class BookServiceImpl implements BookService {
 
 	@Autowired
 	private BookRelationTopicService relationTopicService;
+
+	@Autowired
+	private BookTypeService bookTypeService;
 
     @Override
     public int insert(Book book) {
@@ -596,4 +601,124 @@ public class BookServiceImpl implements BookService {
 		return dao.getBookInfoByIds(bookDto);
 	}
 
+	/**
+	 * 首页全局搜索
+	 * @param reqDto
+	 * @return
+	 */
+	@Override
+	public GlobalSearchResDto globalSearch(GlobalSearchReqDto reqDto) {
+		GlobalSearchResDto resDto = new GlobalSearchResDto();
+
+		BookDto bookDto = new BookDto();
+		bookDto.setTitle(reqDto.getTitle());
+		bookDto.setReviewStatus(ReviewStatusEnum.passed.getCode());
+		bookDto.setSaleStatus(SaleStatusEnum.in_stock.getCode());
+		int count = dao.globalSearchCount(bookDto);
+		List<BookDto> bookDtoList = dao.globalSearch(bookDto, PageUtil.getBeginAndSize(reqDto.getPageNo(), reqDto.getPageSize()));
+		Page<BookDto> page = new Page<>(count, bookDtoList);
+
+		resDto.setBookDtoPage(page);
+		resDto.setCode(ResultCode.success.getCode());
+		resDto.setMsg("获取书籍列表成功");
+		return resDto;
+	}
+
+	/**
+	 * 获取新书
+	 * @param reqDto
+	 * @return
+	 */
+	@Override
+	public GetNewBookResDto getNewBook(GetNewBookReqDto reqDto) {
+		GetNewBookResDto resDto = new GetNewBookResDto();
+
+		BookDto entity = new BookDto();
+		Calendar instance = Calendar.getInstance();
+		instance.setTime(new Date());
+		instance.add(Calendar.MONTH, -5);
+		entity.setBeginDate(instance.getTime());
+		entity.setEndDate(new Date());
+		entity.setTypeId(reqDto.getTypeId());
+		entity.setOrderBy("tb.publish_date desc,tb.recommend_flag desc,sales desc,tb.sort desc");
+		Page<BookDto> page = getBookInfoPage(entity, PageUtil.getBeginAndSize(reqDto.getPageNo(), reqDto.getPageSize()));
+
+
+		resDto.setPage(page);
+		resDto.setCode(ResultCode.success.getCode());
+		resDto.setMsg("新书上架获取成功");
+		return resDto;
+	}
+
+	private Page<BookDto> getBookInfoPage(BookDto entity, HashMap<String, Integer> beginAndSize) {
+		int count = dao.getNewBookCount(entity);
+		List<BookDto> bookDtoList = dao.getBookPage(entity, beginAndSize);
+		Page<BookDto> page = new Page<>(count, bookDtoList);
+		return page;
+	}
+
+	/**
+	 * 新书热卖榜
+	 * @param reqDto
+	 * @return
+	 */
+	@Override
+	public NewBookHotPageResDto newBookHotPage(NewBookHotPageReqDto reqDto) {
+		NewBookHotPageResDto resDto = new NewBookHotPageResDto();
+
+		BookDto entity = new BookDto();
+		Calendar instance = Calendar.getInstance();
+		instance.setTime(new Date());
+		instance.add(Calendar.MONTH, -5);
+		entity.setBeginDate(instance.getTime());
+		entity.setEndDate(new Date());
+		entity.setTypeId(reqDto.getTypeId());
+		entity.setOrderBy("tb.publish_date desc,sales desc,tb.recommend_flag desc,tb.sort desc");
+		Page<BookDto> page = getBookInfoPage(entity, PageUtil.getBeginAndSize(reqDto.getPageNo(), reqDto.getPageSize()));
+
+		resDto.setBookDtoPage(page);
+		resDto.setCode(ResultCode.success.getCode());
+		resDto.setMsg("新书热卖榜获取成功");
+		return resDto;
+	}
+
+	/**
+	 * 图书畅销榜
+	 * @param reqDto
+	 * @return
+	 */
+	@Override
+	public BookSellingPageResDto bookSellingPage(BookSellingPageReqDto reqDto) {
+		BookSellingPageResDto resDto = new BookSellingPageResDto();
+
+		BookDto entity = new BookDto();
+		entity.setTypeId(reqDto.getTypeId());
+		entity.setOrderBy("sales desc,tb.recommend_flag desc,tb.sort desc,tb.publish_date desc");
+		Page<BookDto> page = getBookInfoPage(entity, PageUtil.getBeginAndSize(reqDto.getPageNo(), reqDto.getPageSize()));
+
+		resDto.setBookDtoPage(page);
+		resDto.setCode(ResultCode.success.getCode());
+		resDto.setMsg("图书畅销榜获取成功");
+		return resDto;
+	}
+
+	/**
+	 * 主编推荐
+	 * @param reqDto
+	 * @return
+	 */
+	@Override
+	public RecommendResDto recommend(RecommendReqDto reqDto) {
+		RecommendResDto resDto = new RecommendResDto();
+
+		BookDto entity = new BookDto();
+		entity.setTypeId(reqDto.getTypeId());
+		entity.setOrderBy("tb.recommend_flag desc,tb.sort desc,sales desc,tb.publish_date desc");
+		Page<BookDto> page = getBookInfoPage(entity, PageUtil.getBeginAndSize(reqDto.getPageNo(), reqDto.getPageSize()));
+
+		resDto.setBookDtoPage(page);
+		resDto.setCode(ResultCode.success.getCode());
+		resDto.setMsg("图书畅销榜获取成功");
+		return resDto;
+	}
 }

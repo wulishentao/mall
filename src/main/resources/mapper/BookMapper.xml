@@ -248,6 +248,9 @@
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.bookType)'>
                 and tb.type_id = #{bookDto.bookType}
             </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.recommendFlag)'>
+                and tb.recommend_flag = #{bookDto.recommendFlag}
+            </if>
         </where>
     </select>
 
@@ -302,7 +305,7 @@
             </if>
         </where>
         group by tb.id
-        order by tb.recommend_flag desc,tb.sort desc,tb.create_time desc
+        order by tb.recommend_flag desc,tb.sort desc,sales desc,tb.publish_date desc
         limit #{page.index},#{page.size}
     </select>
 
@@ -395,5 +398,158 @@
             and tb.id = #{bookId}
         </if>
     </select>
+
+    <select id="getNewBookCount" resultType="int">
+        SELECT
+        count(distinct (tb.id))
+        FROM tm_book tb
+        <where>
+            tb.del_flag = '0'
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.saleStatus)'>
+                and tb.sale_status = #{bookDto.saleStatus}
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.reviewStatus)'>
+                and tb.review_status = #{bookDto.reviewStatus}
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.beginDate)'>
+                and tb.publish_date &gt;= #{bookDto.beginDate}
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.endDate)'>
+                and tb.publish_date &lt;= #{bookDto.endDate}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="newBookHotCount" resultType="int">
+        SELECT
+        count(distinct (tb.id))
+        FROM tm_book tb
+        <where>
+            tb.del_flag = '0'
+            and tb.sale_status = '0'
+            and tb.review_status = '1'
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.beginDate)'>
+                and tb.publish_date &gt;= #{bookDto.beginDate}
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.endDate)'>
+                and tb.publish_date &lt;= #{bookDto.endDate}
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.type_id)'>
+                AND tb.type_id IN ( SELECT tbt1.id FROM tm_book_type tbt1 WHERE tbt1.id = #{bookDto.typeId} OR tbt1.parent_id = #{bookDto.typeId} )
+            </if>
+        </where>
+    </select>
+
+    <select id="getBookPage" resultMap="BaseResultMap">
+        SELECT
+        tb.id AS id,
+        group_concat(distinct (tbi.img_url)) AS img_url,
+        tb.title AS title,
+        tb.price AS price,
+        tb.recommend_flag as recommend_flag,
+        tb.type_id as type_id,
+        tbt.name AS type_name,
+        (
+            SELECT
+            sum(tbo.amount)
+            FROM
+            tr_book_order tbo
+            WHERE
+            tb.id = tbo.book_id
+            AND tbo.del_flag = '0'
+        ) AS sales,
+        tb.sort as sort,
+        tb.author as author
+        FROM tm_book tb
+        left join tm_book_image tbi on tb.id=tbi.book_id and tbi.del_flag = '0'
+        left join tm_book_type tbt on tb.type_id=tbt.id and tbt.del_flag = '0'
+        <where>
+            tb.del_flag = '0'
+            and tb.sale_status = '0'
+            and tb.review_status = '1'
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.beginDate)'>
+                and tb.publish_date &gt;= #{bookDto.beginDate}
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.endDate)'>
+                and tb.publish_date &lt;= #{bookDto.endDate}
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.typeId)'>
+                AND tb.type_id IN ( SELECT tbt1.id FROM tm_book_type tbt1 WHERE tbt1.id = #{bookDto.typeId} OR tbt1.parent_id = #{bookDto.typeId} )
+            </if>
+        </where>
+        group by tb.id
+        order by ${bookDto.orderBy}
+        limit #{page.index},#{page.size}
+    </select>
+
+    <select id="globalSearch" resultMap="BaseResultMap">
+        SELECT
+        tb.id AS id,
+        group_concat(distinct (tbi.img_url)) AS img_url,
+        tb.title AS title,
+        tb.introduction as introduction,
+        tb.price AS price,
+        tb.type_id as type_id,
+        tbt.name AS type_name,
+        tb.recommend_flag AS recommend_flag,
+        tb.reserve AS reserve,
+        (
+        SELECT
+        sum(tbo.amount)
+        FROM
+        tr_book_order tbo
+        WHERE
+        tb.id = tbo.book_id
+        AND tbo.del_flag = '0'
+        ) AS sales,
+        tb.review_status AS review_status,
+        tb.publisher as publisher,
+        tb.publish_date as publish_date,
+        tb.sort as sort,
+        tb.sale_status AS sale_status,
+        tb.author as author,
+        group_concat(distinct (tt.id)) as topic_id,
+        group_concat(distinct (tt.topic_title)) as topic_title
+        FROM tm_book tb
+        left join tm_book_type tbt on tb.type_id=tbt.id and tbt.del_flag = '0'
+        left join tm_book_image tbi on tb.id=tbi.book_id and tbi.del_flag = '0'
+        left join tr_book_relation_topic tbrt on tbrt.book_id=tb.id
+        left join tm_topic tt on tt.id=tbrt.topic_id and tt.del_flag = '0' and tt.status = '1'
+        <where>
+            tb.del_flag = '0'
+            <if test='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.title)'>
+                and tb.title like concat('%',#{bookDto.title},'%')
+            </if>
+            <if test='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.saleStatus)'>
+                and tb.sale_status = #{bookDto.saleStatus}
+            </if>
+            <if test='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.reviewStatus)'>
+                and tb.review_status = #{bookDto.reviewStatus}
+            </if>
+        </where>
+        group by tb.id
+        order by tb.recommend_flag desc,tb.sort desc,sales desc,tb.publish_date desc
+        limit #{page.index},#{page.size}
+    </select>
+
+    <select id="globalSearchCount" resultType="int">
+        SELECT
+        count(distinct (tb.id))
+        FROM tm_book tb
+        <where>
+            tb.del_flag = '0'
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.title)'>
+                and tb.title like concat('%',#{bookDto.title},'%')
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.saleStatus)'>
+                and tb.sale_status = #{bookDto.saleStatus}
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookDto.reviewStatus)'>
+                and tb.review_status = #{bookDto.reviewStatus}
+            </if>
+        </where>
+    </select>
+
 
 </mapper>
