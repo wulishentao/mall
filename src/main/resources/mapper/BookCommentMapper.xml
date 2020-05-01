@@ -25,10 +25,10 @@
     <insert id="insert" parameterType="com.beau.graduation.model.BookComment">
         INSERT INTO tm_book_comment
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test ='null != bookComment.id'>
-                `id`,
+            <if test ='null != bookComment.bookId'>
+                `book_id`,
             </if>
-            <if test ='null != bookComment.orderIds'>
+            <if test ='null != bookComment.orderId'>
                 `order_id`,
             </if>
             <if test ='null != bookComment.createTime'>
@@ -40,16 +40,13 @@
             <if test ='null != bookComment.remark'>
                 `remark`,
             </if>
-            <if test ='null != bookComment.delFlag'>
-                `del_flag`
-            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test ='null != bookComment.id'>
-                #{bookComment.id},
+            <if test ='null != bookComment.bookId'>
+                #{bookComment.bookId},
             </if>
-            <if test ='null != bookComment.orderIds'>
-                #{bookComment.orderIds},
+            <if test ='null != bookComment.orderId'>
+                #{bookComment.orderId},
             </if>
             <if test ='null != bookComment.createTime'>
                 #{bookComment.createTime},
@@ -59,9 +56,6 @@
             </if>
             <if test ='null != bookComment.remark'>
                 #{bookComment.remark},
-            </if>
-            <if test ='null != bookComment.delFlag'>
-                #{bookComment.delFlag}
             </if>
         </trim>
     </insert>

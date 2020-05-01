@@ -376,4 +376,24 @@
         group by tb.id
     </select>
 
+    <select id="selectByBookId" resultMap="BaseResultMap">
+        select
+            tb.id as id,
+            tb.title as title,
+            tb.author as author,
+            tb.publish_date as publish_date,
+            tb.publisher as publisher,
+            tb.introduction as introduction,
+            tb.recommend_flag as recommend_flag,
+            tb.reserve as reserve,
+            tb.sales as sales,
+            tb.price as price
+        from tm_book tb
+        where
+            tb.del_flag = '0'
+        <if test="@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookId)">
+            and tb.id = #{bookId}
+        </if>
+    </select>
+
 </mapper>

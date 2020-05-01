@@ -34,17 +34,11 @@
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(order.userId)'>
                 `user_id`,
             </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(order.orderIds)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(order.orderId)'>
                 `order_id`,
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(order.confirmStatus)'>
                 `confirm_status`,
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(order.logisticsCompany)'>
-                `logistics_company`,
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(order.shipmentNumber)'>
-                `shipment_number`,
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(order.createTime)'>
                 `create_time`,
@@ -57,17 +51,11 @@
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(order.userId)'>
                 #{order.userId},
             </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(order.orderIds)'>
-                #{order.orderIds},
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(order.orderId)'>
+                #{order.orderId},
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(order.confirmStatus)'>
                 #{order.confirmStatus},
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(order.logisticsCompany)'>
-                #{order.logisticsCompany},
-            </if>
-            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(order.shipmentNumber)'>
-                #{order.shipmentNumber},
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(order.createTime)'>
                 #{order.createTime},
@@ -178,6 +166,9 @@
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(dto.orderId)'>
                 and t.order_id = #{dto.orderId}
             </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(dto.userId)'>
+                and t.user_id = #{dto.userId}
+            </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(dto.confirmStatus)'>
                 and t.confirm_status = #{dto.confirmStatus}
             </if>
@@ -210,6 +201,9 @@
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(dto.orderId)'>
                 and t.order_id = #{dto.orderId}
+            </if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(dto.userId)'>
+                and t.user_id = #{dto.userId}
             </if>
             <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(dto.confirmStatus)'>
                 and t.confirm_status = #{dto.confirmStatus}

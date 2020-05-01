@@ -1,5 +1,9 @@
 package com.beau.graduation.service;
 
+import com.beau.graduation.basic.reqdto.GetBoughtBookPageReqDto;
+import com.beau.graduation.basic.reqdto.GetCommentPageReqDto;
+import com.beau.graduation.basic.resdto.GetBoughtBookPageResDto;
+import com.beau.graduation.basic.resdto.GetCommentPageResDto;
 import com.beau.graduation.model.BookOrder;
 import com.beau.graduation.model.dto.BookOrderDto;
 
@@ -21,7 +25,7 @@ public interface BookOrderService {
     /**
      * [批量新增]
      **/
-    int batchInsert(List<BookOrder> list);
+    int batchInsert(List<BookOrderDto> list);
 
     /**
      * [更新]
@@ -52,4 +56,8 @@ public interface BookOrderService {
      * [总量查询]
      **/
     int total(BookOrder bookOrder);
+
+    GetBoughtBookPageResDto getBoughtBookPage(GetBoughtBookPageReqDto reqDto);
+
+    GetCommentPageResDto getCommentPage(GetCommentPageReqDto reqDto);
 }

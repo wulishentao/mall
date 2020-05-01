@@ -46,9 +46,19 @@ public class BookOrder implements Serializable {
 
 
     /**
-     * total_price  商品总价
+     * total_price  商品小结
      */
     private BigDecimal totalPrice;
+
+    private String ifComment;
+
+    public String getIfComment() {
+        return ifComment;
+    }
+
+    public void setIfComment(String ifComment) {
+        this.ifComment = ifComment;
+    }
 
     public Long getId() {
         return id;

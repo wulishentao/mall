@@ -72,4 +72,6 @@ public interface BookDao {
     void updateTypeId(@Param("bookIds") List<Long> bookIds);
 
     List<BookDto> getBookInfoByIds(@Param("bookDto") BookDto bookDto);
+
+    BookDto selectByBookId(@Param("bookId") Long id);
 }

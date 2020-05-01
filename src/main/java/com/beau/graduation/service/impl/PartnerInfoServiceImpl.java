@@ -11,6 +11,7 @@ import com.beau.graduation.dao.PartnerInfoDao;
 import com.beau.graduation.model.PartnerInfo;
 import com.beau.graduation.model.ShoppingCart;
 import com.beau.graduation.model.dto.BookDto;
+import com.beau.graduation.service.OrderService;
 import com.beau.graduation.service.PartnerInfoService;
 import com.beau.graduation.utils.*;
 import org.slf4j.Logger;
@@ -37,6 +38,8 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 
 	private static final Long STORE_TIME = 15L;
 
+	private static final String USER_TOKEN = "user_token";
+
 	private static final Logger logger = LoggerFactory.getLogger(PartnerInfoServiceImpl.class);
 
     @Autowired
@@ -47,6 +50,9 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 
 	@Autowired
 	private RedisUtil redisUtil;
+
+	@Autowired
+	private OrderService orderService;
 
     @Override
     public void insert(PartnerInfo partnerInfo) {
@@ -139,7 +145,10 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 		if (LoginTypeEnum.admin.getCode().equals(resDto.getAccountType())) {
 			CookieUtil.addCookie(response, "admin_token", uuToken, null, 3600 * 24 * 15);
 		} else {
-			storageWithId(request, partnerInfo.getId());
+			String cartUuid = CookieUtil.getCookieValue(request, "cart_uuid");
+			if (StringUtils.isNotEmpty(cartUuid)) {
+				storageWithId(request, partnerInfo.getId());
+			}
 			CookieUtil.addCookie(response, "user_token", uuToken, null, 3600 * 24 * 15);
 		}
 
@@ -153,9 +162,9 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 	 * @param request
 	 */
 	private void storageWithId(HttpServletRequest request, Long userId) {
-		String cart_uuid = CookieUtil.getCookieValue(request, "cart_uuid");
+		String cartUuid = CookieUtil.getCookieValue(request, "cart_uuid");
 		String key = "cart_" + userId;
-		ShoppingCart shoppingCart = redisUtil.get(cart_uuid, ShoppingCart.class);
+		ShoppingCart shoppingCart = redisUtil.get(cartUuid, ShoppingCart.class);
 		ShoppingCart cart = redisUtil.get(key, ShoppingCart.class);
 
 		if (cart.getBookDtoList() == null) {
@@ -167,7 +176,7 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 				cart = new ShoppingCart();
 			}
 		} else {
-			if (StringUtils.isNotEmpty(cart_uuid)) {
+			if (StringUtils.isNotEmpty(cartUuid)) {
 				if (shoppingCart != null) {
 					List<BookDto> bookDtoList = shoppingCart.getBookDtoList();
 					List<BookDto> cartList = cart.getBookDtoList();
@@ -188,7 +197,7 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 			}
 		}
 		// 将cart_uuid所存储的购物车信息清空
-		redisUtil.delete(cart_uuid);
+		redisUtil.delete(cartUuid);
 
 		// 将合并过的购物车信息重新存入redis中
 		cart.setUserId(userId);
@@ -316,4 +325,51 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 		resDto.setMsg("更改状态成功");
 		return resDto;
 	}
+
+	/**
+	 * 获取个人中心信息
+	 * @param reqDto
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public HomeResDto home(HomeReqDto reqDto, HttpServletRequest request) {
+		HomeResDto resDto = new HomeResDto();
+		String token = CookieUtil.getCookieValue(request, USER_TOKEN);
+		PartnerInfo pi = loginUtil.getUser(token);
+
+		PartnerInfo partnerInfo = new PartnerInfo();
+		partnerInfo.setId(pi.getId());
+		partnerInfo.setAccountType(LoginTypeEnum.user.getCode());
+		PartnerInfo info = dao.selectByObj(partnerInfo);
+
+		resDto.setPartnerInfo(info);
+		resDto.setCode(ResultCode.success.getCode());
+		resDto.setMsg("用户个人中心信息获取成功");
+		return resDto;
+	}
+
+	/**
+	 * 修改个人信息
+	 * @param reqDto
+	 * @return
+	 */
+	@Override
+	public EditResDto edit(EditReqDto reqDto) {
+		EditResDto resDto = new EditResDto();
+
+		PartnerInfo entity = new PartnerInfo();
+		entity.setId(reqDto.getUserId());
+		entity.setAccountName(reqDto.getAccountName());
+		entity.setPhone(reqDto.getPhone());
+		entity.setAddress(reqDto.getAddress());
+		entity.setAccountType(reqDto.getAccountType());
+		entity.setUpdateTime(new Date());
+		dao.update(entity);
+
+		resDto.setCode(ResultCode.success.getCode());
+		resDto.setMsg("个人信息修改成功");
+		return resDto;
+	}
+
 }

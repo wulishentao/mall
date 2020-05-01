@@ -13,6 +13,12 @@
         <result column="img_url" property="imgUrl"/>
         <result column="topic_name" property="topicName"/>
         <result column="book_title" property="bookTitle"/>
+        <result column="total_price" property="totalPrice"/>
+        <result column="amount" property="amount"/>
+        <result column="author" property="author"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="if_comment" property="ifComment"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -24,46 +30,54 @@
         total_price
     </sql>
 
+    <sql id="insert_Column_List">
+        book_id,
+        order_id,
+        create_time,
+        amount,
+        total_price
+    </sql>
+
     <!-- 插入数据 -->
     <insert id="insert" parameterType="com.beau.graduation.model.BookOrder">
         INSERT INTO tr_book_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.bookId)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.bookId)'>
                 `book_id`,
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.orderId)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.orderId)'>
                 `order_id`,
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.createTime)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.createTime)'>
                 `create_time`,
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.amount)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.amount)'>
                 `amount`,
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.totalPrice)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.totalPrice)'>
                 `total_price`,
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.delFlag)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.delFlag)'>
                 `del_flag`
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.bookId)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.bookId)'>
                 #{bookOrder.bookId},
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.orderId)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.orderId)'>
                 #{bookOrder.orderId},
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.createTime)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.createTime)'>
                 #{bookOrder.createTime},
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.amount)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.amount)'>
                 #{bookOrder.amount},
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.totalPrice)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.totalPrice)'>
                 #{bookOrder.totalPrice},
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.delFlag)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.delFlag)'>
                 #{bookOrder.delFlag}
             </if>
         </trim>
@@ -71,16 +85,14 @@
 
     <!-- 批量插入数据 -->
     <insert id="batchInsert" parameterType="java.util.List">
-        INSERT INTO tr_book_order ( <include refid="Base_Column_List" /> ) VALUES
+        INSERT INTO tr_book_order ( <include refid="insert_Column_List" /> ) VALUES
         <foreach collection="list" item="curr" index="index" separator=",">
             (
-                #{curr.id},
                 #{curr.bookId},
                 #{curr.orderId},
                 #{curr.createTime},
                 #{curr.amount},
-                #{curr.totalPrice},
-                #{curr.delFlag}
+                #{curr.totalPrice}
             )
         </foreach>
     </insert>
@@ -89,14 +101,11 @@
     <update id="update" parameterType="com.beau.graduation.model.BookOrder">
         UPDATE tr_book_order
         <set>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.bookId)'>book_id = #{bookOrder.bookId},</if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.orderId)'>order_id = #{bookOrder.orderId},</if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.createTime)'>create_time = #{bookOrder.createTime},</if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.amount)'>amount = #{bookOrder.amount},</if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.totalPrice)'>total_price = #{bookOrder.totalPrice},</if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.delFlag)'>del_flag = #{bookOrder.delFlag}</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.ifComment)'>if_comment = #{bookOrder.ifComment},</if>
         </set>
-        WHERE id = #{bookOrder.id}
+        WHERE
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.bookId)'>book_id = #{bookOrder.bookId}</if>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.orderId)'>and order_id = #{bookOrder.orderId}</if>
     </update>
 
     <!-- 删除 -->
@@ -141,25 +150,25 @@
         SELECT <include refid="Base_Column_List" />
         FROM tr_book_order
         <where>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.id)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.id)'>
                 and id = #{bookOrder.id}
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.bookId)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.bookId)'>
                 and book_id = #{bookOrder.bookId}
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.orderId)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.orderId)'>
                 and order_id = #{bookOrder.orderId}
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.createTime)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.createTime)'>
                 and create_time = #{bookOrder.createTime}
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.amount)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.amount)'>
                 and amount = #{bookOrder.amount}
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.totalPrice)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.totalPrice)'>
                 and total_price = #{bookOrder.totalPrice}
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.delFlag)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.delFlag)'>
                 and del_flag = #{bookOrder.delFlag}
             </if>
         </where>
@@ -170,27 +179,88 @@
     <select id="total" resultType="java.lang.Integer">
         SELECT count(id) FROM tr_book_order
         <where>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.id)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.id)'>
                 and id = #{bookOrder.id}
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.bookId)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.bookId)'>
                 and book_id = #{bookOrder.bookId}
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.orderId)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.orderId)'>
                 and order_id = #{bookOrder.orderId}
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.createTime)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.createTime)'>
                 and create_time = #{bookOrder.createTime}
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.amount)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.amount)'>
                 and amount = #{bookOrder.amount}
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.totalPrice)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.totalPrice)'>
                 and total_price = #{bookOrder.totalPrice}
             </if>
-            <if test ='@com.qiaofang.common.utils.MapperUtil@isNotEmpty(bookOrder.delFlag)'>
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrder.delFlag)'>
                 and del_flag = #{bookOrder.delFlag}
             </if>
         </where>
     </select>
+
+    <select id="getBoughtBookTotal" resultType="int">
+        SELECT
+            count( 1 )
+        FROM
+            (
+            SELECT
+                tbo.id AS id
+            FROM
+                tm_order t
+                LEFT JOIN tr_book_order tbo ON t.order_id = tbo.order_id
+                AND tbo.del_flag = '0'
+                LEFT JOIN tm_book tb ON tbo.book_id = tb.id
+                AND tb.del_flag = '0'
+                LEFT JOIN tm_book_image tbi ON tb.id = tbi.book_id
+                AND tbi.del_flag = '0'
+            WHERE
+                t.user_id = #{bookOrderDto.userId}
+                AND t.confirm_status = '3'
+            <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrderDto.ifComment)'>
+                and if_comment = #{bookOrderDto.ifComment}
+            </if>
+            GROUP BY
+                tbo.id
+            ORDER BY
+            t.update_time DESC
+            ) AS tp
+    </select>
+
+    <select id="getBoughtBookPage" resultMap="BaseResultMap">
+        SELECT
+            t.order_id AS order_id,
+            tbi.img_url AS img_url,
+            tb.title AS book_title,
+            tb.author AS author,
+            tbo.total_price AS total_price,
+            tbo.amount AS amount,
+            tbo.if_comment as if_comment,
+            t.create_time AS create_time,
+            t.update_time AS update_time
+        FROM
+            tm_order t
+            LEFT JOIN tr_book_order tbo ON t.order_id = tbo.order_id
+            AND tbo.del_flag = '0'
+            LEFT JOIN tm_book tb ON tbo.book_id = tb.id
+            AND tb.del_flag = '0'
+            LEFT JOIN tm_book_image tbi ON tb.id = tbi.book_id
+            AND tbi.del_flag = '0'
+        WHERE
+            t.user_id = #{bookOrderDto.userId}
+            AND t.confirm_status = '3'
+        <if test ='@com.beau.graduation.utils.MapperUtil@isNotEmpty(bookOrderDto.ifComment)'>
+            and if_comment = #{bookOrderDto.ifComment}
+        </if>
+        GROUP BY
+            tbo.id
+        ORDER BY
+            t.update_time DESC
+        limit #{page.index},#{page.size}
+    </select>
+
 </mapper>

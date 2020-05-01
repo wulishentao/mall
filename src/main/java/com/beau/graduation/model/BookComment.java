@@ -22,8 +22,12 @@ public class BookComment implements Serializable {
     /**
      * order_id  订单编号
      */
-    private Long orderId;
+    private String orderId;
 
+    /**
+     * book_id  图书id
+     */
+    private Long bookId;
 
     /**
      * create_time  评论创建时间
@@ -52,11 +56,11 @@ public class BookComment implements Serializable {
         this.id = id;
     }
 
-    public Long getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 
@@ -84,17 +88,11 @@ public class BookComment implements Serializable {
         this.remark = remark;
     }
 
-    public String getDelFlag() {
-        return delFlag;
+    public Long getBookId() {
+        return bookId;
     }
 
-    public void setDelFlag(String delFlag) {
-        this.delFlag = delFlag;
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
     }
-
-    /**
-     * del_flag  是否删除，0-否，1-是
-     */
-    private String delFlag;
-
 }

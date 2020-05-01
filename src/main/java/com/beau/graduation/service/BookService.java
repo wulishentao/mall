@@ -75,4 +75,7 @@ public interface BookService {
     DelCommodityResDto delCommodity(DelCommodityReqDto reqDto);
 
     List<BookDto> getBookInfoByIds(BookDto bookDto);
+
+    BookDto selectByBookId(Long id);
+
 }

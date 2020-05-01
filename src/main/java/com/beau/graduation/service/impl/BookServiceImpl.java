@@ -86,6 +86,11 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
+	public BookDto selectByBookId(Long id) {
+		return dao.selectByBookId(id);
+	}
+
+	@Override
 	public AddCartResDto addCart(AddCartReqDto reqDto, HttpServletRequest request, HttpServletResponse response) {
 		ShoppingCart cart = new ShoppingCart();
 		AddCartResDto resDto = new AddCartResDto();
@@ -274,14 +279,15 @@ public class BookServiceImpl implements BookService {
 	private ShoppingCart delCartWithKey(String key, DelCartReqDto reqDto) {
 		ShoppingCart shoppingCart = redisUtil.get(key, ShoppingCart.class);
 		List<Long> bookIds = reqDto.getBookIds();
-		List<BookDto> collect = null;
+		List<BookDto> bookDtoList = shoppingCart.getBookDtoList();
+		List<BookDto> collect = new ArrayList<>();
 		for (Long bookId : bookIds) {
-			collect = shoppingCart.getBookDtoList().stream().filter(bookDto -> {
-				if (bookDto.getId().equals(bookId)) {
-					return false;
+			for (BookDto dto : bookDtoList) {
+				if (dto.getId().equals(bookId)) {
+					collect.add(dto);
+					break;
 				}
-				return true;
-			}).collect(Collectors.toList());
+			}
 		}
 		shoppingCart.setBookDtoList(collect);
 		return shoppingCart;
@@ -589,4 +595,5 @@ public class BookServiceImpl implements BookService {
 	public List<BookDto> getBookInfoByIds(BookDto bookDto) {
 		return dao.getBookInfoByIds(bookDto);
 	}
+
 }

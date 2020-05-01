@@ -25,8 +25,6 @@ public class BookDto extends Book implements Serializable {
 
     private Boolean exist;
 
-
-
     /**
      * 销量
      */

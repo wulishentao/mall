@@ -1,8 +1,13 @@
 package com.beau.graduation.service;
 
+import com.beau.graduation.basic.reqdto.CommentBookReqDto;
+import com.beau.graduation.basic.reqdto.GetCommentPageReqDto;
+import com.beau.graduation.basic.resdto.CommentBookResDto;
+import com.beau.graduation.basic.resdto.GetCommentPageResDto;
 import com.beau.graduation.common.Page;
 import com.beau.graduation.model.BookComment;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -57,4 +62,7 @@ public interface BookCommentService {
      * [总量查询]
      **/
     int total(BookComment bookComment);
+
+    CommentBookResDto commentBook(CommentBookReqDto reqDto);
+
 }

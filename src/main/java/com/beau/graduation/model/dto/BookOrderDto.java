@@ -4,6 +4,8 @@ import com.beau.graduation.model.BookOrder;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @classname: BookOrderDto.java
@@ -17,6 +19,66 @@ public class BookOrderDto extends BookOrder implements Serializable {
     private BigDecimal unitPrice;
     private String topicName;
     private String typeName;
+    private Long userId;
+    private String author;
+    private BigDecimal totalPrice;
+    private Long amount;
+    private Date createTime;
+    private Date updateTime;
+
+    @Override
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    @Override
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    @Override
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    @Override
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    @Override
+    public Long getAmount() {
+        return amount;
+    }
+
+    @Override
+    public void setAmount(Long amount) {
+        this.amount = amount;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public String getImgUrl() {
         return imgUrl;

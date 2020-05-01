@@ -377,7 +377,6 @@ public class ApiController {
 
     @PostMapping(value = "/private/order/view", produces = "application/json")
     @ApiOperation("查看订单详情")
-    @CheckOrder
     public ApiResult viewOrderInfo(@RequestBody ViewOrderInfoReqDto reqDto) {
         ApiResult<ViewOrderInfoResDto> res = new ApiResult<>();
         try {

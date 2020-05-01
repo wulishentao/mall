@@ -66,4 +66,13 @@ public interface OrderService {
     ViewOrderInfoResDto viewOrderInfo(ViewOrderInfoReqDto reqDto);
 
     ConfirmOrderInfoResDto confirmOrderInfo(ConfirmOrderInfoReqDto reqDto, HttpServletRequest request);
+
+    SubmitOrderResDto submitOrder(SubmitOrderReqDto reqDto);
+
+    ConfirmPaymentResDto confirmPayment(ConfirmPaymentReqDto reqDto, HttpServletRequest request);
+
+    CancelOrderResDto cancelOrder(CancelOrderReqDto reqDto, HttpServletRequest request);
+
+    ConfirmOrderResDto confirmOrder(ConfirmOrderReqDto reqDto, HttpServletRequest request);
+
 }

@@ -18,7 +18,7 @@ public class UuidUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(getUuid());
+        System.out.println(DateUtil.dateTime().concat(getUuid().substring(0,7)));
         System.out.println(new Date());
     }
 }

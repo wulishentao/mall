@@ -30,7 +30,12 @@ public enum ConfirmStatusEnum {
     /**
      * 已签收
      */
-    received("3", "已签收")
+    received("3", "已签收"),
+
+    /**
+     * 已评价
+     */
+    commented("4", "已评价")
     ;
 
     private String code;

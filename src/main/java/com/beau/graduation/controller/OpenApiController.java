@@ -1,12 +1,11 @@
 package com.beau.graduation.controller;
 
+import com.beau.graduation.annotation.CheckOrder;
 import com.beau.graduation.basic.reqdto.*;
 import com.beau.graduation.basic.resdto.*;
 import com.beau.graduation.common.ApiResult;
 import com.beau.graduation.Enum.ResultCode;
-import com.beau.graduation.service.BookService;
-import com.beau.graduation.service.OrderService;
-import com.beau.graduation.service.PartnerInfoService;
+import com.beau.graduation.service.*;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +37,12 @@ public class OpenApiController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private BookCommentService bookCommentService;
+
+    @Autowired
+    private BookOrderService bookOrderService;
 
     /**
      * 用户登录
@@ -201,6 +206,187 @@ public class OpenApiController {
         return res;
     }
 
+    @PostMapping(value = "/order/submitOrder", produces = "application/json")
+    @ApiOperation("提交订单")
+    public ApiResult submitOrder(@RequestBody SubmitOrderReqDto reqDto) {
+        ApiResult<SubmitOrderResDto> res = new ApiResult<>();
+        try {
+            SubmitOrderResDto resDto = orderService.submitOrder(reqDto);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("submitOrder error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("提交订单异常");
+        }
+        return res;
+    }
 
+    @CheckOrder
+    @PostMapping(value = "/order/confirmPayment", produces = "application/json")
+    @ApiOperation("用户确认支付")
+    public ApiResult confirmPayment(@RequestBody ConfirmPaymentReqDto reqDto, HttpServletRequest request) {
+        ApiResult<ConfirmPaymentResDto> res = new ApiResult<>();
+        try {
+            ConfirmPaymentResDto resDto = orderService.confirmPayment(reqDto, request);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("confirmPayment error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("确认支付异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/order/cancel", produces = "application/json")
+    @ApiOperation("用户取消订单")
+    public ApiResult cancelOrder(@RequestBody CancelOrderReqDto reqDto, HttpServletRequest request) {
+        ApiResult<CancelOrderResDto> res = new ApiResult<>();
+        try {
+            CancelOrderResDto resDto = orderService.cancelOrder(reqDto, request);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("confirmPayment error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("确认支付异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/order/confirm", produces = "application/json")
+    @ApiOperation("用户确认收货")
+    public ApiResult confirmOrder(@RequestBody ConfirmOrderReqDto reqDto, HttpServletRequest request) {
+        ApiResult<ConfirmOrderResDto> res = new ApiResult<>();
+        try {
+            ConfirmOrderResDto resDto = orderService.confirmOrder(reqDto, request);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("confirmOrder error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("用户确认收货异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/personal/getCommentPage", produces = "application/json")
+    @ApiOperation("获取待评价/已评价列表")
+    public ApiResult getCommentPage(@RequestBody GetCommentPageReqDto reqDto) {
+        ApiResult<GetCommentPageResDto> res = new ApiResult<>();
+        try {
+            GetCommentPageResDto resDto = bookOrderService.getCommentPage(reqDto);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("getCommentPage error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("获取待评价/已评价列表异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/personal/comment", produces = "application/json")
+    @ApiOperation("评价图书")
+    public ApiResult commentBook(@RequestBody CommentBookReqDto reqDto) {
+        ApiResult<CommentBookResDto> res = new ApiResult<>();
+        try {
+            CommentBookResDto resDto = bookCommentService.commentBook(reqDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("commentBook error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("图书评价异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/personal/home", produces = "application/json")
+    @ApiOperation("个人中心")
+    public ApiResult home(@RequestBody HomeReqDto reqDto, HttpServletRequest request) {
+        ApiResult<HomeResDto> res = new ApiResult<>();
+        try {
+            HomeResDto resDto = partnerInfoService.home(reqDto, request);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("home error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("个人中心获取异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/personal/edit", produces = "application/json")
+    @ApiOperation("修改个人信息")
+    public ApiResult edit(@RequestBody EditReqDto reqDto) {
+        ApiResult<EditResDto> res = new ApiResult<>();
+        try {
+            EditResDto resDto = partnerInfoService.edit(reqDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("edit error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("修改个人信息异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/personal/getOrderPage", produces = "application/json")
+    @ApiOperation("获取订单列表")
+    public ApiResult getOrderPage(@RequestBody GetOrderPageReqDto reqDto) {
+        ApiResult<GetOrderPageResDto> res = new ApiResult<>();
+        try {
+            GetOrderPageResDto resDto = orderService.getOrderPage(reqDto);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("getOrderPage error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("获取订单列表异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/personal/getOrderInfo", produces = "application/json")
+    @ApiOperation("获取订单详情")
+    public ApiResult getOrderInfo(@RequestBody ViewOrderInfoReqDto reqDto) {
+        ApiResult<ViewOrderInfoResDto> res = new ApiResult<>();
+        try {
+            ViewOrderInfoResDto resDto = orderService.viewOrderInfo(reqDto);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("getOrderInfo error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("获取订单异常");
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/personal/getBoughtBookPage", produces = "application/json")
+    @ApiOperation("已购买的图书列表")
+    public ApiResult getBoughtBookPage(@RequestBody GetBoughtBookPageReqDto reqDto) {
+        ApiResult<GetBoughtBookPageResDto> res = new ApiResult<>();
+        try {
+            GetBoughtBookPageResDto resDto = bookOrderService.getBoughtBookPage(reqDto);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("getOrderInfo error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("获取已购买的图书列表异常");
+        }
+        return res;
+    }
 
 }

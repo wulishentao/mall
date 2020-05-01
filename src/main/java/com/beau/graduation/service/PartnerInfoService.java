@@ -73,4 +73,9 @@ public interface PartnerInfoService {
     GetPartnerResDto getPartnerPage(GetPartnerReqDto reqDto);
 
     EditPartnerStatusResDto editPartnerStatus(EditPartnerStatusReqDto reqDto) throws Exception;
+
+    HomeResDto home(HomeReqDto reqDto, HttpServletRequest request);
+
+    EditResDto edit(EditReqDto reqDto);
+
 }

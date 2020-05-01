@@ -4,6 +4,7 @@ import com.beau.graduation.model.BookOrder;
 import com.beau.graduation.model.dto.BookOrderDto;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public interface BookOrderDao {
     /**
      * [批量新增]
      **/
-    int batchInsert(@Param("list")List<BookOrder> list);
+    int batchInsert(@Param("list")List<BookOrderDto> list);
 
     /**
      * [更新]
@@ -54,4 +55,10 @@ public interface BookOrderDao {
      * [总量查询]
      **/
     int total(@Param("bookOrder") BookOrder bookOrder);
+
+    int getBoughtBookTotal(@Param("bookOrderDto") BookOrderDto bookOrderDto);
+
+    List<BookOrderDto> getBoughtBookPage(@Param("bookOrderDto") BookOrderDto bookOrderDto,@Param("page") HashMap<String,Integer> page);
+
+    List<BookOrder> selectPage(@Param("bookOrderDto") BookOrderDto entity,@Param("page") HashMap<String, Integer> beginAndSize);
 }
