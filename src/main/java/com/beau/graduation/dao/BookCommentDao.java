@@ -3,6 +3,7 @@ package com.beau.graduation.dao;
 import com.beau.graduation.model.BookComment;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -51,7 +52,7 @@ public interface BookCommentDao {
     /**
      * [分页条件查询]
      **/
-    List<BookComment> selectPage (@Param("bookComment") BookComment bookComment, @Param("page") Integer page, @Param("pageSize") Integer pageSize);
+    List<BookComment> selectPage (@Param("bookComment") BookComment bookComment,@Param("page") HashMap<String,Integer> page);
 
     /**
      * [总量查询]

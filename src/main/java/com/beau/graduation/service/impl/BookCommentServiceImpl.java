@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -83,28 +84,8 @@ public class BookCommentServiceImpl implements BookCommentService {
 	}
 
 	@Override
-	public Page<BookComment> selectPage(BookComment bookComment, Integer offset, Integer pageSize) {
-		Page<BookComment> pageList = new Page<>();
-
-		int total = this.total(bookComment);
-
-		Integer totalPage;
-		if (total % pageSize != 0) {
-			totalPage = (total /pageSize) + 1;
-		} else {
-			totalPage = total /pageSize;
-		}
-
-		int page = (offset - 1) * pageSize;
-
-		List<BookComment> list = dao.selectPage(bookComment, page, pageSize);
-
-		pageList.setList(list);
-		pageList.setStartPageNo(offset);
-		pageList.setPageSize(pageSize);
-		pageList.setTotalCount(total);
-		pageList.setTotalPageCount(totalPage);
-		return pageList;
+	public List<BookComment> selectPage(BookComment bookComment, HashMap<String,Integer> page) {
+		return dao.selectPage(bookComment, page);
 	}
 
 	@Override

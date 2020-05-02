@@ -11,10 +11,7 @@ import com.beau.graduation.config.UploadConfig;
 import com.beau.graduation.dao.BookDao;
 import com.beau.graduation.model.*;
 import com.beau.graduation.model.dto.BookDto;
-import com.beau.graduation.service.BookImageService;
-import com.beau.graduation.service.BookRelationTopicService;
-import com.beau.graduation.service.BookService;
-import com.beau.graduation.service.BookTypeService;
+import com.beau.graduation.service.*;
 import com.beau.graduation.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -59,6 +56,9 @@ public class BookServiceImpl implements BookService {
 
 	@Autowired
 	private BookTypeService bookTypeService;
+
+	@Autowired
+	private BookCommentService bookCommentService;
 
     @Override
     public int insert(Book book) {
@@ -719,6 +719,33 @@ public class BookServiceImpl implements BookService {
 		resDto.setBookDtoPage(page);
 		resDto.setCode(ResultCode.success.getCode());
 		resDto.setMsg("图书畅销榜获取成功");
+		return resDto;
+	}
+
+	/**
+	 * 图书详情
+	 * @param reqDto
+	 * @return
+	 */
+	@Override
+	public CommodityDetailedResDto bookDetailed(CommodityDetailedReqDto reqDto) {
+		CommodityDetailedResDto resDto = new CommodityDetailedResDto();
+
+		Book entity = new Book();
+		entity.setId(reqDto.getBookId());
+		// 书籍详细信息
+		BookDto bookDto = dao.commodityDetailed(entity);
+		resDto.setBookDto(bookDto);
+		// 书籍评论
+		BookComment comment = new BookComment();
+		comment.setBookId(reqDto.getBookId());
+		int total = bookCommentService.total(comment);
+		List<BookComment> bookCommentList = bookCommentService.selectPage(comment, PageUtil.getBeginAndSize(reqDto.getPageNo(), reqDto.getPageSize()));
+		Page<BookComment> page = new Page<>(total, bookCommentList);
+		resDto.setPage(page);
+
+		resDto.setCode(ResultCode.success.getCode());
+		resDto.setMsg("书籍详情页获取成功");
 		return resDto;
 	}
 }

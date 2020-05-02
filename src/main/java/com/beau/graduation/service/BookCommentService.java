@@ -6,8 +6,10 @@ import com.beau.graduation.basic.resdto.CommentBookResDto;
 import com.beau.graduation.basic.resdto.GetCommentPageResDto;
 import com.beau.graduation.common.Page;
 import com.beau.graduation.model.BookComment;
+import org.apache.ibatis.annotations.Param;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -56,12 +58,12 @@ public interface BookCommentService {
     /**
      * [分页条件查询]
      **/
-    Page<BookComment> selectPage(BookComment bookComment, Integer page, Integer pageSize);
+    List<BookComment> selectPage(BookComment bookComment, HashMap<String, Integer> page);
 
     /**
      * [总量查询]
      **/
-    int total(BookComment bookComment);
+    int total(@Param("bookComment") BookComment bookComment);
 
     CommentBookResDto commentBook(CommentBookReqDto reqDto);
 

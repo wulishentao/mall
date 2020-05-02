@@ -87,4 +87,6 @@ public interface BookService {
     BookSellingPageResDto bookSellingPage(BookSellingPageReqDto reqDto);
 
     RecommendResDto recommend(RecommendReqDto reqDto);
+
+    CommodityDetailedResDto bookDetailed(CommodityDetailedReqDto reqDto);
 }

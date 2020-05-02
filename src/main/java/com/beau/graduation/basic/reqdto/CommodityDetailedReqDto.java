@@ -13,6 +13,26 @@ import java.io.Serializable;
 public class CommodityDetailedReqDto extends CommonReqDTO implements Serializable {
     private Long bookId;
 
+    private Integer pageNo;
+
+    private Integer pageSize;
+
+    public Integer getPageNo() {
+        return pageNo;
+    }
+
+    public void setPageNo(Integer pageNo) {
+        this.pageNo = pageNo;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
     public Long getBookId() {
         return bookId;
     }

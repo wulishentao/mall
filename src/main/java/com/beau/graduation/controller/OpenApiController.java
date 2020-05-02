@@ -494,4 +494,21 @@ public class OpenApiController {
         return res;
     }
 
+    @PostMapping(value = "/book/detailed", produces = "application/json")
+    @ApiOperation("图书详情")
+    public ApiResult bookDetailed(@RequestBody CommodityDetailedReqDto reqDto) {
+        ApiResult<CommodityDetailedResDto> res = new ApiResult<>();
+        try {
+            CommodityDetailedResDto resDto = bookService.bookDetailed(reqDto);
+            res.setData(resDto);
+            res.setCode(resDto.getCode());
+            res.setMsg(resDto.getMsg());
+        } catch (Exception e) {
+            logger.error("detailed error: ", e);
+            res.setCode(ResultCode.failed.getCode());
+            res.setMsg("图书详情获取异常");
+        }
+        return res;
+    }
+
 }
