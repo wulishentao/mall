@@ -666,15 +666,15 @@ public class BookServiceImpl implements BookService {
 	public NewBookHotPageResDto newBookHotPage(NewBookHotPageReqDto reqDto) {
 		NewBookHotPageResDto resDto = new NewBookHotPageResDto();
 
-		BookDto entity = new BookDto();
+		BookDto bookDto = new BookDto();
 		Calendar instance = Calendar.getInstance();
 		instance.setTime(new Date());
 		instance.add(Calendar.MONTH, -5);
-		entity.setBeginDate(instance.getTime());
-		entity.setEndDate(new Date());
-		entity.setTypeId(reqDto.getTypeId());
-		entity.setOrderBy("tb.publish_date desc,sales desc,tb.recommend_flag desc,tb.sort desc");
-		Page<BookDto> page = getBookInfoPage(entity, PageUtil.getBeginAndSize(reqDto.getPageNo(), reqDto.getPageSize()));
+		bookDto.setBeginDate(instance.getTime());
+		bookDto.setEndDate(new Date());
+		bookDto.setTypeId(reqDto.getTypeId());
+		bookDto.setOrderBy("tb.publish_date desc,sales desc,tb.recommend_flag desc,tb.sort desc");
+		Page<BookDto> page = getBookInfoPage(bookDto, PageUtil.getBeginAndSize(reqDto.getPageNo(), reqDto.getPageSize()));
 
 		resDto.setBookDtoPage(page);
 		resDto.setCode(ResultCode.success.getCode());

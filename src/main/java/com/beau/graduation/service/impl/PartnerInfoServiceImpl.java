@@ -63,6 +63,7 @@ public class PartnerInfoServiceImpl implements PartnerInfoService {
 	public RegisterResDto insert(RegisterReqDto reqDto) {
 		RegisterResDto resDto = new RegisterResDto();
 		PartnerInfo pi = new PartnerInfo();
+		pi.setAccountType(reqDto.getAccountType());
 		pi.setPhone(reqDto.getPhone());
 		PartnerInfo partnerInfo = dao.selectByObj(pi);
 		if (partnerInfo != null) {
